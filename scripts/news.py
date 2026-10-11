@@ -24,7 +24,7 @@ feeds = [
     ('Central banks', 'Bank of Japan', 'https://www.boj.or.jp/en/rss/whatsnew.xml', 4),
     ('Markets', 'CNBC Markets', 'https://www.cnbc.com/id/15839069/device/rss/rss.html', 8),
     ('Markets', 'CNBC Economy', 'https://www.cnbc.com/id/20910258/device/rss/rss.html', 6),
-    ('Markets', 'MarketWatch', 'https://feeds.content.dowjones.io/public/rss/mw_marketpulse', 8),
+    ('Markets', 'MarketWatch', 'https://feeds.content.dowjones.io/public/rss/mw_topstories', 8),
     ('Markets', None, gnews('stock market OR "global markets"'), 6),
     ("This week's index", None, gnews(QUERY.get(pick, 'stock market')), 10),
 ]
@@ -44,7 +44,14 @@ def parse_date(s):
 rows, ok = [], 0
 for group, source, url, n in feeds:
     try:
-        with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=30) as r: raw = r.read()
+        raw = None
+        for attempt in range(2):
+            try:
+                with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=30) as r: raw = r.read()
+                break
+            except Exception:
+                if attempt: raise
+                time.sleep(3)
         root = ET.fromstring(raw)
         items = root.findall('.//item') or root.findall('.//{http://www.w3.org/2005/Atom}entry')
         got = 0

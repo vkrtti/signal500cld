@@ -2,7 +2,9 @@
 
 Each week it
   1. ranks six euro-listed index ETFs by their 52-week return and picks the main index
-     (the leader, but it only replaces the current pick when it leads by more than 5 percentage points),
+     by return per unit of risk (52-week return / 52-week volatility); the leader only replaces the current pick when
+     its score is more than 0.25 higher (tested against the old 52-week-return rule: better on 2012-today ETF data
+     and on 1990-2026 regional data),
   2. sets the weekly amount (EUR 40-200) and the signal meter from the world market (MSCI World ETF)
      and US macro stress gauges (VIX, financial conditions, Sahm rule, yield curve),
   3. ranks the stocks of the picked index (value + momentum for the S&P 500, price momentum elsewhere),
@@ -27,7 +29,9 @@ ETFS = [  # key, index, ETF symbol (Yahoo), fund name, ISIN, stock universe
 ]
 EK = [e[0] for e in ETFS]
 E = {e[0]: dict(key=e[0], index=e[1], etf=e[2], fund=e[3], isin=e[4], universe=e[5]) for e in ETFS}
-BUFFER = 0.05          # a challenger must lead the current pick's 52-week return by more than 5 percentage points
+BUFFER = 0.25          # a challenger's score (52-week return / 52-week volatility) must beat the current pick's by more than 0.25
+OLD_BUFFER = 0.05      # previous rule: 52-week return, 5 percentage points
+LIVE_START = '2026-10-09'   # first live weekly decision; earlier weeks are backtest
 START = '2011-01-03'   # ETF prices before 2011 contain data errors (checked against the indexes)
 CCY = {'.DE': 'EUR', '.AS': 'EUR', '.PA': 'EUR', '.BR': 'EUR', '.MC': 'EUR', '.MI': 'EUR', '.HE': 'EUR', '.L': 'GBp', '.SW': 'CHF',
        '.CO': 'DKK', '.ST': 'SEK', '.OL': 'NOK', '.T': 'JPY', '.TW': 'TWD', '.HK': 'HKD', '.KS': 'KRW', '.NS': 'INR', '.SA': 'BRL',
@@ -86,16 +90,29 @@ def etf_prices(research, log, offline):
 
 
 # ------------------------------------------------------------------ rules
-def pick_path(W):
-    """Week-by-week main index with the 5-point buffer. Returns (r52 frame, list of picks per week)."""
-    r52 = W / W.shift(52) - 1
-    r52 = r52.dropna()
+def scores(W, look=52):
+    """52-week return and return per unit of risk (52-week return / annualised volatility of weekly moves)."""
+    r = W / W.shift(look) - 1
+    vol = np.log(W / W.shift(1)).rolling(look).std() * math.sqrt(52)
+    return r, r / vol, vol
+
+
+def buffered(score, buf):
+    """Hold the current pick until another index's score beats it by more than buf."""
+    score = score.dropna()
     held, path = None, []
-    for d, row in r52.iterrows():
+    for d, row in score.iterrows():
         lead = row.idxmax()
-        if held is None or row[lead] - row[held] > BUFFER: held = lead
+        if held is None or row[lead] - row[held] > buf: held = lead
         path.append(held)
-    return r52, pd.Series(path, index=r52.index)
+    return pd.Series(path, index=score.index)
+
+
+def pick_path(W):
+    """Week-by-week main index (current rule). Returns (52-week return, score, volatility, picks)."""
+    r52, sc, vol = scores(W)
+    ok = sc.dropna().index
+    return r52.loc[ok], sc.loc[ok], vol.loc[ok], buffered(sc.loc[ok], BUFFER)
 
 
 def amount_rule(w, trend, ath, vix, nfci, sahm):
@@ -121,7 +138,7 @@ def meter_parts(w, trend, dd, vix, nfci, sahm, curve):
     ]
 
 
-meter_label = lambda m: 'Strong buy' if m >= 40 else 'Buy' if m >= 15 else 'Neutral' if m > -10 else 'Sell' if m > -25 else 'Strong sell'
+meter_label = lambda m: 'Very strong market' if m >= 40 else 'Strong market' if m >= 15 else 'Mixed' if m > -10 else 'Weak market' if m > -25 else 'Very weak market'
 
 
 def irr(flows, values_end):
@@ -214,7 +231,7 @@ def run(S, D, research, fin, cons, log, offline=None):
     spx = S['SP500'].resample('W-FRI').last().reindex(W.index, method='ffill')
 
     # ---- full history: pick, amount, meter for every week
-    r52, path = pick_path(W)
+    r52, sc52, vol52, path = pick_path(W)
     world = W['world']; trend = world.rolling(40, min_periods=40).mean()
     ath = daily['world'].cummax().resample('W-FRI').last().reindex(W.index, method='ffill')
     hist = []
@@ -224,20 +241,20 @@ def run(S, D, research, fin, cons, log, offline=None):
         amt, tier, dd = amount_rule(float(world[d]), float(trend[d]), float(ath[d]), v, nf, sa)
         m = round(100 * sum(wt * sc for _, wt, sc, _ in meter_parts(float(world[d]), float(trend[d]), dd, v, nf, sa, cu)))
         hist.append(dict(week=d.strftime('%Y-%m-%d'), pick=path[d], world=round(float(world[d]), 2), amount=amt, meter=m,
-                         **{f'r52_{k}': round(float(r52.loc[d, k]) * 100, 1) for k in EK}))
+                         **{f'r52_{k}': round(float(r52.loc[d, k]) * 100, 1) for k in EK}, **{f'sc_{k}': round(float(sc52.loc[d, k]), 2) for k in EK}))
     H = pd.DataFrame(hist).set_index('week')
 
     # ---- this week's decision. Keep the pick the site published last week (live record), then apply the rule.
     stored = L('weekly_history', [])
-    live_prev = [h for h in stored if h.get('pick') and h['week'] < H.index[-1]]
+    live_prev = [h for h in stored if h.get('pick') and LIVE_START <= h['week'] < H.index[-1]]
     prev_pick = live_prev[-1]['pick'] if live_prev else (path.iloc[-2] if len(path) > 1 else None)
-    row = r52.loc[date]; leader = row.idxmax()
-    pick = leader if prev_pick is None or row[leader] - row[prev_pick] > BUFFER else prev_pick
+    row = r52.loc[date]; srow = sc52.loc[date]; vrow = vol52.loc[date]; leader = srow.idxmax()
+    pick = leader if prev_pick is None or srow[leader] - srow[prev_pick] > BUFFER else prev_pick
     pick = os.environ.get('IP_FORCE_PICK') or pick   # testing only
     switched = prev_pick is not None and pick != prev_pick
     H.loc[H.index[-1], 'pick'] = pick
     # history: keep published live rows, fill the rest from the backtest
-    pub = {h['week']: h for h in stored if h.get('pick')}
+    pub = {h['week']: h for h in stored if h.get('pick') and h['week'] >= LIVE_START}
     weekly_history = [dict(r, week=w, pick=pub[w]['pick'] if w in pub and w != H.index[-1] else r['pick']) for w, r in H.to_dict('index').items()]
 
     last = hist[-1]
@@ -252,14 +269,14 @@ def run(S, D, research, fin, cons, log, offline=None):
     # ---- index table
     def chg(k, n): return round((float(W[k].iloc[-1]) / float(W[k].iloc[-1 - n]) - 1) * 100, 1)
     idx_rows = []
-    order = row.sort_values(ascending=False).index.tolist()
+    order = srow.sort_values(ascending=False).index.tolist()
     for k in EK:
         s = W[k]; y = daily[k][daily.index > daily.index[-1] - pd.Timedelta(days=365)]
         t40 = float(s.iloc[-40:].mean())
-        status = "This week's pick" if k == pick else ('Leader, but inside the 5-point buffer' if k == leader else '')
+        status = "This week's pick" if k == pick else ('Best score, but inside the buffer' if k == leader else '')
         idx_rows.append(dict(rank=order.index(k) + 1, key=k, index=E[k]['index'], etf=E[k]['etf'], fund=E[k]['fund'], isin=E[k]['isin'],
                              price=round(float(s.iloc[-1]), 2), r52=round(float(row[k]) * 100, 1), r26=chg(k, 26), r13=chg(k, 13), r4=chg(k, 4), r1=chg(k, 1),
-                             gap_to_pick=round((float(row[k]) - float(row[pick])) * 100, 1), from_high_52w=round((float(s.iloc[-1]) / float(y.max()) - 1) * 100, 1),
+                             score=round(float(srow[k]), 2), gap_to_pick=round(float(srow[k]) - float(srow[pick]), 2), from_high_52w=round((float(s.iloc[-1]) / float(y.max()) - 1) * 100, 1),
                              trend='Above' if float(s.iloc[-1]) >= t40 else 'Below', vol=round(float(np.log(s / s.shift(1)).iloc[-52:].std() * math.sqrt(52) * 100), 1),
                              spark=[round(float(x), 2) for x in s.iloc[-53:].values], status=status))
     idx_rows.sort(key=lambda r: r['rank'])
@@ -350,6 +367,9 @@ def run(S, D, research, fin, cons, log, offline=None):
             grp = [p for p in extra_pos if p['side'] == side]
             for p, w in zip(grp, invw([rank_of.get(p['ticker'], {}) for p in grp])):
                 p['weight'] = w; p['euros'] = round(STAKE_SIDE * w / 100, 2)
+    if extra_pos and extra_pos[0]['entry_date'] == dstr and not all(f"in {E[pick]['index']} " in p.get('reason', '') for p in extra_pos):
+        log('extra profit: same-day picks were for another index; rebuilding them for', E[pick]['index'])
+        extra_pos = []   # nothing was closed yet: this week's picks are simply re-chosen
     if not (extra_pos and extra_pos[0]['entry_date'] == dstr):
         for p in extra_pos:
             xp = last_px(p['ticker']); n = ''
@@ -478,24 +498,26 @@ def run(S, D, research, fin, cons, log, offline=None):
     R = W.pct_change().shift(-1).reindex(H.index.map(pd.Timestamp))   # next week's return, decided at this week's close
     R.index = H.index
     picks = H['pick']
-    r52v = r52.reindex(pd.to_datetime(H.index)); r52v.index = H.index
-    nobuf = r52v.idxmax(axis=1)
+    def on_h(sq): sq = sq.reindex(pd.to_datetime(H.index)); sq.index = H.index; return sq
+    nobuf = on_h(buffered(sc52, 0.0))
+    old = on_h(buffered(r52, OLD_BUFFER))
     def series(kind):
         if kind in EK: return R[kind]
         if kind == 'equal': return R[EK].mean(axis=1)
         if kind == 'pick': return pd.Series([R.loc[d, k] for d, k in picks.items()], index=H.index)
         if kind == 'nobuf': return pd.Series([R.loc[d, k] for d, k in nobuf.items()], index=H.index)
+        if kind == 'old': return pd.Series([R.loc[d, k] for d, k in old.items()], index=H.index)
     def tw(r):
         r = r.dropna(); eq = (1 + r).cumprod(); yrs = len(r) / 52.18
         return eq, round((eq.iloc[-1] ** (1 / yrs) - 1) * 100, 1), round(float((eq / eq.cummax() - 1).min()) * 100, 1), round(float(r.std() * math.sqrt(52) * 100), 1)
-    names = {'pick': 'IndexPilot pick (5-point buffer)', 'nobuf': 'Momentum leader, no buffer', 'equal': 'All six, equal weight',
+    names = {'pick': 'IndexPilot pick (return per unit of risk)', 'old': 'Previous rule (52-week return, 5-point buffer)', 'nobuf': 'Best score each week, no buffer', 'equal': 'All six, equal weight',
              **{k: f"Hold {E[k]['index']}" for k in EK}}
     bt, curves = [], {}
-    for k in ['pick', 'nobuf', 'equal'] + EK:
+    for k in ['pick', 'old', 'nobuf', 'equal'] + EK:
         eq, c, mdd, vol = tw(series(k)); curves[k] = eq
         sw = None
-        if k in ('pick', 'nobuf'):
-            sq = picks if k == 'pick' else nobuf
+        if k in ('pick', 'nobuf', 'old'):
+            sq = {'pick': picks, 'nobuf': nobuf, 'old': old}[k]
             sw = round(float((sq != sq.shift(1)).iloc[1:].sum()) / (len(sq) / 52.18), 1)
         bt.append(dict(key=k, strategy=names[k], cagr=c, max_dd=mdd, vol=vol, switches_per_year=sw))
     # money-weighted: the weekly amounts actually bought
@@ -519,6 +541,23 @@ def run(S, D, research, fin, cons, log, offline=None):
         inv, val, r_ = mw(kind, amounts, sw)
         mwrows.append(dict(plan=label_, invested=inv, value=val, irr=r_))
     out['ip_backtest'] = bt
+    # rule variants that were tested (same data, same costs: none); halves show whether a result holds in both periods
+    def var_stats(sq, trend_fb=None):
+        r = pd.Series([R.loc[d, k] for d, k in sq.items()], index=H.index)
+        if trend_fb:
+            ma = W.rolling(40).mean()
+            r = pd.Series([R.loc[d, trend_fb] if float(W.loc[pd.Timestamp(d), k]) < float(ma.loc[pd.Timestamp(d), k]) else R.loc[d, k] for d, k in sq.items()], index=H.index)
+        r = r.dropna(); yrs = len(r) / 52.18; eq = (1 + r).cumprod()
+        cg = lambda x: round((float((1 + x).prod()) ** (52.18 / len(x)) - 1) * 100, 1)
+        return dict(cagr=round((eq.iloc[-1] ** (1 / yrs) - 1) * 100, 1), max_dd=round(float((eq / eq.cummax() - 1).min()) * 100, 1),
+                    sharpe=round(float(r.mean() / r.std() * math.sqrt(52)), 2), switches_per_year=round(float((sq != sq.shift(1)).iloc[1:].sum()) / yrs, 1),
+                    first_half=cg(r[r.index < '2019-01-01']), second_half=cg(r[r.index >= '2019-01-01']))
+    r26 = W / W.shift(26) - 1
+    vrows = [('riskadj', 'Return per unit of risk, 0.25 buffer (current rule)', picks, None), ('old', '52-week return, 5-point buffer (previous rule)', old, None),
+             ('ret_nobuf', '52-week return, no buffer', on_h(buffered(r52, 0.0)), None), ('ret26', '26-week return, 5-point buffer', on_h(buffered(r26.dropna(), OLD_BUFFER)), None),
+             ('ret_buf10', '52-week return, 10-point buffer', on_h(buffered(r52, 0.10)), None), ('riskadj_nobuf', 'Return per unit of risk, no buffer', nobuf, None),
+             ('trend', '52-week return, 5-point buffer, MSCI World when below its 40-week line', old, 'world')]
+    out['ip_variants'] = [dict(key=k, rule=nm, **var_stats(sq.ffill().bfill(), fb)) for k, nm, sq, fb in vrows]
     out['ip_buying'] = mwrows
     step = max(1, len(H) // 300)
     out['ip_growth'] = [dict(date=d, **{k: round(float(curves[k].get(d, np.nan)), 4) for k in ['pick', 'world', 'us', 'ndx', 'europe', 'equal']})
@@ -549,7 +588,7 @@ def run(S, D, research, fin, cons, log, offline=None):
     wv_ = H['world'].astype(float); m_ = H['meter'].astype(float)
     f4 = wv_.shift(-4) / wv_ - 1; f52 = wv_.shift(-52) / wv_ - 1
     mrows = []
-    for lab, lo_, hi_ in [('Sell zone (−10 or lower)', -999, -10), ('Neutral (−10 to +15)', -10, 15), ('Buy (+15 to +40)', 15, 40), ('Strong buy (+40 or higher)', 40, 999)]:
+    for lab, lo_, hi_ in [('Weak (−10 or lower)', -999, -10), ('Mixed (−10 to +15)', -10, 15), ('Strong (+15 to +40)', 15, 40), ('Very strong (+40 or higher)', 40, 999)]:
         sel = (m_ > lo_) & (m_ <= hi_) if lo_ > -999 else (m_ <= hi_)
         if hi_ == 999: sel = m_ > lo_
         mrows.append(dict(bucket=lab, weeks=int(sel.sum()), next_4w=round(float(f4[sel].mean()) * 100, 2) if f4[sel].notna().any() else None,
@@ -559,11 +598,11 @@ def run(S, D, research, fin, cons, log, offline=None):
 
     # ---- weekly_now / weekly_history / meter
     e = E[pick]
-    reason = (f"{e['index']} leads with a {row[pick] * 100:+.1f}% 52-week return in euros." if pick == leader else
-              f"{E[leader]['index']} leads ({row[leader] * 100:+.1f}%), but not by more than 5 points over {e['index']} ({row[pick] * 100:+.1f}%), so the pick stays.")
+    reason = (f"{e['index']} has the best return for its risk: {row[pick] * 100:+.1f}% over 52 weeks at {vrow[pick] * 100:.0f}% volatility (score {srow[pick]:.2f})." if pick == leader else
+              f"{E[leader]['index']} scores higher ({srow[leader]:.2f}), but not by more than {BUFFER} over {e['index']} ({srow[pick]:.2f}), so the pick stays.")
     if switched: reason = f"Switch: {E[prev_pick]['index']} → {e['index']}. " + reason
     out['weekly_now'] = [dict(week_of=week_of, decided_on=dstr, pick=pick, pick_index=e['index'], pick_etf=e['etf'], pick_fund=e['fund'], pick_isin=e['isin'],
-                              pick_r52=round(float(row[pick]) * 100, 1), switched=switched, prev_pick=E[prev_pick]['index'] if prev_pick else None,
+                              pick_r52=round(float(row[pick]) * 100, 1), pick_score=round(float(srow[pick]), 2), pick_vol=round(float(vrow[pick]) * 100, 1), switched=switched, prev_pick=E[prev_pick]['index'] if prev_pick else None,
                               leader=E[leader]['index'], pick_reason=reason, universe=uname, rank_method=method,
                               amount=amount, tier=tier,
                               reason=f"MSCI World {dd * 100:.1f}% from its record; {'above' if wv >= tr else 'below'} its 40-week line; VIX {v:.1f}; NFCI {nf:.2f}; Sahm {sa:.2f}.",

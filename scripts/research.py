@@ -195,39 +195,58 @@ if f is not None:
     except Exception as e: log('WARN momentum overlay', e)
 
 def rotation(df):
-    """The weekly index pick tested on 35 years of regional data (monthly, US dollars):
-    each month hold the region with the best 12-month return; with a 5-point buffer the pick only
-    changes when a challenger leads by more than 5 percentage points."""
+    """The weekly index pick tested on 35 years of regional data (monthly, US dollars).
+    Current rule: each month hold the region with the best return per unit of risk (12-month return / 12-month volatility);
+    a challenger must beat the current pick's score by more than 0.25. Also tests the previous rule (12-month return,
+    5-point buffer) and other variants, with the results split into 1991-2008 and 2009-today."""
     regs = [k for k in ['US', 'Europe', 'Japan', 'AsiaPac', 'Emerging'] if k in df]
     d = df[regs + (['Developed'] if 'Developed' in df else [])].dropna()
-    r12 = (1 + d[regs]).rolling(12).apply(np.prod, raw=True) - 1
-    res, picks = {}, {}
-    for name, buf in [('buffer', 0.05), ('nobuf', 0.0)]:
-        held, out, path = None, [], []
+    lvl = (1 + d).cumprod()
+    r12 = lvl[regs] / lvl[regs].shift(12) - 1
+    r6 = lvl[regs] / lvl[regs].shift(6) - 1
+    sc = r12 / (d[regs].rolling(12).std() * np.sqrt(12))
+    ma10 = lvl.rolling(10).mean()
+    def path(score, buf, trend=False):
+        held, out, picks = None, [], []
         for i in range(12, len(d) - 1):
-            row = r12.iloc[i]; lead = row.idxmax()
+            row = score.iloc[i]
+            if row.isna().any(): continue
+            lead = row.idxmax()
             if held is None or row[lead] - row[held] > buf: held = lead
-            path.append(held); out.append(d[held].iloc[i + 1])
-        res[name] = pd.Series(out, index=d.index[13:]); picks[name] = path
+            hold = held
+            if trend and lvl[held].iloc[i] < ma10[held].iloc[i] and 'Developed' in d: hold = 'Developed'
+            picks.append(held); out.append((d.index[i + 1], d[hold].iloc[i + 1]))
+        return pd.Series([r for _, r in out], index=[t for t, _ in out]), picks
+    def st(r, path_=None):
+        eq = (1 + r).cumprod(); n = len(r)
+        cg = lambda x: round((float((1 + x).prod()) ** (12 / len(x)) - 1) * 100, 1) if len(x) else None
+        return dict(cagr=round((eq.iloc[-1] ** (12 / n) - 1) * 100, 1), max_dd=round(float((eq / eq.cummax() - 1).min()) * 100, 1),
+                    vol=round(float(r.std() * np.sqrt(12) * 100), 1), sharpe=round(float(r.mean() / r.std() * np.sqrt(12)), 2),
+                    switches_per_year=None if path_ is None else round(sum(1 for a, b in zip(path_, path_[1:]) if a != b) / (n / 12), 1),
+                    first_half=cg(r[r.index < '200901']), second_half=cg(r[r.index >= '200901']), start=r.index[0], end=r.index[-1])
+    variants = [('pick', 'Return per unit of risk, 0.25 buffer (current rule)', sc, 0.25, False), ('old', '12-month return, 5-point buffer (previous rule)', r12, 0.05, False),
+                ('ret_nobuf', '12-month return, no buffer', r12, 0.0, False), ('ret26', '6-month return, 5-point buffer', r6, 0.05, False),
+                ('ret_buf10', '12-month return, 10-point buffer', r12, 0.10, False), ('riskadj_nobuf', 'Return per unit of risk, no buffer', sc, 0.0, False),
+                ('trend', '12-month return, 5-point buffer, developed world when below its 10-month line', r12, 0.05, True)]
+    res = {}
+    for k, nm, score, buf, tr in variants: res[k] = (nm,) + path(score, buf, tr)
+    ix = res['pick'][1].index
     rows = []
     labels = {'US': 'Hold North America', 'Europe': 'Hold Europe', 'Japan': 'Hold Japan', 'AsiaPac': 'Hold Asia Pacific ex-Japan', 'Emerging': 'Hold Emerging markets', 'Developed': 'Hold Developed world'}
-    def st(key, nm, r, path=None):
-        eq = (1 + r).cumprod(); n = len(r)
-        sw = None if path is None else round(sum(1 for a, b in zip(path, path[1:]) if a != b) / (n / 12), 1)
-        rows.append(dict(key=key, strategy=nm, cagr=round((eq.iloc[-1] ** (12 / n) - 1) * 100, 1), max_dd=round(float((eq / eq.cummax() - 1).min()) * 100, 1),
-                         vol=round(float(r.std() * np.sqrt(12) * 100), 1), switches_per_year=sw, start=r.index[0], end=r.index[-1]))
-    st('pick', 'Momentum pick, 5-point buffer', res['buffer'], picks['buffer'])
-    st('nobuf', 'Momentum pick, no buffer', res['nobuf'], picks['nobuf'])
+    rows.append(dict(key='pick', strategy='IndexPilot pick (return per unit of risk)', **st(res['pick'][1], res['pick'][2])))
+    rows.append(dict(key='old', strategy='Previous rule (12-month return, 5-point buffer)', **st(res['old'][1], res['old'][2])))
+    rows.append(dict(key='nobuf', strategy='Best score each month, no buffer', **st(res['riskadj_nobuf'][1], res['riskadj_nobuf'][2])))
     for k in regs + (['Developed'] if 'Developed' in d else []):
-        st(k, labels[k], d[k].loc[res['buffer'].index])
-    save('hist_rotation', rows, 'Index pick on 35 years of regional data', 'Monthly test of the momentum index pick across North America, Europe, Japan, Asia Pacific ex-Japan and emerging markets (US dollars, Kenneth French data library).')
+        rows.append(dict(key=k, strategy=labels[k], **st(d[k].loc[ix])))
+    save('hist_rotation', rows, 'Index pick on 35 years of regional data', 'Monthly test of the index pick across North America, Europe, Japan, Asia Pacific ex-Japan and emerging markets (US dollars, Kenneth French data library).')
+    save('hist_rotation_variants', [dict(key=k, rule=v[0], **{kk: vv for kk, vv in st(v[1], v[2]).items() if kk not in ('start', 'end', 'vol')}) for k, v in res.items()],
+         'Index-pick variants on regional data', 'Each rule variant tested monthly 1991-today on regional data, with results for 1991-2008 and 2009-today.')
     dec = []
-    ix = res['buffer'].index
     for dd_, g in pd.Series(ix, index=ix).groupby(ix.str[:3]):
         m = list(g.index); k = 12 / len(m)
         cg = lambda r: round((float((1 + r.loc[m]).prod()) ** k - 1) * 100, 1)
-        dec.append(dict(decade=dd_ + '0s', pick=cg(res['buffer']), nobuf=cg(res['nobuf']), world=cg(d['Developed']) if 'Developed' in d else None, us=cg(d['US'])))
-    save('hist_rotation_decades', dec, 'Index pick by decade', 'Yearly return by decade of the momentum index pick vs holding the developed world or North America.')
+        dec.append(dict(decade=dd_ + '0s', pick=cg(res['pick'][1]), nobuf=cg(res['old'][1]), world=cg(d['Developed']) if 'Developed' in d else None, us=cg(d['US'])))
+    save('hist_rotation_decades', dec, 'Index pick by decade', 'Yearly return by decade of the index pick, the previous rule, the developed world and North America.')
 
 
 # ------------------------------------------------------------ regional markets

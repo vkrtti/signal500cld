@@ -12,8 +12,8 @@
   "updated": "2026-10-11T20:06:59Z"
  },
  "meter_now": {
-  "title": "Signal strength",
-  "description": "The \u2212100\u2026+100 meter and its six components (MSCI World trend and discount, VIX, NFCI, Sahm, yield curve).",
+  "title": "Market meter",
+  "description": "The \u2212100\u2026+100 market meter and its six components (MSCI World trend and discount, VIX, NFCI, Sahm, yield curve). Descriptive only.",
   "refresh": "weekly",
   "updated": "2026-10-11T20:06:59Z"
  },
@@ -115,7 +115,7 @@
  },
  "index_rank": {
   "title": "This week's index ranking",
-  "description": "Six euro-listed index ETFs ranked by 52-week return in euros, with the main index pick (5-point buffer).",
+  "description": "Six euro-listed index ETFs scored by return per unit of risk (52-week return \u00f7 volatility), with the main index pick (0.25 buffer).",
   "refresh": "weekly",
   "updated": "2026-10-11T20:06:59Z"
  },
@@ -198,9 +198,19 @@
   "updated": "2026-10-11T20:07:28Z"
  },
  "meter_test": {
-  "title": "Meter vs the next year",
+  "title": "Market meter vs the next year",
   "description": "Average MSCI World ETF return over the next 4 and 52 weeks for each meter reading, weekly 2012-today.",
   "refresh": "weekly",
   "updated": "2026-10-11T20:06:59Z"
+ },
+ "ip_variants": {
+  "title": "Index-pick variants (ETF)",
+  "description": "Each rule variant tested weekly 2012-today on the six ETFs in euros, with results for 2012-18 and 2019-today.",
+  "refresh": "weekly"
+ },
+ "hist_rotation_variants": {
+  "title": "Index-pick variants (regional)",
+  "description": "Each rule variant tested monthly 1991-today on regional data, with results for 1991-2008 and 2009-today.",
+  "refresh": "weekly"
  }
 }

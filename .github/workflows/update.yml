@@ -4,6 +4,7 @@ on:
   schedule:
     - cron: '30 22 * * 1-5'   # every weekday after the US close (22:30 UTC)
     - cron: '0 6 * * 6'       # Saturday 06:00 UTC: weekly roll (main index pick, buy amount, meter, stock picks, demo account)
+    - cron: '0 6 * * 0'       # Sunday 06:00 UTC: retry of the weekly roll (does nothing new if Saturday worked)
   workflow_dispatch:
     inputs:
       weekly:
@@ -26,10 +27,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install pandas numpy yfinance
+      - run: pip install pandas numpy yfinance || (sleep 20 && pip install pandas numpy yfinance)
       - name: Update data
         run: |
-          if [ "${{ github.event.schedule }}" = "0 6 * * 6" ] || [ "${{ inputs.weekly }}" = "true" ]; then
+          if [ "${{ github.event.schedule }}" = "0 6 * * 6" ] || [ "${{ github.event.schedule }}" = "0 6 * * 0" ] || [ "${{ inputs.weekly }}" = "true" ]; then
             python scripts/update.py --weekly
           else
             python scripts/update.py
@@ -38,7 +39,7 @@ jobs:
         continue-on-error: true
         run: python scripts/news.py docs/data
       - name: Long-history research (Saturday / manual weekly runs)
-        if: github.event.schedule == '0 6 * * 6' || inputs.weekly == true
+        if: github.event.schedule == '0 6 * * 6' || github.event.schedule == '0 6 * * 0' || inputs.weekly == true
         continue-on-error: true
         run: python scripts/research.py
       - name: Write run summary

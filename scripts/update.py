@@ -89,22 +89,24 @@ if 'VIXCLS' in S:
     v, d = last(S['VIXCLS']); setk('vix', v, f'{v:.1f}', 'good' if v >= 30 else 'warn' if v >= 20 else 'neutral', d,
                                   'Panic: historically a good entry.' if v >= 30 else 'Nervous.' if v >= 20 else 'Calm. No panic discount.')
 if 'T10Y3M' in S:
-    v, d = last(S['T10Y3M']); setk('curve', v, f'{v:+.2f} pp', 'good' if v >= 0 else 'bad', d)
+    v, d = last(S['T10Y3M']); setk('curve', v, f'{v:+.2f} pp', 'good' if v >= 0 else 'bad', d, 'Positive: no recession warning from bonds.' if v >= 0 else 'Inverted: long rates below short rates, a classic recession warning.')
 if 'SAHMREALTIME' in S:
-    v, d = last(S['SAHMREALTIME']); setk('sahm', v, f'{v:.2f}', 'bad' if v >= 0.5 else 'warn' if v >= 0.3 else 'good', d)
+    v, d = last(S['SAHMREALTIME']); setk('sahm', v, f'{v:.2f}', 'bad' if v >= 0.5 else 'warn' if v >= 0.3 else 'good', d, 'Recession signal: unemployment has risen fast.' if v >= 0.5 else 'Unemployment is rising; close to the warning level.' if v >= 0.3 else 'Unemployment is not rising fast enough to signal a recession.')
 if 'UNRATE' in S:
-    v, d = last(S['UNRATE']); setk('unrate', v, f'{v:.1f}%', 'neutral', d)
+    u = S['UNRATE']; v, d = last(u); prev = float(u.iloc[-13]) if len(u) > 13 else v
+    setk('unrate', v, f'{v:.1f}%', 'neutral', d, f'{v - prev:+.1f} points vs a year ago.')
 if 'BAMLH0A0HYM2' in S:
-    v, d = last(S['BAMLH0A0HYM2']); setk('hy', v, f'{v:.2f} pp', 'bad' if v >= 5 else 'warn' if v >= 4 else 'good', d)
+    v, d = last(S['BAMLH0A0HYM2']); setk('hy', v, f'{v:.2f} pp', 'bad' if v >= 5 else 'warn' if v >= 4 else 'good', d, 'Credit stress: lenders demand a high premium.' if v >= 5 else 'Somewhat elevated risk premium.' if v >= 4 else 'Lenders see little default risk.')
 if 'NFCI' in S:
-    v, d = last(S['NFCI']); setk('nfci', v, f'{v:.2f}', 'bad' if v > 0 else 'good', d)
+    v, d = last(S['NFCI']); setk('nfci', v, f'{v:.2f}', 'bad' if v > 0 else 'good', d, 'Tighter than average: money is harder to get.' if v > 0 else 'Looser than average: money is easy to get.')
 if 'DFF' in S:
-    v, d = last(S['DFF']); setk('fed', v, f'{v:.2f}%', None, d)
+    f_ = S['DFF']; v, d = last(f_); p_ = float(f_[f_.index <= f_.index[-1] - pd.Timedelta(days=180)].iloc[-1]) if len(f_) > 200 else v
+    setk('fed', v, f'{v:.2f}%', 'warn' if v > p_ + 0.1 else 'good' if v < p_ - 0.1 else 'neutral', d, f'{"Up" if v > p_ + 0.1 else "Down" if v < p_ - 0.1 else "Unchanged"} vs six months ago ({p_:.2f}%).')
 if 'DGS10' in S:
-    v, d = last(S['DGS10']); setk('ten', v, f'{v:.2f}%', 'bad' if v >= 5 else 'warn' if v >= 4.5 else 'neutral', d)
+    v, d = last(S['DGS10']); setk('ten', v, f'{v:.2f}%', 'bad' if v >= 5 else 'warn' if v >= 4.5 else 'neutral', d, 'High: safe bonds compete hard with stocks.' if v >= 4.5 else 'Moderate long-term rates.')
 if 'CPIAUCSL' in S:
     c = S['CPIAUCSL']; yoy = c.iloc[-1] / c[c.index <= c.index[-1] - pd.DateOffset(months=12)].iloc[-1] - 1
-    setk('cpi', round(yoy * 100, 2), f'{yoy * 100:.1f}%', 'warn' if yoy > 0.025 else 'good', c.index[-1].strftime('%Y-%m-%d'))
+    setk('cpi', round(yoy * 100, 2), f'{yoy * 100:.1f}%', 'warn' if yoy > 0.025 else 'good', c.index[-1].strftime('%Y-%m-%d'), 'Above the Fed\'s 2% target.' if yoy > 0.025 else 'Close to the Fed\'s 2% target.')
 if ind: save('indicators', ind)
 
 # ---------------------------------------------------------------- daily: markets table
@@ -140,17 +142,31 @@ for sid, key, name, group, unit, note in [('NASDAQCOM', 'nasdaq', 'Nasdaq Compos
     if sid in S:
         r = market_row(key, name, group, S[sid], unit, note)
         if r: mk.append(r)
-if mk: save('markets', [m for m in mk if m])
+if mk:
+    # keep last known rows for any market whose source failed today, so a failed download never removes it
+    have = {m['key'] for m in mk if m}
+    kept = [dict(r, note=(r.get('note') or '') + (' ' if r.get('note') else '') + '(not updated: source unavailable)') if '(not updated' not in (r.get('note') or '') else r
+            for r in (load('markets', []) or []) if r.get('key') not in have]
+    if kept: log('WARN markets kept from last run:', [r['key'] for r in kept])
+    save('markets', [m for m in mk if m] + kept)
 
 # ---------------------------------------------------------------- weekly roll (Saturday run)
 if args.weekly:
     need = ['SP500', 'VIXCLS', 'NFCI', 'SAHMREALTIME', 'T10Y3M']
     if not fund_ok or any(k not in S for k in need):
         log('ERROR weekly roll skipped: missing', [k for k in need if k not in S], 'fundamentals' if not fund_ok else '')
-        sys.exit(1)
+        print('::error::Weekly roll skipped: a data source failed. Last week\'s decision is kept; the Sunday retry will try again.')
+        open('work/summary.md', 'w').write('### Weekly roll skipped\n\nA data source failed; previous data kept.\n')
+        sys.exit(0)
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     import indexpilot
-    out, summary = indexpilot.run(S, D, args.research, 'work/fin.csv', 'work/cons.csv', log, args.offline)
+    try:
+        out, summary = indexpilot.run(S, D, args.research, 'work/fin.csv', 'work/cons.csv', log, args.offline)
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        print(f'::error::Weekly roll failed ({e}). Nothing was overwritten; the Sunday retry will try again.')
+        open('work/summary.md', 'w').write(f'### Weekly roll failed\n\n{e}\n\nNothing was overwritten.\n')
+        sys.exit(0)
     for n, obj in out.items(): save(n, obj)
     # archive this week's prices of the ranked stocks (our own price history for testing the picks later)
     try:
