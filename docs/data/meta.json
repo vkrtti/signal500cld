@@ -17,18 +17,6 @@
   "refresh": "weekly",
   "updated": "2026-10-11T18:06:40Z"
  },
- "rank_top": {
-  "title": "US screen: top 50",
-  "description": "Value + momentum ranking of S&P 500 members (US research), decided each Friday close.",
-  "refresh": "weekly",
-  "updated": "2026-10-11T18:06:40Z"
- },
- "rank_bottom": {
-  "title": "US screen: bottom 50",
-  "description": "Same ranking, lowest first.",
-  "refresh": "weekly",
-  "updated": "2026-10-11T18:06:40Z"
- },
  "demo_positions": {
   "title": "Demo: holdings",
   "description": "The demo account's current holdings: 70% main-index ETF, 30% in its 3 strongest stocks, valued in euros.",
@@ -42,92 +30,14 @@
   "updated": "2026-10-11T18:06:40Z"
  },
  "indicators": {
-  "title": "Market indicators",
-  "description": "Trend, fear, recession, credit, rates and valuation readings. FRED (daily); FactSet, multpl.com, AAII and LPL Research (as of 9 Oct 2026, not auto-updated).",
+  "title": "Market gauges",
+  "description": "Nine US stress and rate readings from the Federal Reserve (VIX, yield curve, Sahm rule, credit spread, NFCI, Fed funds, 10Y yield, CPI, unemployment).",
   "refresh": "daily",
   "updated": "2026-10-11T18:06:40Z"
- },
- "signal_now": {
-  "title": "Monthly signal",
-  "description": "Rule-based monthly signal from FRED data.",
-  "refresh": "daily",
-  "updated": "2026-10-11T18:06:40Z"
- },
- "spx_weekly": {
-  "title": "S&P 500 weekly closes",
-  "description": "Last two years. FRED SP500.",
-  "refresh": "daily",
-  "updated": "2026-10-11T18:06:40Z"
- },
- "history": {
-  "title": "Monthly history 1990\u20132026",
-  "description": "Shiller S&P 500 data, VIX and FRED macro series with backtest values. Static research data.",
-  "refresh": "static",
-  "updated": "2026-10-11T15:55:00Z"
- },
- "backtest": {
-  "title": "Backtest results",
-  "description": "\u20ac500/month strategies, 1990\u20132026. Static research data.",
-  "refresh": "static",
-  "updated": "2026-10-11T15:55:00Z"
- },
- "fwd_by_signal": {
-  "title": "Returns after signals",
-  "description": "Static research data, 1990\u20132025.",
-  "refresh": "static",
-  "updated": "2026-10-11T15:55:00Z"
- },
- "cape_buckets": {
-  "title": "CAPE vs 10-year returns",
-  "description": "Shiller data 1881\u20132013. Static.",
-  "refresh": "static",
-  "updated": "2026-10-11T15:55:00Z"
- },
- "stocks_top": {
-  "title": "Value + momentum leaders (screen)",
-  "description": "Snapshot 11 Oct 2026.",
-  "refresh": "static",
-  "updated": "2026-10-11T15:55:00Z"
- },
- "stocks_fallen": {
-  "title": "Fallen but cheap (screen)",
-  "description": "Snapshot 11 Oct 2026.",
-  "refresh": "static",
-  "updated": "2026-10-11T15:55:00Z"
- },
- "sectors": {
-  "title": "Sector medians",
-  "description": "Snapshot 11 Oct 2026.",
-  "refresh": "static",
-  "updated": "2026-10-11T15:55:00Z"
- },
- "news": {
-  "title": "Market news",
-  "description": "Hand-picked, as of 9 Oct 2026; not auto-updated.",
-  "refresh": "static",
-  "updated": "2026-10-11T15:55:00Z"
  },
  "weekly_tiers": {
   "title": "Weekly amount rule",
   "description": "The five tiers.",
-  "refresh": "static",
-  "updated": "2026-10-11T15:55:00Z"
- },
- "weekly_test": {
-  "title": "Weekly rule vs flat",
-  "description": "Backtest. Static.",
-  "refresh": "static",
-  "updated": "2026-10-11T15:55:00Z"
- },
- "meter_buckets": {
-  "title": "Meter vs next returns",
-  "description": "Backtest 1990\u20132026. Static.",
-  "refresh": "static",
-  "updated": "2026-10-11T15:55:00Z"
- },
- "demo_backtest": {
-  "title": "Demo index leg backtest",
-  "description": "Static.",
   "refresh": "static",
   "updated": "2026-10-11T15:55:00Z"
  },
@@ -187,7 +97,7 @@
  },
  "markets": {
   "title": "Markets today",
-  "description": "S&P 500 (also in euros), Nasdaq, Dow, Nikkei 225, EUR/USD, dollar index, Brent oil and Bitcoin. Federal Reserve (FRED).",
+  "description": "Major indexes, currencies and commodities from the Federal Reserve (FRED), updated every weekday.",
   "refresh": "daily",
   "updated": "2026-10-11T18:06:40Z"
  },
@@ -277,7 +187,7 @@
  },
  "demo_value": {
   "title": "Demo account value",
-  "description": "The EUR 1,000 demo account's value each Friday close next to the same EUR 1,000 in the MSCI World ETF.",
+  "description": "The demo account's value each Friday close, the money deposited (EUR 1,000 a week) and the same deposits in the MSCI World ETF.",
   "refresh": "weekly",
   "updated": "2026-10-11T18:06:40Z"
  },
@@ -286,5 +196,10 @@
   "description": "Yearly return and worst fall of the US market, the demo account mix (70% market + 30% top-decile momentum stocks), all-momentum and a long/short version, by period (Kenneth French data library, before costs).",
   "refresh": "weekly",
   "updated": "2026-10-11T18:07:17Z"
+ },
+ "meter_test": {
+  "title": "Meter vs the next year",
+  "description": "Average MSCI World ETF return over the next 4 and 52 weeks for each meter reading, weekly 2012-today.",
+  "refresh": "weekly"
  }
 }

@@ -160,6 +160,44 @@
 .sx .news .meta{font-size:12px;color:var(--muted)}
 .sx .strip{display:flex;height:18px;border-radius:5px;overflow:hidden;margin:6px 0 4px}
 .sx .strip i{display:block;height:100%}
+/* research sub-navigation */
+.sx .subtabs{padding:14px 0 0;gap:4px 18px}
+.sx .subtabs button{font-size:15px}
+.sx details.whyus{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:12px 0;font-size:13px;color:var(--muted)}
+.sx details.whyus summary{cursor:pointer;font-weight:700;color:var(--color-fg)}
+.sx details.whyus p{margin:8px 0 0;line-height:1.55}
+/* Ask IndexPilot AI */
+.sx .askbar{position:fixed;left:50%;bottom:48px;transform:translateX(-50%);z-index:20;display:flex;align-items:center;gap:10px;width:min(560px,calc(100vw - 32px));padding:10px 12px 10px 16px;border-radius:16px;
+  background:color-mix(in srgb,var(--color-bg) 78%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 12%,transparent),0 8px 30px color-mix(in srgb,var(--accent) 28%,transparent);cursor:text;color:var(--muted);font:inherit;font-size:14px;font-weight:600;text-align:left}
+.sx .askbar .spark{width:18px;height:18px;flex:none;color:var(--accent)}
+.sx .askbar .lbl2{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sx .askbar kbd{font:inherit;font-size:12px;font-weight:700;color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 55%,transparent);border-radius:8px;padding:2px 8px;background:color-mix(in srgb,var(--accent) 12%,transparent);white-space:nowrap}
+.sx .askbar .hide{background:none;border:0;color:var(--muted);cursor:pointer;padding:2px;display:flex}
+.sx .askmini{position:fixed;right:16px;bottom:48px;z-index:20;width:44px;height:44px;border-radius:50%;border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));background:var(--panel);color:var(--accent);cursor:pointer;box-shadow:0 6px 20px color-mix(in srgb,var(--accent) 25%,transparent);display:flex;align-items:center;justify-content:center}
+.sx .askpanel{position:fixed;z-index:30;right:16px;bottom:16px;width:min(440px,calc(100vw - 32px));height:min(640px,calc(100vh - 32px));display:flex;flex-direction:column;background:var(--color-bg);border:1px solid color-mix(in srgb,var(--accent) 40%,var(--line));border-radius:18px;box-shadow:0 18px 60px rgba(0,0,0,.35);overflow:hidden}
+.sx .askpanel[hidden],.sx .askbar[hidden],.sx .askmini[hidden]{display:none}
+.sx .askhead{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line);font-weight:800}
+.sx .askhead .mode{font-size:11px;font-weight:700;color:var(--muted);background:var(--panel);border-radius:6px;padding:2px 8px;margin-left:4px}
+.sx .askhead .sp{flex:1}
+.sx .askhead button{background:none;border:0;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:4px}
+.sx .asklog{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.sx .msg{max-width:92%;padding:10px 12px;border-radius:14px;font-size:13.5px;line-height:1.5;white-space:pre-wrap;word-wrap:break-word}
+.sx .msg.me{align-self:flex-end;background:var(--accent);color:#fff;border-bottom-right-radius:4px}
+.sx .msg.bot{align-self:flex-start;background:var(--panel);border:1px solid var(--line);border-bottom-left-radius:4px}
+.sx .msg.bot .go{display:inline-flex;margin:8px 6px 0 0;font:inherit;font-size:12px;font-weight:700;border:1px solid var(--line);background:var(--color-bg);color:var(--accent);border-radius:999px;padding:4px 10px;cursor:pointer}
+.sx .msg.bot .src{display:block;margin-top:6px;font-size:11px;color:var(--muted)}
+.sx .msg.bot.wait{color:var(--muted)}
+.sx .asksug{display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 10px}
+.sx .asksug button{font:inherit;font-size:12px;font-weight:600;border:1px solid var(--line);background:var(--panel);color:var(--color-fg);border-radius:999px;padding:5px 10px;cursor:pointer}
+.sx .askform{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line)}
+.sx .askform input{flex:1;font:inherit;font-size:14px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--color-fg);min-width:0}
+.sx .askform button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:0 14px;background:var(--accent);color:#fff;cursor:pointer}
+.sx .askset{padding:10px 14px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);display:none}
+.sx .askset.on{display:block}
+.sx .askset input{width:100%;margin:6px 0;font:inherit;font-size:12px;padding:8px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--color-fg)}
+.sx .askset button{font:inherit;font-size:12px;font-weight:700;border:1px solid var(--line);background:var(--panel);color:var(--color-fg);border-radius:8px;padding:5px 10px;cursor:pointer;margin-right:6px}
+@media (max-width:640px){.sx .askbar{bottom:44px;padding:8px 10px 8px 12px}.sx .askbar kbd{display:none}.sx .askpanel{right:8px;left:8px;bottom:8px;width:auto;height:calc(100vh - 16px)}}
 [data-dash-source-state=refreshing]{opacity:.5;transition:opacity var(--cds-dur-slow)}
 .sx .gauge-box{position:relative;min-height:200px;display:flex;justify-content:center}
 .sx .gauge-box.mini{min-height:96px}
@@ -168,7 +206,7 @@
 /* bottom status bar */
 .sx .statusbar{position:sticky;bottom:0;z-index:4;display:flex;gap:18px;overflow-x:auto;padding:8px 16px;font-size:12px;color:var(--muted);background:var(--color-bg);border-top:1px solid var(--line);margin-top:24px;scrollbar-width:none;white-space:nowrap}
 .sx .statusbar b{color:var(--color-fg);font-weight:700}
-.sx section[data-page]{padding:0 16px 8px}
+.sx section[data-page]{padding:0 16px 84px}
 </style>
 
 <div class="sx">
@@ -190,10 +228,7 @@
     <button role="tab" data-tab="strategy" id="tab-strategy" aria-selected="false">Strategy</button>
     <button role="tab" data-tab="news" id="tab-news" aria-selected="false">News</button>
     <button role="tab" data-tab="markets" id="tab-markets" aria-selected="false">Markets</button>
-    <button role="tab" data-tab="history" id="tab-history" aria-selected="false">100-year history</button>
-    <button role="tab" data-tab="plans" id="tab-plans" aria-selected="false">US: return plans</button>
-    <button role="tab" data-tab="signal" id="tab-signal" aria-selected="false">US: signal</button>
-    <button role="tab" data-tab="backtest" id="tab-backtest" aria-selected="false">US: backtest</button>
+    <button role="tab" data-tab="research" id="tab-research" aria-selected="false">Research</button>
   </div>
 
   <!-- ================= OVERVIEW ================= -->
@@ -240,9 +275,9 @@
       </div>
       <div class="exrec">
         <span>Track record: <b data-source="extra_summary" data-field="value" data-where="metric=Weeks">—</b> weeks</span>
-        <span>Profit/loss: <b data-source="extra_summary" data-field="value" data-where="metric=Total P/L (€)">—</b> €</span>
+        <span>Return: <b data-source="extra_summary" data-field="value" data-where="metric=Total return (%25)">—</b>%</span>
         <span>Win rate: <b data-source="extra_summary" data-field="value" data-where="metric=Win rate (%25)">—</b>%</span>
-        <span>Stake: €83 per stock, €500 a week in total</span>
+        <span>Weights: % of your money per side</span>
       </div>
     </div>
 
@@ -342,13 +377,13 @@
   <!-- ================= MARKETS ================= -->
   <section id="markets" data-page hidden>
     <h1 class="ttl">Markets</h1>
-    <p class="lede">Major indexes, the S&amp;P 500 as a euro investor sees it, currencies and commodities, updated every weekday after the US close. Then 36 years of stock markets around the world.</p>
+    <p class="lede">Major stock indexes, currencies and commodities, updated every weekday after the US close. Then 36 years of stock markets around the world.</p>
     <div class="tbl tall">
       <table id="mk-table" data-source="markets" data-row-key="key">
         <thead><tr><th data-field="name">Market</th><th data-field="last" class="n">Last</th><th data-field="w1" class="n">1 week</th><th data-field="w4" class="n">4 weeks</th><th data-field="ytd" class="n">This year</th><th data-field="y1" class="n">1 year</th><th data-field="from_high_52w" class="n">From 52w high</th><th data-field="trend">200-day trend</th><th data-field="spark">Last 52 weeks</th></tr></thead>
         <tbody></tbody></table>
     </div>
-    <p class="note" style="margin-top:6px">Changes in %, price only. Source: Federal Reserve (FRED). The S&amp;P 500 in euros is the index divided by the EUR/USD rate.</p>
+    <p class="note" style="margin-top:6px">Changes in %, price only. Source: Federal Reserve (FRED). The six ETFs IndexPilot picks from, in euros, are on the Index pick page.</p>
 
     <h2 id="mk-long-h">Long-run record</h2>
     <div class="card tbl">
@@ -372,8 +407,10 @@
 
   <!-- ================= 100-YEAR HISTORY ================= -->
   <section id="history" data-page hidden>
+    <div class="tabs subtabs" role="tablist" aria-label="Research"><button role="tab" data-go="history" aria-selected="true">100 years of data</button><button role="tab" data-go="plans" aria-selected="false">10/20/30% plans</button><button role="tab" data-go="gauges" aria-selected="false">Market gauges</button></div>
+    <details class="whyus"><summary>Why is the research based on US data?</summary><p>IndexPilot itself works on six indexes worldwide. This research section is background: it uses US data because the US is the only market with free, reliable monthly data back to 1927 (Kenneth French data library), and because 2x/3x leveraged funds that a euro investor can buy exist mainly for US indexes. The gauges are American because US recessions, credit stress and the VIX move every stock market in the world. None of it decides which index you buy; it explains why the rules are built the way they are.</p></details>
     <h1 class="ttl">100 years of evidence</h1>
-    <p class="lede">The strategy's methods tested on US stock market returns since January 1927: the 1929 crash, the 1930s, WWII, 1970s inflation, 2000, 2008, 2020 and 2022. Monthly total returns from the Kenneth French data library, the standard dataset of academic finance.</p>
+    <p class="lede">IndexPilot's ideas (buy more after falls, avoid leverage, favour momentum) tested on US stock market returns since January 1927: the 1929 crash, the 1930s, WWII, 1970s inflation, 2000, 2008, 2020 and 2022. Monthly total returns from the Kenneth French data library, the standard dataset of academic finance.</p>
 
     <h2 id="h-plans-h">The 10/20/30% plans since 1927</h2>
     <div class="card tbl">
@@ -467,21 +504,21 @@
     <div class="card">
       <p class="note">Weekly meter reading. Shaded bands: sell zone below −10, strong-buy zone above +40.</p>
       <div class="chart" id="meter-chart" data-source="weekly_history" style="min-height:220px"></div>
-      <table id="mb-table" data-source="meter_buckets" data-row-key="bucket" style="margin-top:var(--cds-gap-md)">
-        <thead><tr><th data-field="bucket">Meter reading (US version, monthly 1990–2026)</th><th data-field="months" class="n">Months</th><th data-field="next_month_avg_pct" class="n">S&amp;P next month, avg (%)</th><th data-field="next_12m_avg_pct" class="n">Next 12 months, avg (%)</th></tr></thead>
+      <table id="mb-table" data-source="meter_test" data-row-key="bucket" style="margin-top:var(--cds-gap-md)">
+        <thead><tr><th data-field="bucket">Meter reading (weekly, 2012–today)</th><th data-field="weeks" class="n">Weeks</th><th data-field="next_4w" class="n">MSCI World next 4 weeks, avg (%)</th><th data-field="next_52w" class="n">Next 52 weeks, avg (%)</th><th data-field="up_52w" class="n">Up after 52 weeks (% of weeks)</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
 
     <h2 id="wk-test-h">Does varying the amount beat a flat weekly amount?</h2>
-    <p class="note">2012–today on the MSCI World ETF: rule <b data-source="ip_buying" data-field="irr" data-where="plan=Weekly rule into MSCI World">—</b>%/yr vs flat <b data-source="ip_buying" data-field="irr" data-where="plan=Flat amount into MSCI World">—</b>%/yr with the same total. Longer US tests below. Money-weighted yearly return (price only), counting when each euro went in. A small but consistent edge; the main benefit is buying more in crashes, when most people stop.</p>
     <div class="card tbl">
-      <table id="wk-test" data-source="weekly_test" data-row-key="period">
-        <thead><tr><th data-field="period">US test period</th><th data-field="rule_irr" class="n">Variable rule (%/yr)</th><th data-field="flat_irr" class="n">Flat amount (%/yr)</th><th data-field="diff" class="n">Difference (pp)</th><th data-field="avg_weekly" class="n">Avg weekly (€)</th><th data-field="data">Data</th></tr></thead>
+      <table id="wk-test" data-source="ip_buying" data-row-key="plan">
+        <thead><tr><th data-field="plan">Weekly buying, 2012–today</th><th data-field="invested" class="n">Invested (€)</th><th data-field="value" class="n">Worth now (€)</th><th data-field="irr" class="n">Per year (%)</th></tr></thead>
         <tbody></tbody>
       </table>
+      <p class="note" style="margin-top:8px">Money-weighted: each euro counts from the week it went in. The flat line invests the rule's average every week, so both spend the same total. The edge from varying the amount is small; the bigger effect comes from what you buy (the pick). The 100-year test is under Research.</p>
     </div>
-    <div class="warnbox">Budget check: the rule averaged about €80–110 a week, but in a 2008-style crash it asks for €200 every week for over a year (around €13,000). Only follow it if you could keep that up. Not financial advice.</div>
+    <div class="warnbox">Budget check: in calm markets the rule asks for €60 a week, but in a 2008-style crash it asks for €200 every week for over a year (around €13,000). Only follow it if you could keep that up. Not financial advice.</div>
   </section>
 
   <!-- ================= STRATEGY ================= -->
@@ -500,7 +537,7 @@
     </div>
 
     <div class="toc">
-      <a class="chip" href="#s-routine">Weekly routine</a><a class="chip" href="#s-pick">Index pick</a><a class="chip" href="#s-amount">Weekly amount</a><a class="chip" href="#s-meter">Signal meter</a><a class="chip" href="#s-trend">Trend rule &amp; plans</a><a class="chip" href="#s-monthly">Monthly signal</a><a class="chip" href="#s-ind">Indicators</a><a class="chip" href="#s-val">Valuation</a><a class="chip" href="#s-rank">Stock ranking</a><a class="chip" href="#s-extra">Extra profit &amp; demo</a><a class="chip" href="#s-test">How it was tested</a><a class="chip" href="#s-risk">Risk management</a><a class="chip" href="#s-data">Data &amp; updates</a><a class="chip" href="#s-limits">Limits</a><a class="chip" href="#history" data-go="history">100-year history</a>
+      <a class="chip" href="#s-routine">Weekly routine</a><a class="chip" href="#s-pick">Index pick</a><a class="chip" href="#s-amount">Weekly amount</a><a class="chip" href="#s-meter">Signal meter</a><a class="chip" href="#s-ind">Market gauges</a><a class="chip" href="#s-rank">Stock ranking</a><a class="chip" href="#s-extra">Extra profit &amp; demo</a><a class="chip" href="#s-test">How it was tested</a><a class="chip" href="#s-risk">Risk management</a><a class="chip" href="#s-data">Data &amp; updates</a><a class="chip" href="#s-limits">Limits</a><a class="chip" href="#s-trend">Research: plans</a><a class="chip" href="#history" data-go="history">Research: 100 years</a>
     </div>
 
     <h2 id="s-routine">1 · The weekly routine</h2>
@@ -552,12 +589,12 @@ pick            = leader   if momentum(leader) − momentum(current pick) &gt; 5
         <tr><td>Recession (Sahm rule)</td><td class="n">15%</td><td>≥ 0.5: −1 · 0.3–0.5: −0.5 · below 0.3: +0.3</td></tr>
         <tr><td>Yield curve (10Y − 3M)</td><td class="n">10%</td><td>inverted: −0.5 · positive: +0.2</td></tr></tbody></table>
       <p>Labels: ≥ +40 Strong buy · +15 to +40 Buy · −10 to +15 Neutral · −25 to −10 Sell · ≤ −25 Strong sell.</p>
-      <span class="lbl">Evidence (US version, monthly, 1990–2026)</span>
-      <p>Meter ≤ −10: S&amp;P 500 averaged −0.69% the next month (25 months). −10 to +10: +0.30%. +10 to +30: +1.15%. Above +30: +0.82%. Historical range −29 (2008, 2020) to +64. Valuation is deliberately left out: it predicts 10-year returns, not next week's.</p>
+      <span class="lbl">Evidence (weekly, 2012–today)</span>
+      <p>Average MSCI World return over the next 52 weeks by meter reading: neutral <b data-source="meter_test" data-field="next_52w" data-where="bucket=Neutral (−10 to +15)">—</b>%, buy <b data-source="meter_test" data-field="next_52w" data-where="bucket=Buy (+15 to +40)">—</b>%, strong buy <b data-source="meter_test" data-field="next_52w" data-where="bucket=Strong buy (+40 or higher)">—</b>%. The meter is a description of the market, not a timing tool: that's why the demo account stays fully invested whatever it says. Valuation is left out: it predicts 10-year returns, not next week's.</p>
     </div></details>
 
-    <details class="mth" id="s-trend"><summary>US research: 200-day trend rule and the 10/20/30% plans<span class="k">risk control for leverage</span></summary><div class="body">
-      <p><b>Trend line:</b> the average of the last 200 daily closes (the weekly job uses the 40-week average of Friday closes, which tracks it within about 0.3%). Checked once a week at the Friday close.</p>
+    <details class="mth" id="s-trend"><summary>Research: the 10/20/30% plans and the 200-day trend rule<span class="k">not used by IndexPilot</span></summary><div class="body">
+      <p>Kept as research because you asked what 20% or 30% a year would take. Tested on the US market because it has 100 years of data and euro-listed 2x/3x funds. <b>Trend line:</b> the average of the last 200 daily closes (the weekly job uses the 40-week average of Friday closes, which tracks it within about 0.3%). Checked once a week at the Friday close.</p>
       <table><thead><tr><th>Plan</th><th>Holds</th><th>Rule</th><th class="n">1990–2026</th><th class="n">Worst fall</th><th class="n">2017–26 daily</th></tr></thead><tbody>
         <tr><td>10% Steady</td><td>1x S&amp;P 500 ETF</td><td>Weekly amount rule, never sell</td><td class="n">11.0%/yr</td><td class="n">−49%</td><td class="n">14.8%/yr</td></tr>
         <tr><td>20% Growth</td><td>2x daily-leveraged ETF</td><td>Hold above the trend line, cash below</td><td class="n">16.4%/yr</td><td class="n">−38%</td><td class="n">18.9%/yr</td></tr>
@@ -566,19 +603,9 @@ pick            = leader   if momentum(leader) − momentum(current pick) &gt; 5
       <p><b>100-year test (1927–2026, monthly total returns):</b> 1x hold 10.3%/yr, worst fall −84% · 2x + trend rule 11.1%/yr, worst fall −86% · 3x + trend rule 6.8%/yr, worst fall −99.7%. Crashes inside one month (1929–32, May 1940, October 1987) defeat the trend rule. A volatility brake did not fix it (3x still fell about −90%). The leveraged plans are shown for comparison; the evidence does not support them.</p>
     </div></details>
 
-    <details class="mth" id="s-monthly"><summary>US research: monthly market signal (BUY / BUY EXTRA / HOLD)<span class="k">risk gauge</span></summary><div class="body">
-      <p><b>HOLD</b>: monthly price below its 10-month average <b>and</b> (Sahm ≥ 0.5 <b>or</b> NFCI &gt; 0), unless a panic is already easing. <b>BUY EXTRA</b>: 15%+ below the peak or VIX ≥ 30 without worsening credit stress. <b>BUY</b>: everything else. Uses only data known at the end of the previous month.</p>
-      <p><b>Result:</b> €500/month 1990–2026 (€220,500 invested): plain monthly buying €2.58M, trend rule only €2.57M, this signal €2.46M, buy-the-dip €2.31M. No timing rule beat plain buying, because cash waiting on the sidelines cost more than the crashes avoided. But HOLD months were followed by +1.9% on average over 12 months, vs +10.9% after BUY months, so it is kept as a risk gauge, not a reason to stop buying.</p>
-    </div></details>
-
-    <details class="mth" id="s-ind"><summary>Indicator board (19 readings)<span class="k">context</span></summary><div class="body">
-      <p>Grouped as trend (S&amp;P 500, distance from 200-day average and from the record, market breadth), fear (VIX, AAII sentiment), recession risk (yield curve, Sahm rule, unemployment), credit (high-yield spread, NFCI), rates and inflation (Fed funds, 10-year yield, CPI, oil), valuation (forward P/E, CAPE, equity risk premium) and earnings growth. Each gets a status from its usual professional threshold, e.g. VIX ≥ 30 panic, curve below 0 recession warning, Sahm ≥ 0.5 recession signal, high-yield spread above 5 pp stress, NFCI above 0 tight conditions.</p>
-    </div></details>
-
-    <details class="mth" id="s-val"><summary>Valuation: CAPE and the equity risk premium<span class="k">long-term expectations</span></summary><div class="body">
-      <p><b>CAPE</b> = price ÷ 10-year average of inflation-adjusted earnings (Shiller). Average real return over the next 10 years by starting CAPE, 1881–2013: under 10: 11.3%/yr · 15–20: 6.0% · 25–30: 4.4% · over 35: −2.6% (mostly 1999–2000).</p>
-      <p><b>Equity risk premium</b> = forward earnings yield (1 ÷ forward P/E) − 10-year Treasury yield. Near zero means stocks pay little extra over safe bonds.</p>
-      <p>Used to set expectations, not to time purchases.</p>
+    <details class="mth" id="s-ind"><summary>Market gauges<span class="k">inputs to the amount and meter</span></summary><div class="body">
+      <p>Nine US readings from the Federal Reserve, refreshed every weekday: VIX (fear), yield curve 10Y−3M, Sahm rule, unemployment, high-yield credit spread, Chicago Fed financial conditions (NFCI), Fed funds rate, 10-year yield and CPI inflation. Each gets a status from its usual professional threshold (VIX ≥ 30 panic, curve below 0 recession warning, Sahm ≥ 0.5 recession signal, high-yield spread above 5 pp stress, NFCI above 0 tight conditions). They are US measures because US recessions and credit stress hit every market; the world market's own trend and distance from its record come from the MSCI World ETF.</p>
+      <p><b>Timing tested:</b> on 1990–2026 US data, no rule that paused buying on these warnings beat plain steady buying; money waiting in cash cost more than the crashes avoided. So they change how much you buy, never whether you stay invested.</p>
     </div></details>
 
     <details class="mth" id="s-rank"><summary>Stock ranking of the picked index<span class="k">stock picks, extra profit</span></summary><div class="body">
@@ -600,15 +627,15 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
     </div></details>
 
     <details class="mth" id="s-extra"><summary>Demo account and the Extra profit record<span class="k">simulation</span></summary><div class="body">
-      <p><b>Demo account (€1,000, long only):</b> started with €1,000, no further deposits, profits stay in. 70% in the main-index ETF (switched only with the pick, rebalanced if outside 60–80%). 30% in the 3 highest-ranked stocks of that index, 10% each; a stock is kept while it stays in the top 20% and is sold if it drops out, falls 25% below its highest close since purchase, or the main index changes. 0.2% cost per trade; stock values converted to euros at Yahoo Finance exchange rates. Benchmark: €1,000 put into the MSCI World ETF on the same day.</p>
-      <p><b>Why this mix:</b> on 100 years of US data, holding the strongest 10% of stocks by 12-1 month momentum beat the market in every period tested, before costs: <b data-source="hist_overlay" data-field="top" data-where="period=1927–today">—</b>%/yr vs <b data-source="hist_overlay" data-field="market" data-where="period=1927–today">—</b>% since 1927 and <b data-source="hist_overlay" data-field="top" data-where="period=2007–today">—</b>% vs <b data-source="hist_overlay" data-field="market" data-where="period=2007–today">—</b>% since 2007. The 70/30 mix keeps most of the index's diversification: <b data-source="hist_overlay" data-field="demo" data-where="period=2007–today">—</b>%/yr since 2007. Adding shorts lowered the worst fall but, inside a €1,000 limit, the money tied up in shorts cost more return than it added (<b data-source="hist_overlay" data-field="ls" data-where="period=2007–today">—</b>%/yr). Timing the index with the meter and leverage were left out because they lost in the tests.</p>
-      <p><b>Extra profit record:</b> separate paper record of the weekly picks: €83.33 long in each of the 3 highest-ranked stocks and €83.33 short in each of the 3 lowest-ranked (skipping flagged data), opened at the Friday close and closed at the next. <code>P/L = stake × (exit ÷ entry − 1)</code> for longs, the negative for shorts. No costs. Record starts 9 Oct 2026.</p>
+      <p><b>Demo account (€1,000 a week, long only):</b> €1,000 is deposited at every Friday close; profits stay in. 70% in the main-index ETF (switched only with the pick; new money tops it up to 70%; trimmed only above 80%). 30% in the 3 highest-ranked stocks of that index, split by inverse volatility; a stock is kept while it stays in the top 20% and is sold if it drops out, falls 25% below its highest close since purchase, or the main index changes. 0.2% cost per trade; stock values converted to euros at Yahoo Finance exchange rates. Benchmark: the same deposits put into the MSCI World ETF on the same days.</p>
+      <p><b>Why this mix:</b> on 100 years of US data, holding the strongest 10% of stocks by 12-1 month momentum beat the market in every period tested, before costs: <b data-source="hist_overlay" data-field="top" data-where="period=1927–today">—</b>%/yr vs <b data-source="hist_overlay" data-field="market" data-where="period=1927–today">—</b>% since 1927 and <b data-source="hist_overlay" data-field="top" data-where="period=2007–today">—</b>% vs <b data-source="hist_overlay" data-field="market" data-where="period=2007–today">—</b>% since 2007. The 70/30 mix keeps most of the index's diversification: <b data-source="hist_overlay" data-field="demo" data-where="period=2007–today">—</b>%/yr since 2007. Adding shorts lowered the worst fall but, the money tied up in shorts cost more return than it added (<b data-source="hist_overlay" data-field="ls" data-where="period=2007–today">—</b>%/yr). Timing the index with the meter and leverage were left out because they lost in the tests.</p>
+      <p><b>Extra profit record:</b> separate paper record of the weekly picks: long the 3 highest-ranked stocks and short the 3 lowest-ranked (skipping flagged data), opened at the Friday close and closed at the next. Each side is split by inverse volatility: <code>weight = (1 ÷ volatility) ÷ Σ(1 ÷ volatility)</code>, using each stock's last 12 months of daily moves. Results are in % of the stake (half long, half short), so they apply to any amount. No costs. Record starts 9 Oct 2026.</p>
     </div></details>
 
     <details class="mth" id="s-test"><summary>How everything was tested<span class="k">methodology</span></summary><div class="body">
       <ul class="m">
         <li><b>No look-ahead:</b> each decision uses only data available before it is acted on (previous month or previous Friday).</li>
-        <li><b>Total return:</b> dividends reinvested (Shiller dividend yield; 1.4%/yr in daily tests). Uninvested cash earns the Fed funds rate.</li>
+        <li><b>Total return:</b> the ETFs are accumulating, so their prices already include reinvested dividends. The US research uses Kenneth French total returns.</li>
         <li><b>Leveraged funds (monthly test):</b> <code>monthly return = L × index − (L − 1) × cash rate − (L² − L) ÷ 2 × variance − fee</code>, with variance from the VIX. This reproduces the daily-reset drag of real 2x/3x funds. Fees 0.07% (1x), 0.6% (2x), 0.75% (3x) a year.</li>
         <li><b>Daily check:</b> the plans were re-run day by day on Federal Reserve data for Jul 2017–Oct 2026 with weekly decisions, as you would actually trade them.</li>
         <li><b>Measures:</b> yearly growth rate, money-weighted return (each euro counted from when it went in), worst fall from a peak, worst calendar year, rolling 10-year returns, profit per euro staked.</li>
@@ -620,7 +647,7 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
       <ul class="m">
         <li><b>Diversified core:</b> the main strategy is always a whole index fund (hundreds of companies), bought every week.</li><li><b>Slow switching:</b> the 5-point buffer keeps the pick in place unless the lead is clear; about 1–2 changes a year.</li>
         <li><b>Budget cap:</b> €40–€200 a week; know that crashes ask for the maximum for many months.</li>
-        <li><b>Trend exit for leverage:</b> 2x/3x only while the S&amp;P 500 is above its 200-day line, checked weekly.</li>
+        <li><b>No leverage:</b> the research plans show why: near-total losses in the 1930s and 1940.</li>
         <li><b>Position size:</b> leveraged plans and the extra-profit trades only with money you could see halve (or worse).</li>
         <li><b>Shorts:</b> can lose more than the stake; consider a stop-loss or skip them.</li>
         <li><b>Not modelled:</b> taxes on each sale, spreads and broker fees. The ETF tests are in euros; the US and regional research is in dollars.</li>
@@ -632,11 +659,10 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
         <tr><td>Yahoo Finance (daily closes): the six iShares ETFs since 2009 and ~900 stocks of the index universes</td><td>Index pick, weekly amount and meter (MSCI World), stock ranking, demo prices, 2012–today backtest</td><td>Saturday</td></tr>
         <tr><td>Federal Reserve (FRED): SP500, VIXCLS, NFCI, SAHMREALTIME, T10Y3M, BAMLH0A0HYM2, DFF, DGS10, UNRATE, CPIAUCSL</td><td>Weekly amount, meter, trend rule, indicators, monthly signal</td><td>Every weekday after the US close; weekly decisions Saturday morning</td></tr>
         <tr><td>RSS: Federal Reserve, ECB, Bank of Japan, CNBC, MarketWatch, Google News</td><td>News page and headlines (titles and links only)</td><td>Every weekday</td></tr>
-        <tr><td>Public S&amp;P 500 datasets (GitHub): constituents and fundamentals</td><td>Stock ranking, extra profit, demo stock prices</td><td>Saturday</td></tr>
-        <tr><td>Robert Shiller's S&amp;P 500 data (1871 onward)</td><td>1990–2026 backtests, CAPE study</td><td>Fixed research data</td></tr>
+        <tr><td>S&amp;P 500 company list and fundamentals (public datasets on GitHub)</td><td>Stock ranking when the S&amp;P 500 or MSCI World is the main index</td><td>Saturday</td></tr>
         <tr><td>Kenneth French data library: US market, value, momentum and T-bill returns since 1926; regional markets since 1990</td><td>100-year history, world markets, 35-year index-pick test</td><td>Every Saturday (French publishes monthly)</td></tr>
-        <tr><td>FRED: NASDAQCOM, NASDAQ100, DJIA, NIKKEI225, DEXUSEU, DTWEXBGS, DCOILBRENTEU, CBBTCUSD</td><td>Markets page, S&amp;P 500 in euros</td><td>Every weekday</td></tr>
-        <tr><td>FactSet Earnings Insight, multpl.com, AAII, LPL Research</td><td>Forward P/E, earnings growth, CAPE, sentiment, news</td><td>As of 9 Oct 2026 (manual)</td></tr></tbody></table>
+        <tr><td>FRED: NASDAQCOM, NASDAQ100, DJIA, NIKKEI225, DEXUSEU, DTWEXBGS, DCOILBRENTEU, CBBTCUSD</td><td>Markets page</td><td>Every weekday</td></tr>
+</tbody></table>
     </div></details>
 
     <details class="mth" id="s-limits"><summary>Limits and honest caveats<span class="k">read this</span></summary><div class="body">
@@ -653,14 +679,14 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
   <!-- ================= EXTRA PROFIT ================= -->
   <section id="extra" data-page hidden>
     <h1 class="ttl">Extra profit: 3 longs and 3 shorts a week</h1>
-    <p class="lede">On top of your index buying: each Friday close, the 3 highest-ranked stocks of this week's main index (<b data-source="weekly_now" data-field="pick_index" data-row="0">—</b>) are bought and the 3 lowest-ranked are sold short, €83 each, held for one week. The long and short sides balance, so the result depends on the picks rather than on whether the market goes up or down. This is a separate paper record of the weekly picks; the €1,000 demo account runs its own long-only rules.</p>
+    <p class="lede">On top of your index buying: each Friday close, the 3 highest-ranked stocks of this week's main index (<b data-source="weekly_now" data-field="pick_index" data-row="0">—</b>) are bought and the 3 lowest-ranked are sold short, held for one week. Each side is split by the weights below (calmer stocks get more), so it works for any stake: put the shown % of your long money into each long and the shown % of your short money into each short. The long and short sides balance, so the result depends on the picks rather than on whether the market goes up or down. This is a separate paper record of the weekly picks; the €1,000 demo account runs its own long-only rules.</p>
     <div class="ex">
       <div class="card"><div class="ex-h l">▲ Long: buy this week</div>
         <table id="ex-long-table" data-source="extra_picks" data-row-key="ticker">
-          <thead><tr><th data-field="ticker">Stock</th><th data-field="entry_price" class="n">Price</th><th data-field="rank" class="n">Rank</th><th data-field="score" class="n">Score</th><th data-field="off_52w_high" class="n">From 52w high (%)</th><th data-field="euros" class="n">Stake (€)</th></tr></thead><tbody></tbody></table></div>
+          <thead><tr><th data-field="ticker">Stock</th><th data-field="weight" class="n">Weight (%)</th><th data-field="entry_price" class="n">Price</th><th data-field="rank" class="n">Rank</th><th data-field="score" class="n">Score</th><th data-field="vol" class="n">Volatility (%)</th><th data-field="off_52w_high" class="n">From 52w high (%)</th></tr></thead><tbody></tbody></table></div>
       <div class="card"><div class="ex-h s">▼ Short: sell this week</div>
         <table id="ex-short-table" data-source="extra_picks" data-row-key="ticker">
-          <thead><tr><th data-field="ticker">Stock</th><th data-field="entry_price" class="n">Price</th><th data-field="rank" class="n">Rank</th><th data-field="score" class="n">Score</th><th data-field="off_52w_high" class="n">From 52w high (%)</th><th data-field="euros" class="n">Stake (€)</th></tr></thead><tbody></tbody></table></div>
+          <thead><tr><th data-field="ticker">Stock</th><th data-field="weight" class="n">Weight (%)</th><th data-field="entry_price" class="n">Price</th><th data-field="rank" class="n">Rank</th><th data-field="score" class="n">Score</th><th data-field="vol" class="n">Volatility (%)</th><th data-field="off_52w_high" class="n">From 52w high (%)</th></tr></thead><tbody></tbody></table></div>
     </div>
 
     <div class="card" style="margin-top:12px">
@@ -670,26 +696,26 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
 
     <h2 id="ex-record-h">Track record</h2>
     <div class="kpis">
-      <div class="card kpi"><div class="lab">Total profit/loss (€)</div><div class="num" data-source="extra_summary" data-field="value" data-where="metric=Total P/L (€)">—</div></div>
-      <div class="card kpi"><div class="lab">Longs (€)</div><div class="num" data-source="extra_summary" data-field="value" data-where="metric=Longs P/L (€)">—</div></div>
-      <div class="card kpi"><div class="lab">Shorts (€)</div><div class="num" data-source="extra_summary" data-field="value" data-where="metric=Shorts P/L (€)">—</div></div>
+      <div class="card kpi"><div class="lab">Total return (%)</div><div class="num" data-source="extra_summary" data-field="value" data-where="metric=Total return (%25)">—</div><div class="note">Half long, half short, weekly compounding</div></div>
+      <div class="card kpi"><div class="lab">Long side (%)</div><div class="num" data-source="extra_summary" data-field="value" data-where="metric=Long side (%25)">—</div></div>
+      <div class="card kpi"><div class="lab">Short side (%)</div><div class="num" data-source="extra_summary" data-field="value" data-where="metric=Short side (%25)">—</div></div>
       <div class="card kpi"><div class="lab">Weeks · win rate</div><div class="num"><span data-source="extra_summary" data-field="value" data-where="metric=Weeks">—</span> · <span data-source="extra_summary" data-field="value" data-where="metric=Win rate (%25)">—</span>%</div></div>
     </div>
     <div class="card" style="margin-top:12px">
       <p class="note" id="ex-empty">The record starts with this week's picks. The first result is booked after the Friday 16 Oct close.</p>
       <div class="chart" id="ex-chart" data-source="extra_weeks" style="min-height:200px"></div>
       <div class="tbl"><table id="ex-weeks" data-source="extra_weeks" data-row-key="week">
-        <thead><tr><th data-field="week">Week closed</th><th data-field="longs" class="n">Longs (€)</th><th data-field="shorts" class="n">Shorts (€)</th><th data-field="pnl" class="n">Week (€)</th><th data-field="cumulative" class="n">Running total (€)</th></tr></thead><tbody></tbody></table></div>
+        <thead><tr><th data-field="week">Week closed</th><th data-field="longs" class="n">Long side (%)</th><th data-field="shorts" class="n">Short side (%)</th><th data-field="pnl" class="n">Week (%)</th><th data-field="cumulative" class="n">Since start (%)</th></tr></thead><tbody></tbody></table></div>
     </div>
 
     <h2 id="ex-how-h">How to trade it, and the risks</h2>
     <div class="grid">
       <div class="card"><h3>Long side</h3><ul class="m">
-        <li>Buy the 3 stocks after the Friday close (or Monday), about €83 each. Sell them the next Friday.</li>
-        <li>Many brokers sell fractional shares, so €83 works even for expensive stocks.</li></ul></div>
+        <li>Buy the 3 stocks after the Friday close (or Monday), splitting your long money by the weights. Sell them the next Friday.</li>
+        <li>Many brokers sell fractional shares, so even small amounts work for expensive stocks.</li></ul></div>
       <div class="card"><h3>Short side</h3><ul class="m">
         <li>Shorting means profiting when a price falls. For private investors in Europe this is usually done with CFDs, which use leverage and borrowing fees.</li>
-        <li><b>A short can lose more than its stake</b>: if a shorted stock jumps 50% on a takeover bid, an €83 short loses €42. Consider a stop-loss, and skip the short side if your broker or comfort doesn't allow it.</li></ul></div>
+        <li><b>A short can lose more than its stake</b>: if a shorted stock jumps 50% on a takeover bid, that short loses half its stake. Consider a stop-loss, and skip the short side if your broker or comfort doesn't allow it.</li></ul></div>
       <div class="card"><h3>Keep it in proportion</h3><ul class="m">
         <li>Rankings are momentum (plus value for the S&amp;P 500). Their edge shows up over months and many stocks; over one week, 6 stocks are mostly luck.</li>
         <li>Untested historically (no free price history for every member of every index), so judge it by the live record above after a few months. Outside the US the ranking is price momentum only. Costs, spreads and tax are not included. Not financial advice.</li></ul></div>
@@ -698,7 +724,10 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
 
   <!-- ================= RETURN PLANS ================= -->
   <section id="plans" data-page hidden>
-    <div class="warnbox">You can't order a return, only choose a risk level. The S&amp;P 500 has returned about 10–11% a year; reaching for 20–30% means leverage (2x or 3x daily-leveraged funds), which multiplies crashes too. Each plan below uses the same risk control: leveraged money is only held while the S&amp;P 500 is above its 200-day average, checked every Friday. Results are backtests, before tax, and in dollars (euro/dollar moves not included).</div>
+    <div class="tabs subtabs" role="tablist" aria-label="Research"><button role="tab" data-go="history" aria-selected="false">100 years of data</button><button role="tab" data-go="plans" aria-selected="true">10/20/30% plans</button><button role="tab" data-go="gauges" aria-selected="false">Market gauges</button></div>
+    <details class="whyus"><summary>Why is the research based on US data?</summary><p>IndexPilot itself works on six indexes worldwide. This research section is background: it uses US data because the US is the only market with free, reliable monthly data back to 1927 (Kenneth French data library), and because 2x/3x leveraged funds that a euro investor can buy exist mainly for US indexes. The gauges are American because US recessions, credit stress and the VIX move every stock market in the world. None of it decides which index you buy; it explains why the rules are built the way they are.</p></details>
+    <h1 class="ttl">10/20/30% return plans</h1>
+    <div class="warnbox">You can't order a return, only choose a risk level. The US stock market has returned about 10–11% a year; reaching for 20–30% means leverage (2x or 3x daily-leveraged funds), which multiplies crashes too. Each plan below uses the same risk control: leveraged money is only held while the index is above its 200-day average, checked every Friday. Tested on the US market (the S&amp;P 500), the only index with both long data and euro-listed 2x/3x funds. Results are backtests, before tax, and in dollars (euro/dollar moves not included).</div>
     <div class="warnbox" style="border-color:var(--color-bad)"><b style="color:var(--color-fg)">100-year check:</b> over 1927–2026 the 20% plan (2x + trend rule) made <b data-source="hist_plans" data-field="cagr" data-where="plan=20%25">—</b>% a year but fell <b data-source="hist_plans" data-field="max_dd" data-where="plan=20%25">—</b>% at its worst; the 30% plan made <b data-source="hist_plans" data-field="cagr" data-where="plan=30%25">—</b>% a year and fell <b data-source="hist_plans" data-field="max_dd" data-where="plan=30%25">—</b>%. Plain buying made <b data-source="hist_plans" data-field="cagr" data-where="plan=10%25">—</b>%. The 1990–2026 figures below are much kinder than the full century. <button class="chip" data-go="history" style="margin-left:6px">See 100 years</button></div>
     <div class="tabs" role="tablist" id="plan-tabs" style="margin-top:0">
       <button role="tab" data-plan="10%" aria-selected="false">10% plan · Steady</button>
@@ -707,10 +736,10 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
     </div>
     <div class="hero">
       <div class="card" id="plan-now-card">
-        <div class="note">This week in the <span data-source="plans_summary" data-field="name" data-where="plan=20%25" data-plan-mark>—</span> plan</div>
-        <div class="sig BUY" style="font-size:var(--cds-font-size-title)" id="plan-action" data-source="plans_now" data-field="action" data-where="plan=20%25" data-plan-mark>—</div>
-        <p style="margin:0" data-source="plans_now" data-field="status" data-where="plan=20%25" data-plan-mark>—</p>
-        <p class="note" style="margin-top:var(--cds-gap-sm)">What to hold: <span data-source="plans_summary" data-field="vehicle" data-where="plan=20%25" data-plan-mark>—</span></p>
+        <div class="note">The <span data-source="plans_summary" data-field="name" data-where="plan=20%25" data-plan-mark>—</span> plan</div>
+        <div class="sig BUY" style="font-size:var(--cds-font-size-title)" data-source="plans_summary" data-field="vehicle" data-where="plan=20%25" data-plan-mark>—</div>
+        <p style="margin:0" data-source="plans_summary" data-field="rule" data-where="plan=20%25" data-plan-mark>—</p>
+        <p class="note" style="margin-top:var(--cds-gap-sm)">Research only: IndexPilot does not use leverage, and the 100-year test below explains why.</p>
       </div>
       <div class="kpis">
         <div class="card kpi"><div class="lab">Yearly return, 1990–2026 (%)</div><div class="num" data-source="plans_summary" data-field="cagr_1990" data-where="plan=20%25" data-plan-mark>—</div></div>
@@ -749,7 +778,7 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
     <h2 id="plan-risk-h">How the risk is managed</h2>
     <div class="grid">
       <div class="card"><h3>Built into the plans</h3><ul class="m">
-        <li><b>Trend exit:</b> leverage only while the S&amp;P 500 is above its 200-day average. Over 1990–2026 this cut the 3x fund's worst fall from −99% to −58%.</li>
+        <li><b>Trend exit:</b> leverage only while the index is above its 200-day average. Over 1990–2026 this cut the 3x fund's worst fall from −99% to −58%.</li>
         <li><b>Weekly check:</b> fewer false switches than daily (about 3 a year), but a crash inside one week is not avoided.</li>
         <li><b>Cash when out:</b> money waits in cash or a money-market fund, earning the short-term rate.</li></ul></div>
       <div class="card"><h3>Limits to set yourself</h3><ul class="m">
@@ -763,88 +792,26 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
     </div>
   </section>
 
-  <!-- ================= SIGNAL ================= -->
-  <section id="signal" data-page hidden>
-    <div class="hero">
-      <div class="card" id="signal-card">
-        <div class="note">This month's rule-based signal</div>
-        <div class="sig" id="sig" data-source="signal_now" data-field="signal" data-row="0">—</div>
-        <p id="sig-reason" data-source="signal_now" data-field="reason" data-row="0" style="margin:0">—</p>
-        <p class="note" style="margin-top:var(--cds-gap-sm)">Uses month-end data for <span data-source="signal_now" data-field="month_used" data-row="0">—</span>. Rules on the “News &amp; method” tab.</p>
-        <div class="gauge" id="gauge">
-          <span><i class="dot d-good"></i>Supportive <b data-source="risk_counts" data-field="count" data-where="status=good">—</b></span>
-          <span><i class="dot d-neutral"></i>Neutral <b data-source="risk_counts" data-field="count" data-where="status=neutral">—</b></span>
-          <span><i class="dot d-warn"></i>Caution <b data-source="risk_counts" data-field="count" data-where="status=warn">—</b></span>
-          <span><i class="dot d-bad"></i>Warning <b data-source="risk_counts" data-field="count" data-where="status=bad">—</b></span>
-        </div>
-        <div class="gauge-box" id="gauge-signal" data-source="meter_now" style="margin-top:var(--cds-gap-md)"></div>
-      </div>
-      <div class="kpis">
-        <div class="card kpi"><div class="lab">S&amp;P 500 close</div><div class="num" data-source="indicators" data-field="display" data-where="key=spx">—</div><div class="note" data-source="indicators" data-field="asof" data-where="key=spx">—</div></div>
-        <div class="card kpi"><div class="lab">vs 200-day average</div><div class="num" data-source="indicators" data-field="display" data-where="key=above200">—</div><div class="note">Above = uptrend</div></div>
-        <div class="card kpi"><div class="lab">From all-time high</div><div class="num" data-source="indicators" data-field="display" data-where="key=drawdown">—</div><div class="note">−15% or worse = buy-extra zone</div></div>
-        <div class="card kpi"><div class="lab">Shiller CAPE</div><div class="num" data-source="indicators" data-field="display" data-where="key=cape">—</div><div class="note">Long-run mean 17.4×</div></div>
-      </div>
+  <!-- ================= GAUGES ================= -->
+  <section id="gauges" data-page hidden>
+    <div class="tabs subtabs" role="tablist" aria-label="Research"><button role="tab" data-go="history" aria-selected="false">100 years of data</button><button role="tab" data-go="plans" aria-selected="false">10/20/30% plans</button><button role="tab" data-go="gauges" aria-selected="true">Market gauges</button></div>
+    <details class="whyus"><summary>Why is the research based on US data?</summary><p>IndexPilot itself works on six indexes worldwide. This research section is background: it uses US data because the US is the only market with free, reliable monthly data back to 1927 (Kenneth French data library), and because 2x/3x leveraged funds that a euro investor can buy exist mainly for US indexes. The gauges are American because US recessions, credit stress and the VIX move every stock market in the world. None of it decides which index you buy; it explains why the rules are built the way they are.</p></details>
+    <h1 class="ttl">Market gauges</h1>
+    <p class="lede">The stress readings behind the weekly amount and the signal meter. Updated every weekday from the Federal Reserve. They are US measures because US recessions and credit stress spread to every stock market.</p>
+    <div class="kpis">
+      <div class="card kpi"><div class="lab">VIX (fear)</div><div class="num" data-source="indicators" data-field="display" data-where="key=vix">—</div><div class="note">30+ = panic: weekly amount goes to €200</div></div>
+      <div class="card kpi"><div class="lab">Financial conditions (NFCI)</div><div class="num" data-source="indicators" data-field="display" data-where="key=nfci">—</div><div class="note">Above 0 = tight credit</div></div>
+      <div class="card kpi"><div class="lab">Sahm rule</div><div class="num" data-source="indicators" data-field="display" data-where="key=sahm">—</div><div class="note">0.5+ = recession under way</div></div>
+      <div class="card kpi"><div class="lab">Yield curve 10Y−3M</div><div class="num" data-source="indicators" data-field="display" data-where="key=curve">—</div><div class="note">Below 0 = recession warning</div></div>
     </div>
-
-    <h2 id="price-h">Price, last two years</h2>
-    <div class="card">
-      <p class="note">Weekly closes. Dashed lines: today's 200-day average and the all-time high.</p>
-      <div class="chart" id="price-chart" data-source="spx_weekly signal_now"></div>
-    </div>
-
-    <h2 id="ind-h">What professionals watch, and where it stands</h2>
-    <p class="note">Each indicator is colored by its usual professional reading. Short-term conditions are supportive; long-term valuation and interest rates are the red flags.</p>
+    <h2 id="ind-h">All gauges</h2>
     <div class="card tbl">
       <table id="ind-table" data-source="indicators" data-row-key="key">
-        <thead><tr><th data-field="group">Area</th><th data-field="name">Indicator</th><th data-field="display" class="n">Now</th><th data-field="status">Reading</th><th data-field="rule">Rule of thumb</th><th data-field="meaning">What it means</th><th data-field="asof">As of</th><th data-field="source">Source</th></tr></thead>
+        <thead><tr><th data-field="group">Area</th><th data-field="name">Gauge</th><th data-field="display" class="n">Now</th><th data-field="status">Reading</th><th data-field="rule">Rule of thumb</th><th data-field="meaning">What it means</th><th data-field="asof">As of</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
-  </section>
-
-  <!-- ================= BACKTEST ================= -->
-  <section id="backtest" data-page hidden>
-    <p class="lede" style="margin-top:var(--cds-gap-md)">€500 a month from January 1990 to September 2026 (€220,500 in total). Dividends reinvested; uninvested cash earns the Fed funds rate. The signal for each month uses only data available at the end of the month before.</p>
-    <div class="card tbl">
-      <table id="bt-table" data-source="backtest" data-row-key="strategy">
-        <thead><tr><th data-field="strategy">Strategy</th><th data-field="final" class="n">Final value (€)</th><th data-field="vs_dca" class="n">vs plain buying (%)</th><th data-field="max_dd" class="n">Worst drop (%)</th><th data-field="invested" class="n">Invested (€)</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-    <div class="warnbox">None of the timing rules beat simply buying every month. The signal is useful as a risk gauge, but waiting in cash cost more than the crashes it avoided.</div>
-
-    <h2 id="curve-h">Portfolio value over time</h2>
-    <div class="card">
-      <div class="legend" id="curve-legend"></div>
-      <div class="chart" id="curve-chart" data-source="history"></div>
-      <p class="note">Log scale. The strip under the chart shows each month's signal: <span class="pill p-good">BUY</span> <span class="pill p-good" style="font-weight:600">BUY EXTRA</span> <span class="pill p-bad">HOLD</span></p>
-    </div>
-
-    <div class="grid" style="margin-top:var(--cds-gap-md)">
-      <div class="card">
-        <h3 id="fwd-h">What happened in the next 12 months</h3>
-        <p class="note">S&amp;P 500 price change 12 months after each signal, 1990–2025.</p>
-        <table id="fwd-table" data-source="fwd_by_signal" data-row-key="signal">
-          <thead><tr><th data-field="signal">Signal</th><th data-field="months" class="n">Months</th><th data-field="avg_12m" class="n">Average (%)</th><th data-field="median_12m" class="n">Median (%)</th><th data-field="pct_positive" class="n">Up (% of time)</th></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-      <div class="card">
-        <h3 id="cape-h">Valuation vs the next 10 years</h3>
-        <p class="note">Average yearly return after inflation over the following 10 years, by starting CAPE, 1881–2013. Today's CAPE: <b data-source="indicators" data-field="display" data-where="key=cape">—</b></p>
-        <div class="chart sm" id="cape-chart" data-source="cape_buckets"></div>
-        <p class="note">Caution: the “Over 35” group is almost entirely 1999–2000.</p>
-      </div>
-    </div>
-
-    <h2 id="macro-h">The recession and stress gauges since 1990</h2>
-    <div class="grid">
-      <div class="card"><h3>Yield curve, 10Y − 3M</h3><p class="note">Below 0 = inverted (recession warning)</p><div class="chart sm" id="m-curve" data-source="history"></div></div>
-      <div class="card"><h3>Chicago Fed financial conditions</h3><p class="note">Above 0 = tighter than average</p><div class="chart sm" id="m-nfci" data-source="history"></div></div>
-      <div class="card"><h3>Sahm rule</h3><p class="note">0.5 or more = recession likely under way</p><div class="chart sm" id="m-sahm" data-source="history"></div></div>
-      <div class="card"><h3>Baa corporate spread over 10Y</h3><p class="note">Rising = credit stress</p><div class="chart sm" id="m-baa" data-source="history"></div></div>
-    </div>
+    <p class="note" style="margin-top:6px">Used by the rules: VIX, NFCI and the Sahm rule set the weekly amount; those plus the yield curve make up 55% of the meter. The rest is context.</p>
   </section>
 
   <!-- ================= STOCKS ================= -->
@@ -873,55 +840,16 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
     </div>
     <p class="note" style="margin-top:8px">12-1 m = return from 12 months ago to 1 month ago (the standard momentum measure; the last month is skipped because it tends to reverse). Prices in local currency.</p>
 
-    <h2 id="us-screen-h">US research: S&amp;P 500 value + momentum, this week</h2>
-    <p class="note">All S&amp;P 500 members with complete data are scored each Friday within their sector: 50% value (earnings, sales and book vs price) and 50% momentum (position in the 52-week range). Used for the picks whenever the S&amp;P 500 is the main index.</p>
-    <div class="grid">
-      <div class="card"><h3>Top 50</h3><div class="tbl">
-        <table id="ut-table" data-source="rank_top" data-row-key="ticker">
-          <thead><tr><th data-field="rank" class="n">#</th><th data-field="ticker">Ticker</th><th data-field="company">Company</th><th data-field="sector">Sector</th><th data-field="score" class="n">Score</th><th data-field="pe" class="n">P/E</th><th data-field="off_52w_high" class="n">Off high (%)</th><th data-field="note">Note</th></tr></thead>
-          <tbody></tbody></table></div></div>
-      <div class="card"><h3>Bottom 50</h3><div class="tbl">
-        <table id="ub-table" data-source="rank_bottom" data-row-key="ticker">
-          <thead><tr><th data-field="rank" class="n">#</th><th data-field="ticker">Ticker</th><th data-field="company">Company</th><th data-field="sector">Sector</th><th data-field="score" class="n">Score</th><th data-field="pe" class="n">P/E</th><th data-field="off_52w_high" class="n">Off high (%)</th><th data-field="note">Note</th></tr></thead>
-          <tbody></tbody></table></div></div>
-    </div>
-    <div class="warnbox">US research snapshot. Scores rank S&amp;P 500 companies (market cap over $10bn, profitable) on factual data as of 11 Oct 2026. Do your own research before buying any single stock; individual stocks are far riskier than the index.</div>
-    <h2 id="top-h">Value + momentum leaders</h2>
-    <p class="note">Score 0–100 = half value (cheap on earnings, sales and book vs its own sector) and half momentum (where the price sits in its 52-week range, 100 = at the high). This is the combination with the strongest academic record (Fama-French, AQR).</p>
-    <input class="q" id="q-top" placeholder="Search ticker, company or sector" aria-label="Search leaders">
-    <div class="card tbl">
-      <table id="top-table" data-source="stocks_top" data-row-key="ticker">
-        <thead><tr><th data-field="ticker">Ticker</th><th data-field="company">Company</th><th data-field="sector">Sector</th><th data-field="score" class="n">Score</th><th data-field="value" class="n">Value</th><th data-field="momentum" class="n">Momentum</th><th data-field="pe" class="n">P/E</th><th data-field="sector_pe" class="n">Sector P/E</th><th data-field="off_52w_high" class="n">Off 52w high (%)</th><th data-field="div_yield" class="n">Div yield (%)</th><th data-field="price" class="n">Price ($)</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <h2 id="fallen-h">Fallen but cheap (higher risk)</h2>
-    <p class="note">30%+ below their 52-week high and cheaper than their sector on P/E. Cheap stocks often stay cheap; this list is where to start research, not where to stop it.</p>
-    <div class="card tbl">
-      <table id="fallen-table" data-source="stocks_fallen" data-row-key="ticker">
-        <thead><tr><th data-field="ticker">Ticker</th><th data-field="company">Company</th><th data-field="sector">Sector</th><th data-field="off_52w_high" class="n">Off 52w high (%)</th><th data-field="pe" class="n">P/E</th><th data-field="sector_pe" class="n">Sector P/E</th><th data-field="div_yield" class="n">Div yield (%)</th><th data-field="price" class="n">Price ($)</th><th data-field="check">Data check</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <h2 id="sector-h">Sectors at a glance</h2>
-    <p class="note">Medians across each sector's companies. “Range position” 100 = at the 52-week high, 0 = at the low.</p>
-    <div class="card tbl">
-      <table id="sector-table" data-source="sectors" data-row-key="sector">
-        <thead><tr><th data-field="sector">Sector</th><th data-field="stocks" class="n">Stocks</th><th data-field="median_pe" class="n">Median P/E</th><th data-field="median_off_high" class="n">Median off high (%)</th><th data-field="median_range_pos" class="n">Range position</th><th data-field="median_div_yield" class="n">Div yield (%)</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
   </section>
 
   <!-- ================= DEMO ================= -->
   <section id="demo" data-page hidden>
-    <h1 class="ttl">Demo account: €1,000, run by the rules</h1>
-    <p class="lede">A simulated portfolio, no broker and no real money. It started with €1,000 on <b data-source="demo_summary" data-field="value" data-where="metric=Since">—</b>, never gets more, and keeps its profits. Every Friday close: <b>70%</b> in this week's main-index ETF and <b>30%</b> in the 3 strongest stocks of that index (10% each). No shorts, no leverage. Prices from Yahoo Finance, converted to euros; 0.2% cost on every trade.</p>
+    <h1 class="ttl">Demo account: €1,000 a week, run by the rules</h1>
+    <p class="lede">A simulated portfolio, no broker and no real money. Started <b data-source="demo_summary" data-field="value" data-where="metric=Since">—</b>; €1,000 is deposited at every Friday close and profits stay in. The money is kept at <b>70%</b> in this week's main-index ETF and <b>30%</b> in the 3 strongest stocks of that index, split by the same weights as Extra profit. No shorts, no leverage. Prices from Yahoo Finance, converted to euros; 0.2% cost on every trade.</p>
     <div class="kpis">
       <div class="card kpi"><div class="lab">Account value (€)</div><div class="num" data-source="demo_summary" data-field="value" data-where="metric=Account value (€)">—</div><div class="note">Return <span data-source="demo_summary" data-field="value" data-where="metric=Return (%25)">—</span>%</div></div>
-      <div class="card kpi"><div class="lab">Same €1,000 in MSCI World (€)</div><div class="num" data-source="demo_summary" data-field="value" data-where="metric=MSCI World, same €1,000 (€)">—</div><div class="note">The benchmark to beat</div></div>
+      <div class="card kpi"><div class="lab">Deposited (€)</div><div class="num" data-source="demo_summary" data-field="value" data-where="metric=Deposited (€)">—</div><div class="note">€1,000 a week</div></div>
+      <div class="card kpi"><div class="lab">Same deposits in MSCI World (€)</div><div class="num" data-source="demo_summary" data-field="value" data-where="metric=MSCI World, same deposits (€)">—</div><div class="note">The benchmark to beat</div></div>
       <div class="card kpi"><div class="lab">Ahead / behind (€)</div><div class="num" id="demo-diff" data-source="demo_summary" data-field="value" data-where="metric=vs MSCI World (€)">—</div></div>
       <div class="card kpi"><div class="lab">Trades · costs</div><div class="num"><span data-source="demo_summary" data-field="value" data-where="metric=Trades">—</span> · €<span data-source="demo_summary" data-field="value" data-where="metric=Costs paid (€)">—</span></div></div>
     </div>
@@ -937,15 +865,15 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
     <h2 id="demo-pl-h">Account vs MSCI World</h2>
     <div class="card">
       <div class="legend" id="demo-legend"></div>
-      <p class="note" id="demo-empty">The account opened this week. The line starts after the first full week, at the next Friday close.</p>
+      <p class="note" id="demo-empty">The account opened this week. The lines start after the first full week, at the next Friday close.</p>
       <div class="chart" id="demo-chart" data-source="demo_weekly" style="min-height:220px"></div>
     </div>
 
     <h2 id="demo-rules-h">The rules</h2>
     <div class="grid">
-      <div class="card"><h3>Core: 70%</h3><ul class="m"><li>Held in this week's main-index ETF (the Index pick page).</li><li>Sold and switched only when the pick switches, about once a year.</li><li>Brought back to 70% only if it drifts outside 60–80%.</li></ul></div>
-      <div class="card"><h3>Stocks: 30%</h3><ul class="m"><li>The 3 highest-ranked stocks of the main index, 10% of the account each.</li><li>A stock stays while it is in the top 20% of the ranking.</li><li>Sold if it drops out of the top 20%, falls 25% below its highest close since purchase, or the main index changes.</li></ul></div>
-      <div class="card"><h3>Left out on purpose</h3><ul class="m"><li><b>Shorts:</b> they lower the worst fall but, within €1,000, cost more return than they add (table below).</li><li><b>Timing the index with the meter:</b> no timing rule beat staying invested.</li><li><b>Leverage:</b> near-total losses in the 100-year test.</li></ul></div>
+      <div class="card"><h3>Core: 70%</h3><ul class="m"><li>Held in this week's main-index ETF (the Index pick page).</li><li>Sold and switched only when the pick switches, about once a year.</li><li>Each week's new €1,000 tops it up to 70%; it is only sold down if it grows above 80%.</li></ul></div>
+      <div class="card"><h3>Stocks: 30%</h3><ul class="m"><li>The 3 highest-ranked stocks of the main index, split by inverse volatility (calmer stocks get more); new money tops each up to its share.</li><li>A stock stays while it is in the top 20% of the ranking.</li><li>Sold if it drops out of the top 20%, falls 25% below its highest close since purchase, or the main index changes.</li></ul></div>
+      <div class="card"><h3>Left out on purpose</h3><ul class="m"><li><b>Shorts:</b> they lower the worst fall but cost more return than they add (table below).</li><li><b>Timing the index with the meter:</b> no timing rule beat staying invested.</li><li><b>Leverage:</b> near-total losses in the 100-year test.</li></ul></div>
     </div>
 
     <h2 id="demo-why-h">Why this mix: momentum stocks since 1927</h2>
@@ -984,45 +912,18 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
       </table>
     </div>
 
-    <h2 id="news-h">Background: what moved the US market (as of 9 Oct 2026)</h2>
-    <div class="card tbl">
-      <table id="news-table" data-source="news" data-row-key="id">
-        <thead><tr><th data-field="date">Date</th><th data-field="topic">Topic</th><th data-field="item">What happened</th><th data-field="source">Source</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <h2 id="method-h">How the US monthly signal works</h2>
-    <div class="grid">
-      <div class="card">
-        <h3>The rules (checked monthly)</h3>
-        <ul class="m">
-          <li><b>HOLD</b>: price below its 10-month average <i>and</i> a recession or stress warning is on (Sahm rule ≥ 0.5 or Chicago Fed conditions index above 0), unless a panic is already easing.</li>
-          <li><b>BUY EXTRA</b>: index 15%+ below its peak or VIX ≥ 30, without worsening credit stress. Deploy saved cash.</li>
-          <li><b>BUY</b>: everything else. Invest the normal monthly amount.</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3>Data sources</h3>
-        <ul class="m">
-          <li>Federal Reserve (FRED): S&amp;P 500, yield curve, credit spreads, financial conditions, Sahm rule, Fed funds, 10Y yield, CPI, VIX.</li>
-          <li>Robert Shiller's long-run S&amp;P 500 dataset (1871 on): prices, dividends, CAPE.</li>
-          <li>FactSet Earnings Insight: forward P/E, earnings growth.</li>
-          <li>AAII sentiment survey; S&amp;P 500 company fundamentals (updated 11 Oct 2026).</li>
-        </ul>
-        <p class="note">Bloomberg, FactSet and Refinitiv terminals are paid; these are the free sources their analysts also cite. Valuation and sentiment figures are a snapshot from 11 Oct 2026; market data updates automatically.</p>
-      </div>
-      <div class="card">
-        <h3>Limits to know</h3>
-        <ul class="m">
-          <li>No rule here beat plain monthly buying since 1990. Treat the signal as a risk gauge.</li>
-          <li>CAPE predicts 10-year returns, not next month's.</li>
-          <li>EU investors buy UCITS ETFs (like the six on the Index pick page); US-listed funds such as SPY are usually not available.</li>
-          <li>Not financial advice. Past results don't predict future returns.</li>
-        </ul>
-      </div>
-    </div>
   </section>
+  <button class="askbar" id="askbar" type="button" aria-label="Ask IndexPilot AI (Shift + /)"><svg class="spark" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2l1.9 5.6L19.5 9.5l-5.6 1.9L12 17l-1.9-5.6L4.5 9.5l5.6-1.9z" fill="currentColor"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z" fill="currentColor" opacity=".6"/></svg><span class="lbl2">Ask IndexPilot AI</span><kbd>Shift + /</kbd><span class="hide" title="Hide" aria-label="Hide the assistant"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l18 18M10.6 10.6a2 2 0 002.8 2.8M9.9 5.1A9.8 9.8 0 0112 5c5 0 9 5 9 7a11 11 0 01-2.6 3.4M6.6 6.6C4.3 8 3 10.6 3 12c0 2 4 7 9 7a9.7 9.7 0 004.4-1"/></svg></span></button>
+  <button class="askmini" id="askmini" type="button" aria-label="Ask IndexPilot AI" hidden><svg class="spark" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2l1.9 5.6L19.5 9.5l-5.6 1.9L12 17l-1.9-5.6L4.5 9.5l5.6-1.9z" fill="currentColor"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z" fill="currentColor" opacity=".6"/></svg></button>
+  <div class="askpanel" id="askpanel" role="dialog" aria-label="Ask IndexPilot AI" hidden>
+    <div class="askhead"><svg class="spark" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2l1.9 5.6L19.5 9.5l-5.6 1.9L12 17l-1.9-5.6L4.5 9.5l5.6-1.9z" fill="currentColor"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z" fill="currentColor" opacity=".6"/></svg><span>Ask IndexPilot AI</span><span class="mode" id="askmode">Site data</span><span class="sp"></span><button id="askgear" type="button" title="Settings" aria-label="Settings">⚙</button><button id="askclose" type="button" title="Close (Esc)" aria-label="Close">×</button></div>
+    <div class="askset" id="askset">Optional: use Claude with your own Anthropic API key for free-form answers. The key is stored only in this browser and sent only to api.anthropic.com; usage is billed to your account. Leave empty to keep the built-in answers.
+      <input id="askkey" type="password" placeholder="sk-ant-…" autocomplete="off" aria-label="Anthropic API key">
+      <button id="askkeysave" type="button">Save key</button><button id="askkeyclear" type="button">Remove key</button></div>
+    <div class="asklog" id="asklog" aria-live="polite"></div>
+    <div class="asksug" id="asksug"><button type="button">Which index should I buy this week?</button><button type="button">How much should I invest?</button><button type="button">Top stocks and their weights</button><button type="button">How is the demo account doing?</button><button type="button">Does the strategy work?</button></div>
+    <form class="askform" id="askform" autocomplete="off"><input id="askinput" placeholder="Ask about any page or number…" aria-label="Your question"><button type="submit">Ask</button></form>
+  </div>
   <div class="statusbar" id="statusbar">
     <span>Pick: <b data-source="weekly_now" data-field="pick_index" data-row="0">—</b></span>
     <span>Buy: <b>€<span data-source="weekly_now" data-field="amount" data-row="0">—</span></b></span>
@@ -1032,7 +933,6 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
     <span>VIX: <b data-source="weekly_now" data-field="vix" data-row="0">—</b></span>
     <span>NFCI: <b data-source="weekly_now" data-field="nfci" data-row="0">—</b></span>
     <span>Sahm: <b data-source="weekly_now" data-field="sahm" data-row="0">—</b></span>
-    <span>S&amp;P 500: <b data-source="weekly_now" data-field="spx_close" data-row="0">—</b></span>
     <span>10Y: <b data-source="indicators" data-field="display" data-where="key=ten">—</b></span>
   </div>
 </div>
@@ -1044,7 +944,7 @@ SX.rows = (id) => { const d = dash.data(id); return d.status === 'ok' ? (Array.i
 SX.fail = (el, id) => { const s = dash.data(id).status; if (s === 'error' || s === 'connect' || s === 'declined' || s === 'missing') { el.innerHTML = ''; const f = document.createElement('div'); f.className = 'fail'; f.textContent = 'Failed to load'; el.appendChild(f); return true; } return false; };
 SX.fmt = d3.format(',');
 SX.icon = (t) => { const i = document.createElement('span'); i.className = 'ic'; let h = 0; for (const ch of String(t)) h = (h * 31 + ch.charCodeAt(0)) >>> 0; i.style.background = dash.colors[h % dash.colors.length]; i.textContent = String(t).slice(0, 3); return i; };
-SX.fmtField = { world_close: (v) => '€' + d3.format(',.2f')(v), pick_r52: (v) => (v > 0 ? '+' : '') + v + '%', spx_close: d3.format(',.2f'), ma200: d3.format(',.0f'), from_ath_pct: (v) => (v > 0 ? '+' : '') + Number(v).toFixed(2) + '%', meter: (v) => (v > 0 ? '+' : '') + v };
+SX.fmtField = { world_close: (v) => '€' + d3.format(',.2f')(v), pick_r52: (v) => (v > 0 ? '+' : '') + v + '%', from_ath_pct: (v) => (v > 0 ? '+' : '') + Number(v).toFixed(2) + '%', meter: (v) => (v > 0 ? '+' : '') + v };
 SX.money = (v, c) => { if (v == null) return '—'; const sym = { USD: '$', EUR: '€', GBp: '', JPY: '¥', CHF: 'CHF ', HKD: 'HK$', INR: '₹', KRW: '₩', TWD: 'NT$' }[c || 'USD']; const f = d3.format(v >= 1000 ? ',.0f' : ',.2f')(v); return sym == null ? f + ' ' + c : c === 'GBp' ? f + 'p' : sym + f; };
 SX.cur = (v) => '€' + (v >= 1e6 ? (v / 1e6).toFixed(2) + 'M' : d3.format(',.0f')(v));
 
@@ -1058,17 +958,19 @@ dash.calc('risk_counts', {
 dash.calc('demo_summary', {
   inputs: ['demo_value', 'demo_ledger'],
   title: 'Demo account totals',
-  description: 'Account value, profit/loss since the €1,000 start, the same money in the MSCI World ETF, and trade counts.',
+  description: 'Account value, money deposited (€1,000 a week), profit/loss, the same deposits in the MSCI World ETF, and trade counts.',
   fn: (demo_value, demo_ledger) => {
-    const last = demo_value[demo_value.length - 1] || { value: 1000, benchmark: 1000 };
+    const last = demo_value[demo_value.length - 1] || { value: 1000, benchmark: 1000, invested: 1000 };
+    const inv = Number(last.invested ?? 1000);
     const r2 = (x) => Math.round(x * 100) / 100;
-    const trades = demo_ledger.filter((r) => r.leg !== 'Account');
+    const trades = demo_ledger.filter((r) => r.action === 'Buy' || r.action === 'Sell');
     const sells = trades.filter((r) => r.action === 'Sell');
     return [
       { metric: 'Account value (€)', value: r2(last.value) },
-      { metric: 'Total P/L (€)', value: r2(last.value - 1000) },
-      { metric: 'Return (%)', value: r2((last.value / 1000 - 1) * 100) },
-      { metric: 'MSCI World, same €1,000 (€)', value: r2(last.benchmark) },
+      { metric: 'Deposited (€)', value: r2(inv) },
+      { metric: 'Total P/L (€)', value: r2(last.value - inv) },
+      { metric: 'Return (%)', value: r2((last.value / inv - 1) * 100) },
+      { metric: 'MSCI World, same deposits (€)', value: r2(last.benchmark) },
       { metric: 'vs MSCI World (€)', value: r2(last.value - last.benchmark) },
       { metric: 'Costs paid (€)', value: r2(trades.reduce((a, r) => a + Number(r.cost_eur || 0), 0)) },
       { metric: 'Trades', value: trades.length },
@@ -1080,24 +982,8 @@ dash.calc('demo_summary', {
 dash.calc('demo_weekly', {
   inputs: ['demo_value'],
   title: 'Demo account by week',
-  description: 'Account value each Friday close next to €1,000 put into the MSCI World ETF on the same start day.',
-  fn: (demo_value) => demo_value.map((r) => ({ week: r.date, value: r.value, benchmark: r.benchmark, diff: Math.round((r.value - r.benchmark) * 100) / 100, pick: r.pick })),
-});
-
-dash.calc('plans_now', {
-  inputs: ['weekly_now', 'plans_summary'],
-  title: 'Plan actions this week',
-  description: 'Applies each plan’s rule to this week’s data: is the S&P 500 above its trend line, and how much new money goes in.',
-  fn: (weekly_now, plans_summary) => {
-    const w = weekly_now[0]; const above = Number(w.spx_close) > Number(w.ma200);
-    return plans_summary.map((p) => {
-      const L = Number(p.leverage);
-      if (L === 1) return { plan: p.plan, action: `Buy €${w.amount} of the 1x ETF`, status: `${w.tier} tier this week. The 10% plan never sells on signals.` };
-      return above
-        ? { plan: p.plan, action: `Hold ${L}x · add €${w.amount}`, status: `S&P 500 ${Number(w.spx_close).toFixed(0)} is above its trend line ${Number(w.ma200).toFixed(0)}: stay in the ${L}x fund and add this week's €${w.amount}.` }
-        : { plan: p.plan, action: `Sell ${L}x · hold cash`, status: `S&P 500 ${Number(w.spx_close).toFixed(0)} is below its trend line ${Number(w.ma200).toFixed(0)}: sell the ${L}x fund, keep everything (and this week's €${w.amount}) in cash until a Friday close above the line.` };
-    });
-  },
+  description: 'Account value each Friday close, money deposited so far, and the same deposits in the MSCI World ETF.',
+  fn: (demo_value) => demo_value.map((r) => ({ week: r.date, value: r.value, invested: r.invested ?? 1000, benchmark: r.benchmark, diff: Math.round((r.value - r.benchmark) * 100) / 100, pick: r.pick })),
 });
 
 dash.calc('pick_list', {
@@ -1123,31 +1009,34 @@ dash.calc('extra_picks', {
   fn: (extra_positions, pick_rank) => {
     const info = {}; pick_rank.forEach((r) => { info[r.ticker] = r; });
     return extra_positions.filter((p) => p.leg === 'Stocks').map((p) => { const r = info[p.ticker] || {};
-      return { ticker: p.ticker, company: p.company, side: p.side, euros: p.euros, entry_price: p.entry_price, currency: p.currency || r.currency || 'USD', rank: r.rank ?? null, score: r.score ?? null, sector: r.sector || r.country || '', off_52w_high: r.off_52w_high ?? null, week_of: p.week_of }; });
+      return { ticker: p.ticker, company: p.company, side: p.side, weight: p.weight ?? null, vol: p.vol ?? r.vol ?? null, euros: p.euros, entry_price: p.entry_price, currency: p.currency || r.currency || 'USD', rank: r.rank ?? null, score: r.score ?? null, sector: r.sector || r.country || '', off_52w_high: r.off_52w_high ?? null, week_of: p.week_of }; });
   },
 });
 dash.calc('extra_weeks', {
   inputs: ['extra_ledger'],
   title: 'Extra profit by week',
-  description: 'Profit/loss of the weekly stock picks (longs, shorts, total) and the running total.',
+  description: 'Weekly return of the picks in % of the stake: long side, short side, both together (half each), and since the start (compounded).',
   fn: (extra_ledger) => {
     const by = {};
-    extra_ledger.filter((r) => r.leg === 'Stocks').forEach((r) => { const w = (by[r.closed_on] = by[r.closed_on] || { longs: 0, shorts: 0 }); w[r.side === 'Long' ? 'longs' : 'shorts'] += Number(r.pnl_eur); });
-    let c = 0; const r2 = (x) => Math.round(x * 100) / 100;
-    return Object.keys(by).sort().map((week) => { const p = by[week].longs + by[week].shorts; c += p; return { week, longs: r2(by[week].longs), shorts: r2(by[week].shorts), pnl: r2(p), cumulative: r2(c) }; });
+    extra_ledger.filter((r) => r.leg === 'Stocks').forEach((r) => { const w = (by[r.closed_on] = by[r.closed_on] || { lp: 0, le: 0, sp: 0, se: 0 }); if (r.side === 'Long') { w.lp += Number(r.pnl_eur); w.le += Number(r.euros); } else { w.sp += Number(r.pnl_eur); w.se += Number(r.euros); } });
+    let c = 1; const r2 = (x) => Math.round(x * 100) / 100;
+    return Object.keys(by).sort().map((week) => { const w = by[week]; const tot = (w.lp + w.sp) / ((w.le + w.se) || 1); c *= 1 + tot;
+      return { week, longs: r2((w.lp / (w.le || 1)) * 100), shorts: r2((w.sp / (w.se || 1)) * 100), pnl: r2(tot * 100), cumulative: r2((c - 1) * 100) }; });
   },
 });
 dash.calc('extra_summary', {
   inputs: ['extra_ledger'],
   title: 'Extra profit totals',
-  description: 'Totals of the weekly stock picks: profit/loss overall, longs, shorts, weeks and share of winning trades.',
+  description: 'Totals of the weekly picks in % of the stake: overall (compounded), long side, short side, weeks and share of winning trades.',
   fn: (extra_ledger) => {
-    const t = extra_ledger.filter((r) => r.leg === 'Stocks'); const sum = (rows) => Math.round(rows.reduce((a, r) => a + Number(r.pnl_eur), 0) * 100) / 100;
+    const t = extra_ledger.filter((r) => r.leg === 'Stocks'); const r2 = (x) => Math.round(x * 100) / 100;
+    const by = {}; t.forEach((r) => { const w = (by[r.closed_on] = by[r.closed_on] || { L: [0, 0], S: [0, 0] }); const k = r.side === 'Long' ? 'L' : 'S'; w[k][0] += Number(r.pnl_eur); w[k][1] += Number(r.euros); });
+    let c = 1, cl = 1, cs = 1; Object.values(by).forEach((w) => { c *= 1 + (w.L[0] + w.S[0]) / ((w.L[1] + w.S[1]) || 1); cl *= 1 + w.L[0] / (w.L[1] || 1); cs *= 1 + w.S[0] / (w.S[1] || 1); });
     return [
-      { metric: 'Total P/L (€)', value: sum(t) },
-      { metric: 'Longs P/L (€)', value: sum(t.filter((r) => r.side === 'Long')) },
-      { metric: 'Shorts P/L (€)', value: sum(t.filter((r) => r.side === 'Short')) },
-      { metric: 'Weeks', value: new Set(t.map((r) => r.closed_on)).size },
+      { metric: 'Total return (%)', value: r2((c - 1) * 100) },
+      { metric: 'Long side (%)', value: r2((cl - 1) * 100) },
+      { metric: 'Short side (%)', value: r2((cs - 1) * 100) },
+      { metric: 'Weeks', value: Object.keys(by).length },
       { metric: 'Win rate (%)', value: t.length ? Math.round((t.filter((r) => Number(r.pnl_eur) > 0).length / t.length) * 1000) / 10 : 0 },
     ];
   },
@@ -1171,9 +1060,14 @@ SX.gauge = (box, v, label) => {
 };
 
 // ---- tabs ----
+SX.RESEARCH = ['history', 'plans', 'gauges'];
 SX.show = (name) => {
+  if (name === 'research') name = SX.RESEARCH.includes(SX.active) ? SX.active : 'history';
+  if (!document.getElementById(name)) name = 'home';
+  const tab = SX.RESEARCH.includes(name) ? 'research' : name;
   document.querySelectorAll('.sx [data-page]').forEach((s) => { s.hidden = s.id !== name; });
-  document.querySelectorAll('.sx .tabs button[data-tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === name)));
+  document.querySelectorAll('.sx .tabs button[data-tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === tab)));
+  document.querySelectorAll('.sx .subtabs button[data-go]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.go === name)));
   SX.active = name; dash.setLink(name); SX.draw && SX.draw();
 };
 document.querySelectorAll('.sx .tabs button[data-tab]').forEach((b) => b.addEventListener('click', () => SX.show(b.dataset.tab)));
@@ -1274,7 +1168,6 @@ SX.line = (box, series, o) => {
 
   SX.draw = () => {
     // ---------- header ----------
-    const sn = SX.rows('signal_now');
     const tk = document.getElementById('takeaway'); const wn0 = SX.rows('weekly_now');
     if (wn0 && wn0[0] && wn0[0].pick_index) {
       const w = wn0[0];
@@ -1290,7 +1183,6 @@ SX.line = (box, series, o) => {
       if (r) { const f = el.dataset.field, v = r[f]; const fm = SX.fmtField[f]; el.textContent = v == null ? '—' : fm && typeof v === 'number' ? fm(v) : v;
         if (f === 'pct') { el.className = (el.className.replace(/\b(up|down)\b/g, '') + (v >= 0 ? ' up' : ' down')).trim(); el.textContent = (v > 0 ? '+' : '') + v + '%'; } }
     });
-    const sig = document.getElementById('sig'); if (sig && sn && sn[0]) sig.className = 'sig ' + sn[0].signal.replace(' ', '_');
 
     const mrows = SX.rows('meter_now'); const mt = mrows && mrows.find((r) => r.component === 'Total');
     ['gauge-home', 'gauge-week', 'gauge-signal'].forEach((id) => { const b = document.getElementById(id); if (b && b.offsetParent && !SX.fail(b, 'meter_now') && mt) SX.gauge(b, +mt.contribution, mt.reading); });
@@ -1358,22 +1250,22 @@ SX.line = (box, series, o) => {
         const li = document.createElement('li');
         const nm = document.createElement('span'); nm.style.minWidth = '0'; const tk = document.createElement('div'); tk.className = 'tk'; tk.textContent = r.ticker; const co = document.createElement('div'); co.className = 'co'; co.textContent = r.company + (r.sector ? ' · ' + r.sector : ''); nm.append(tk, co);
         const p = document.createElement('span'); p.textContent = SX.money(r.entry_price, r.currency);
-        const sc = document.createElement('span'); sc.className = 'pill ' + (side === 'Long' ? 'p-good' : 'p-bad'); sc.textContent = '#' + r.rank;
+        const sc = document.createElement('span'); sc.className = 'pill ' + (side === 'Long' ? 'p-good' : 'p-bad'); sc.textContent = r.weight != null ? r.weight + '%' : '#' + r.rank; sc.title = 'Share of your ' + side.toLowerCase() + ' money';
         li.append(SX.icon(r.ticker), nm, p, sc); return li; }));
     };
     if (SX.active === 'home') { SX.exList('ex-long-home', 'Long'); SX.exList('ex-short-home', 'Short'); }
     if (SX.active === 'extra') {
       const fm = { ticker: (td, v, r) => { const d = document.createElement('div'); d.className = 'nm'; const c = document.createElement('span'); c.className = 'co'; c.textContent = v; const t = document.createElement('span'); t.className = 'tk'; t.textContent = r.company; d.append(SX.icon(v), c, t); td.appendChild(d); },
+        weight: (td, v) => { td.textContent = v == null ? '—' : v + '%'; td.style.fontWeight = '800'; }, vol: (td, v) => { td.textContent = v == null ? '—' : v; td.style.color = 'var(--muted)'; },
         entry_price: (td, v, r) => { td.textContent = SX.money(v, r.currency); }, off_52w_high: (td, v) => { td.textContent = v == null ? '—' : v; td.style.color = v < 0 ? 'var(--down)' : ''; } };
       const lt = document.getElementById('ex-long-table'), st = document.getElementById('ex-short-table');
       lt._f = (r) => r.side === 'Long'; st._f = (r) => r.side === 'Short';
       SX.table('ex-long-table', 'extra_picks', fm); SX.table('ex-short-table', 'extra_picks', fm);
-      const col = (td, v) => { td.textContent = v; td.style.color = v > 0 ? 'var(--up)' : v < 0 ? 'var(--down)' : ''; };
-      SX.table('ex-weeks', 'extra_weeks', { longs: col, shorts: col, pnl: col, cumulative: col });
+      SX.table('ex-weeks', 'extra_weeks', { longs: pc, shorts: pc, pnl: pc, cumulative: pc });
       const ew = SX.rows('extra_weeks'); const eb = document.getElementById('ex-chart'); eb.querySelector('svg')?.remove();
       document.getElementById('ex-empty').hidden = !!(ew && ew.length);
       eb.style.minHeight = ew && ew.length ? '200px' : '0';
-      if (ew && ew.length) SX.line(eb, [{ name: 'Running total', color: dash.colors[0], pts: [{ x: new Date(pm(ew[0].week) - 7 * 864e5), y: 0 }].concat(ew.map((r) => ({ x: pm(r.week), y: +r.cumulative }))) }], { h: 200, yfmt: (v) => '€' + d3.format(',.0f')(v), tipfmt: (v) => '€' + d3.format(',.2f')(v), refs: [{ y: 0, label: '€0' }] });
+      if (ew && ew.length) SX.line(eb, [{ name: 'Since start', color: dash.colors[0], pts: [{ x: new Date(pm(ew[0].week) - 7 * 864e5), y: 0 }].concat(ew.map((r) => ({ x: pm(r.week), y: +r.cumulative }))) }], { h: 200, yfmt: (v) => d3.format('+.1f')(v) + '%', tipfmt: (v) => d3.format('+.2f')(v) + '%', refs: [{ y: 0, label: '0%' }] });
     }
     SX.idxFmt = {
       rank: (td, v) => { td.textContent = v; td.style.color = 'var(--muted)'; },
@@ -1465,7 +1357,7 @@ SX.line = (box, series, o) => {
 
     if (SX.active === 'week') {
       SX.table('meter-table', 'meter_now', { component: (td, v) => { td.textContent = v; if (v === 'Total') td.style.fontWeight = '600'; }, contribution: (td, v) => { td.textContent = v; td.style.color = v > 0 ? 'var(--color-ok)' : v < 0 ? 'var(--color-bad)' : ''; } });
-      SX.table('mb-table', 'meter_buckets');
+      SX.table('mb-table', 'meter_test', { bucket: (td, v) => { td.textContent = v; td.style.fontWeight = '600'; }, next_4w: num, next_52w: num });
       const mh = SX.rows('weekly_history'); const mbox = document.getElementById('meter-chart');
       if (!SX.fail(mbox, 'weekly_history') && mh && mbox.clientWidth) {
         SX.line(mbox, [{ name: 'Meter', color: dash.colors[0], w: 1.5, pts: mh.filter((r) => r.meter != null).map((r) => ({ x: pm(r.week), y: +r.meter })) }],
@@ -1474,7 +1366,7 @@ SX.line = (box, series, o) => {
       const wn = SX.rows('weekly_now'); const cur = wn && wn[0] ? wn[0].tier : null;
       SX.table('tier-table', 'weekly_tiers', { tier: (td, v) => { td.textContent = v; td.style.fontWeight = '600'; } });
       document.querySelectorAll('#tier-table tbody tr').forEach((tr) => { const on = tr.dataset.key === cur; tr.style.background = on ? 'var(--color-bg)' : ''; tr.style.outline = on ? '2px solid var(--color-ok)' : ''; });
-      SX.table('wk-test', 'weekly_test', { period: (td, v) => { td.textContent = v; td.style.fontWeight = '500'; } });
+      SX.table('wk-test', 'ip_buying', { plan: (td, v) => { td.textContent = v; td.className = 'wrapc'; td.style.fontWeight = '600'; }, invested: (td, v) => { td.textContent = SX.fmt(v); }, value: (td, v) => { td.textContent = SX.fmt(v); }, irr: num });
       const box = document.getElementById('wk-chart'); const wh = SX.rows('weekly_history');
       box.querySelector('svg')?.remove();
       if (!SX.fail(box, 'weekly_history') && wh && box.clientWidth) {
@@ -1535,55 +1427,14 @@ SX.line = (box, series, o) => {
       }
     }
 
-    if (SX.active === 'signal') {
-      // ---------- price chart ----------
-      const box = document.getElementById('price-chart'); const wk = SX.rows('spx_weekly');
-      if (!SX.fail(box, 'spx_weekly') && wk && sn) {
-        const s = sn[0];
-        SX.line(box, [{ name: 'S&P 500', color: dash.colors[0], pts: wk.map((r) => ({ x: pm(r.date), y: +r.close })) }],
-          { h: 280, refs: [{ y: +s.ath, label: 'High ' + d3.format(',.0f')(s.ath), dy: '-0.4em' }, { y: +s.ma200, label: '200-day ' + d3.format(',.0f')(s.ma200), dy: '1em' }] });
-      }
-      // ---------- indicator table, grouped ----------
+    if (SX.active === 'gauges') {
       SX.table('ind-table', 'indicators', {
-        status: (td, v) => { const p = document.createElement('span'); p.className = 'pill p-' + v; const d = document.createElement('i'); d.className = 'dot d-' + v; d.style.marginRight = '6px'; p.append(d, v); td.appendChild(p); },
+        status: (td, v) => { const p = document.createElement('span'); p.className = 'pill p-' + v; const d = document.createElement('i'); d.className = 'dot d-' + v; d.style.marginRight = '6px'; p.append(d, statusWord[v] || v); td.appendChild(p); },
         name: (td, v) => { td.textContent = v; td.style.fontWeight = '500'; },
         group: (td, v) => { td.textContent = v; td.style.color = 'var(--color-fg-muted)'; },
+        meaning: (td, v) => { td.textContent = v || ''; td.className = 'wrapc'; },
+        rule: (td, v) => { td.textContent = v || ''; td.className = 'wrapc'; td.style.color = 'var(--muted)'; },
       });
-    }
-
-    if (SX.active === 'backtest') {
-      SX.table('bt-table', 'backtest', { final: (td, v) => (td.textContent = SX.fmt(v)), invested: (td, v) => (td.textContent = SX.fmt(v)), strategy: (td, v) => { td.textContent = v; if (v === 'Plain monthly buying') td.style.fontWeight = '600'; } });
-      SX.table('fwd-table', 'fwd_by_signal');
-      const h = SX.rows('history'); const cb = document.getElementById('curve-chart');
-      if (!SX.fail(cb, 'history') && h) {
-        const keys = [['v_dca', 'Plain monthly buying', dash.colors[0], 2.5, 1], ['v_trend', 'Trend rule only', dash.colors[1], 1.5, 0.8], ['v_signal', 'Combined signal', dash.colors[2], 1.5, 0.8], ['v_dip', 'Buy the dip', 'var(--cds-chart-muted)', 1.5, 1]];
-        const lg = document.getElementById('curve-legend'); lg.replaceChildren(...keys.map((k) => { const s = document.createElement('span'); const i = document.createElement('i'); i.style.background = k[2]; s.append(i, k[1]); return s; }));
-        SX.line(cb, keys.map((k) => ({ name: k[1], color: k[2], w: k[3], op: k[4], pts: h.map((r) => ({ x: pm(r.month), y: r[k[0]] == null ? null : +r[k[0]] })) })),
-          { h: 300, log: true, yfmt: (v) => SX.cur(v), tipDate: d3.utcFormat('%b %Y'), strip: h.map((r) => ({ x: pm(r.month), s: r.sig })), tipExtra: (i) => 'Signal: ' + String(h[i].sig).replace('_', ' ') });
-        const small = [['m-curve', 'T10Y3M', 0, 'pp'], ['m-nfci', 'NFCI', 0, ''], ['m-sahm', 'SAHMREALTIME', 0.5, ''], ['m-baa', 'BAA10Y', null, 'pp']];
-        small.forEach(([id, f, ref, u]) => SX.line(document.getElementById(id), [{ name: f, color: dash.colors[0], w: 1.5, pts: h.map((r) => ({ x: pm(r.month), y: r[f] == null ? null : +r[f] })) }],
-          { h: 170, yfmt: d3.format('.1f'), tipDate: d3.utcFormat('%b %Y'), refs: ref == null ? [] : [{ y: ref, label: String(ref), color: 'var(--cds-chart-status-critical)' }] }));
-      }
-      // CAPE bars
-      const cbx = document.getElementById('cape-chart'); const cr = SX.rows('cape_buckets');
-      cbx.querySelector('svg')?.remove();
-      if (!SX.fail(cbx, 'cape_buckets') && cr && cbx.clientWidth) {
-        const W = cbx.clientWidth, bh = 20, gap = 6, H = cr.length * (bh + gap) + 24;
-        const svg = d3.select(cbx).insert('svg', ':first-child').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
-        const t = svg.append('text').attr('font-size', 12).text('Under 10'); const ml = t.node().getComputedTextLength() + 10; t.remove();
-        const x = d3.scaleLinear([-6, 20], [ml, W - 40]);
-        svg.append('line').attr('x1', x(0)).attr('x2', x(0)).attr('y1', 0).attr('y2', H - 20).attr('stroke', 'var(--cds-chart-axis)');
-        const tip = SX.tip(cbx);
-        cr.forEach((r, i) => {
-          const y0 = i * (bh + gap); const v = +r.avg_10y_real; const last = i === cr.length - 1;
-          svg.append('line').attr('x1', x(+r.worst)).attr('x2', x(+r.best)).attr('y1', y0 + bh / 2).attr('y2', y0 + bh / 2).attr('stroke', 'var(--cds-chart-grid)').attr('stroke-width', 2);
-          svg.append('rect').attr('x', Math.min(x(0), x(v))).attr('y', y0 + 3).attr('width', Math.abs(x(v) - x(0))).attr('height', bh - 6).attr('rx', 4).attr('fill', last ? 'var(--cds-chart-status-critical)' : dash.colors[0])
-            .on('mousemove', (ev) => { tip.replaceChildren(); const d = document.createElement('div'); d.className = 'd'; d.textContent = 'CAPE ' + r.cape; const a = document.createElement('div'); a.textContent = `Avg ${v}%/yr · range ${r.worst}% to ${r.best}% · ${r.months} months`; tip.append(d, a); const [mx, my] = d3.pointer(ev, cbx); SX.place(tip, cbx, mx, my); })
-            .on('mouseleave', () => (tip.style.display = 'none'));
-          svg.append('text').attr('x', ml - 6).attr('y', y0 + bh / 2).attr('dy', '0.32em').attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(r.cape);
-          svg.append('text').attr('x', v >= 0 ? x(v) + 4 : x(v) - 4).attr('y', y0 + bh / 2).attr('dy', '0.32em').attr('text-anchor', v >= 0 ? 'start' : 'end').attr('font-size', 12).attr('fill', 'var(--color-fg)').text((v > 0 ? '+' : '') + v + '%');
-        });
-      }
     }
 
     if (SX.active === 'stocks') {
@@ -1595,11 +1446,6 @@ SX.line = (box, series, o) => {
       if (!rb._sort) rb._sort = { f: 'rank', dir: -1 };
       SX.table('rt-table', 'pick_rank', { ticker: tick, note: nt, group: grp, momentum: pc, off_52w_high: num });
       SX.table('rb-table', 'pick_rank', { ticker: tick, note: nt, group: grp, momentum: pc, off_52w_high: num });
-      SX.table('ut-table', 'rank_top', { ticker: tick, note: nt });
-      SX.table('ub-table', 'rank_bottom', { ticker: tick, note: nt });
-      SX.table('top-table', 'stocks_top', { ticker: tick });
-      SX.table('fallen-table', 'stocks_fallen', { ticker: tick, check: (td, v) => { td.textContent = v; if (v) td.className = 'p-warn'; } });
-      SX.table('sector-table', 'sectors');
     }
     if (SX.active === 'demo') {
       const eur = (td, v) => { td.textContent = v == null ? '—' : d3.format(',.2f')(v); };
@@ -1619,9 +1465,9 @@ SX.line = (box, series, o) => {
       const dw = SX.rows('demo_weekly'); const db = document.getElementById('demo-chart');
       document.getElementById('demo-empty').hidden = !!(dw && dw.length > 1);
       db.querySelector('svg')?.remove(); db.style.minHeight = dw && dw.length > 1 ? '220px' : '0';
-      const ser = [['value', 'Demo account', dash.colors[0], 2.5], ['benchmark', 'MSCI World, same €1,000', 'var(--cds-chart-muted)', 1.8]];
+      const ser = [['value', 'Demo account', dash.colors[0], 2.5], ['benchmark', 'MSCI World, same deposits', 'var(--cds-chart-muted)', 1.8], ['invested', 'Money deposited', 'var(--color-warn)', 1.4]];
       document.getElementById('demo-legend').replaceChildren(...ser.map((k) => { const sp = document.createElement('span'); const i = document.createElement('i'); i.style.background = k[2]; sp.append(i, k[1]); return sp; }));
-      if (dw && dw.length > 1) SX.line(db, ser.map((k) => ({ name: k[1], color: k[2], w: k[3], pts: dw.map((r) => ({ x: pm(r.week), y: +r[k[0]] })) })), { h: 220, yfmt: (v) => '€' + d3.format(',.0f')(v), tipfmt: (v) => '€' + d3.format(',.2f')(v), refs: [{ y: 1000, label: '€1,000' }] });
+      if (dw && dw.length > 1) SX.line(db, ser.map((k) => ({ name: k[1], color: k[2], w: k[3], pts: dw.map((r) => ({ x: pm(r.week), y: +r[k[0]] })) })), { h: 220, yfmt: (v) => '€' + d3.format(',.0f')(v), tipfmt: (v) => '€' + d3.format(',.2f')(v) });
     }
     if (SX.active === 'news') {
       const ft = document.getElementById('feed-table'); ft._f = (r) => !SX.ng || SX.ng === 'all' || r.group === SX.ng;
@@ -1630,7 +1476,6 @@ SX.line = (box, series, o) => {
         group: (td, v, r) => { td.textContent = v === "This week's index" && r.topic ? r.topic : v; td.style.color = 'var(--muted)'; td.style.fontWeight = '500'; },
         title: (td, v, r) => { const a = document.createElement('a'); if (/^https:\/\//.test(r.link)) a.href = r.link; a.target = '_blank'; a.rel = 'noopener'; a.textContent = v; a.style.color = 'var(--color-fg)'; td.className = 'wrapc'; td.appendChild(a); },
       });
-      SX.table('news-table', 'news', { source: (td, v, r) => { const a = document.createElement('a'); if (/^https:\/\//.test(r.link)) a.href = r.link; a.target = '_blank'; a.rel = 'noopener'; a.textContent = v; td.appendChild(a); } });
     }
   };
 
@@ -1656,11 +1501,9 @@ SX.line = (box, series, o) => {
     document.querySelectorAll('[data-plan-mark]').forEach((el) => el.setAttribute('data-where', 'plan=' + encodeURIComponent(SX.plan)));
     dash.setLink('plans'); SX.draw();
   }));
-  const qi = document.getElementById('q-top');
-  qi.addEventListener('input', () => { document.getElementById('top-table')._q = qi.value; SX.draw(); });
 
   const named = location.hash.slice(1);
-  if (['home', 'indexes', 'markets', 'week', 'strategy', 'extra', 'plans', 'signal', 'backtest', 'history', 'stocks', 'demo', 'news'].includes(named)) SX.active = named;
+  if (['home', 'indexes', 'markets', 'week', 'strategy', 'extra', 'plans', 'gauges', 'history', 'stocks', 'demo', 'news', 'research'].includes(named)) SX.active = named === 'research' ? 'history' : named;
   let first = true;
   dash.onData(() => {
     if (first) { first = false; SX.show(SX.active); return; }
@@ -1668,6 +1511,237 @@ SX.line = (box, series, o) => {
   });
 })();
 </script>
+
+<script>
+// ---------------------------------------------------------------- Ask IndexPilot AI
+// Answers questions about the site. Three engines, best first:
+//   1. Claude through the claude.ai viewer (the dashboard version), when the page is allowed to ask it
+//   2. Claude through the viewer's own Anthropic API key (optional, kept only in this browser)
+//   3. Built-in answers computed from the site's live data (always available, no AI)
+(() => {
+  const SX = window.SX;
+  const $ = (id) => document.getElementById(id);
+  const bar = $('askbar'), mini = $('askmini'), panel = $('askpanel'), log = $('asklog'), form = $('askform'), inp = $('askinput'), modeEl = $('askmode');
+  if (!bar || !panel) return;
+  const PAGES = { home: 'Overview', indexes: 'Index pick', week: 'This week', stocks: 'Stocks', extra: 'Extra profit', demo: 'Demo account', strategy: 'Strategy', news: 'News', markets: 'Markets', history: 'Research: 100 years', plans: 'Research: plans', gauges: 'Research: gauges' };
+  const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} } };
+  const history = [];   // [{role, content}] for the AI engines
+  let sample = null, busy = false;
+
+  // ---------- open / close / hide
+  const open = () => { panel.hidden = false; bar.hidden = true; mini.hidden = true; if (!log.childElementCount) greet(); setTimeout(() => inp.focus(), 30); };
+  const close = () => { panel.hidden = true; const hidden = store.get('askHidden') === '1'; bar.hidden = hidden; mini.hidden = !hidden; };
+  bar.addEventListener('click', (e) => { if (e.target.closest('.hide')) { e.stopPropagation(); store.set('askHidden', '1'); close(); return; } open(); });
+  mini.addEventListener('click', () => { store.set('askHidden', null); open(); });
+  $('askclose').addEventListener('click', close);
+  document.addEventListener('keydown', (e) => {
+    const typing = /INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName || '') || document.activeElement?.isContentEditable;
+    if (e.key === '?' && e.shiftKey && !typing) { e.preventDefault(); panel.hidden ? open() : close(); }
+    else if (e.key === 'Escape' && !panel.hidden) close();
+  });
+  close();
+
+  // ---------- engine detection
+  const keyMode = () => !!store.get('askKey');
+  const setMode = () => { modeEl.textContent = sample ? 'Claude' : keyMode() ? 'Claude (your key)' : 'Site data'; };
+  setMode();
+  if (window.claude && typeof window.claude.use === 'function') {
+    window.claude.use('sample').then((s) => { sample = s || null; setMode(); }).catch(() => {});
+  }
+  $('askgear').addEventListener('click', () => $('askset').classList.toggle('on'));
+  $('askkeysave').addEventListener('click', () => { const v = $('askkey').value.trim(); if (v) store.set('askKey', v); $('askkey').value = ''; setMode(); say('bot', keyMode() ? 'Saved. Questions now go to Claude with your key, from this browser only.' : 'No key saved.'); });
+  $('askkeyclear').addEventListener('click', () => { store.set('askKey', null); setMode(); say('bot', 'Key removed. Back to answers from the site data.'); });
+
+  // ---------- chat UI
+  function say(who, text, extra) {
+    const d = document.createElement('div'); d.className = 'msg ' + who; d.textContent = text;
+    if (extra?.go) extra.go.filter((g) => PAGES[g]).forEach((g) => { const b = document.createElement('button'); b.className = 'go'; b.textContent = 'Open ' + PAGES[g] + ' ›'; b.addEventListener('click', () => { SX.show(g); if (window.innerWidth < 900) close(); document.getElementById('top')?.scrollIntoView({ block: 'start' }); }); d.appendChild(b); });
+    if (extra?.src) { const s = document.createElement('span'); s.className = 'src'; s.textContent = extra.src; d.appendChild(s); }
+    log.appendChild(d); log.scrollTop = log.scrollHeight; return d;
+  }
+  function greet() {
+    const w = (SX.rows('weekly_now') || [])[0];
+    say('bot', `Hi! Ask me anything about IndexPilot: this week's index, the amount, the stocks, the demo account, the backtests or any page.${w ? `\n\nRight now: buy €${w.amount} of ${w.pick_index} (${w.pick_etf}).` : ''}`);
+  }
+  document.querySelectorAll('#asksug button').forEach((b) => b.addEventListener('click', () => ask(b.textContent)));
+  form.addEventListener('submit', (e) => { e.preventDefault(); const q = inp.value.trim(); if (q) { inp.value = ''; ask(q); } });
+
+  // ---------- site context for the AI engines (small, current, no page text dumps)
+  const pickCols = (rows, cols) => (rows || []).map((r) => Object.fromEntries(cols.filter((c) => r[c] != null).map((c) => [c, r[c]])));
+  function context() {
+    const R = (id) => SX.rows(id) || [];
+    const pr = R('pick_rank');
+    return JSON.stringify({
+      this_week: R('weekly_now')[0],
+      index_ranking: pickCols(R('index_rank'), ['rank', 'index', 'etf', 'isin', 'price', 'r4', 'r26', 'r52', 'gap_to_pick', 'trend', 'status']),
+      strongest_stocks: pickCols(pr.slice(0, 10), ['rank', 'ticker', 'company', 'country', 'score', 'momentum', 'r1y', 'off_52w_high', 'price', 'currency', 'note']),
+      weakest_stocks: pickCols(pr.slice(-5), ['rank', 'ticker', 'company', 'score', 'momentum', 'r1y']),
+      extra_profit_picks: pickCols(R('extra_positions'), ['ticker', 'company', 'side', 'weight', 'entry_price', 'currency']),
+      extra_profit_record: R('extra_summary'),
+      meter: R('meter_now'),
+      demo_account: R('demo_summary'), demo_holdings: pickCols(R('demo_positions'), ['ticker', 'company', 'leg', 'weight', 'euros', 'pnl_eur', 'return_pct']),
+      backtest_2012_today: R('ip_backtest'), weekly_buying_2012_today: R('ip_buying'), regional_test_1990_2026: R('hist_rotation'),
+      momentum_stocks_since_1927: R('hist_overlay'), meter_vs_next_year: R('meter_test'),
+      gauges: pickCols(R('indicators'), ['name', 'display', 'status', 'asof']),
+      headlines: pickCols(R('news_feed').slice(0, 10), ['group', 'source', 'title', 'published']),
+      markets: pickCols(R('markets'), ['name', 'last', 'w1', 'ytd', 'y1']),
+    });
+  }
+  const GUIDE = `IndexPilot is a personal research site for a euro investor. Pages: Overview (this week's main index, amount, meter, index table, stocks, headlines), Index pick (how the weekly index is chosen: six euro ETFs ranked by 52-week return in euros, the leader replaces the current pick only if it leads by more than 5 percentage points; backtests 2012-today and 1990-2026), This week (EUR 40-200 amount tiers set by the MSCI World ETF's distance from its record plus VIX, NFCI and Sahm rule; signal meter -100..+100), Stocks (members of the picked index ranked: momentum 12-1 month + 52-week range; S&P 500 also uses value), Extra profit (weekly 3 longs and 3 shorts of the main index, each side split by inverse volatility, results in % of stake), Demo account (simulated: EUR 1,000 deposited every Friday, 70% main-index ETF + 30% its 3 strongest stocks, no shorts, no leverage, 0.2% cost per trade, benchmark = same deposits in MSCI World), Strategy (all rules), News (Fed, ECB, BoJ, CNBC, MarketWatch, Google News headlines), Markets, Research (100 years of US data, 10/20/30% leveraged plans which IndexPilot does not use, US market gauges). Research uses US data because only the US has free monthly data back to 1927 and euro-listed leveraged funds.`;
+  const RULES = `You are "Ask IndexPilot AI", the assistant on the IndexPilot website. Answer the user's question using ONLY the site guide and the live site data below. Be concise (2-6 short sentences or a short list), concrete, and use the numbers. If the data doesn't contain the answer, say so. Mention which page to open for more. This is simulation and research, not financial advice: never tell the user to place a specific trade with certainty, and say so briefly when they ask what to buy. Plain text, no markdown tables.`;
+  function prompt(q) {
+    return [...history.slice(-6), { role: 'user', content: `${RULES}\n\nSITE GUIDE:\n${GUIDE}\n\nLIVE SITE DATA (JSON):\n${context()}\n\nQUESTION: ${q}` }];
+  }
+
+  async function ask(q) {
+    if (busy) return; busy = true;
+    say('me', q);
+    const wait = say('bot wait', 'Thinking…');
+    try {
+      let text = null;
+      if (sample) {
+        try {
+          const r = await sample(prompt(q), { modelTier: 'quick', cache: false, onText: ({ text }) => { wait.classList.remove('wait'); wait.textContent = text; log.scrollTop = log.scrollHeight; } });
+          text = r.text;
+        } catch (e) { if (e && (e.code === 'not_granted' || e.code === 'unavailable')) { sample = null; setMode(); } }
+      }
+      if (text == null && keyMode()) {
+        try { text = await viaKey(q, wait); } catch (e) { say('bot', 'Claude with your key failed (' + (e.message || e) + '). Answering from the site data instead.'); }
+      }
+      if (text != null) { wait.classList.remove('wait'); wait.textContent = text; addGo(wait, text, q); history.push({ role: 'user', content: q }, { role: 'assistant', content: text }); }
+      else { wait.remove(); const a = local(q); say('bot', a.text, { go: a.go, src: 'Answered from the site’s live data' }); }
+    } finally { busy = false; }
+  }
+  function addGo(el, text, q) {
+    const t = (text + ' ' + q).toLowerCase(); const go = [];
+    [['indexes', /index pick|52-week|buffer|backtest/], ['week', /this week|amount|meter|tier/], ['stocks', /stocks? page|ranking/], ['extra', /extra profit|long|short/], ['demo', /demo/], ['news', /news|headline/], ['strategy', /strategy|rule/]].forEach(([g, re]) => { if (re.test(t) && go.length < 2) go.push(g); });
+    go.forEach((g) => { const b = document.createElement('button'); b.className = 'go'; b.textContent = 'Open ' + PAGES[g] + ' ›'; b.addEventListener('click', () => SX.show(g)); el.appendChild(b); });
+  }
+  async function viaKey(q, wait) {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-api-key': store.get('askKey'), 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: store.get('askModel') || 'claude-haiku-5-5', max_tokens: 700, messages: prompt(q) }),
+    });
+    const j = await res.json();
+    if (!res.ok) throw new Error(j?.error?.message || res.status);
+    return (j.content || []).filter((c) => c.type === 'text').map((c) => c.text).join('\n').trim();
+  }
+
+  // ---------- built-in answers from the live data
+  const pct = (v) => (v == null ? '—' : (v > 0 ? '+' : '') + v + '%');
+  const eur = (v) => '€' + d3.format(',.2f')(v);
+  const rowsOf = (id) => SX.rows(id) || [];
+  const metric = (id, m) => (rowsOf(id).find((r) => r.metric === m) || {}).value;
+  const A = {
+    pick() {
+      const w = rowsOf('weekly_now')[0]; if (!w) return null;
+      const ir = rowsOf('index_rank').map((r) => `${r.rank}. ${r.index} ${pct(r.r52)}`).join('\n');
+      return { text: `This week's main index: ${w.pick_index} (${w.pick_fund}, ${w.pick_etf}, ISIN ${w.pick_isin}).\n${w.pick_reason}\n\n52-week returns in euros:\n${ir}\n\nThe pick only changes when another index leads by more than 5 percentage points.`, go: ['indexes'] };
+    },
+    amount() {
+      const w = rowsOf('weekly_now')[0]; if (!w) return null;
+      const t = rowsOf('weekly_tiers').map((r) => `€${r.amount} ${r.tier}: ${r.condition}`).join('\n');
+      return { text: `Buy €${w.amount} this week (${w.tier} tier) into ${w.pick_index} (${w.pick_etf}).\n${w.reason}\n\nThe tiers:\n${t}`, go: ['week'] };
+    },
+    meter() {
+      const m = rowsOf('meter_now'); const tot = m.find((r) => r.component === 'Total'); if (!tot) return null;
+      return { text: `Signal strength is ${pct(tot.contribution).replace('%', '')} (${tot.reading}), on a −100…+100 scale.\n` + m.filter((r) => r.component !== 'Total').map((r) => `${r.component}: ${r.reading} → ${r.contribution > 0 ? '+' : ''}${r.contribution} pts`).join('\n') + `\n\nIt describes the market; it doesn't change what to buy, and the demo account stays invested whatever it says.`, go: ['week'] };
+    },
+    stocks(side) {
+      const pr = rowsOf('pick_rank'); const w = rowsOf('weekly_now')[0]; if (!pr.length) return null;
+      const sel = side === 'bottom' ? pr.slice(-5).reverse() : pr.slice(0, 5);
+      return { text: `${side === 'bottom' ? 'Weakest' : 'Strongest'} stocks in ${w?.pick_index || 'the main index'} this week:\n` + sel.map((r) => `#${r.rank} ${r.company} (${r.ticker}) score ${r.score}, 12-1 month ${pct(r.momentum)}${r.note ? ' — ' + r.note : ''}`).join('\n') + `\n\n${w?.rank_method || ''}`, go: ['stocks', 'extra'] };
+    },
+    extra() {
+      const ep = rowsOf('extra_positions'); if (!ep.length) return null;
+      const f = (s) => ep.filter((p) => p.side === s).map((p) => `${p.company} (${p.ticker}) ${p.weight ?? '—'}%`).join(', ');
+      return { text: `Extra profit picks this week (weights = share of your money on that side):\nLong: ${f('Long')}\nShort: ${f('Short')}\n\nRecord so far: ${pct(metric('extra_summary', 'Total return (%)'))} over ${metric('extra_summary', 'Weeks') ?? 0} weeks. Calmer stocks get bigger weights (inverse volatility). Shorts can lose more than their stake.`, go: ['extra'] };
+    },
+    demo() {
+      const v = metric('demo_summary', 'Account value (€)'); if (v == null) return null;
+      const h = rowsOf('demo_positions').map((p) => `${p.company} (${p.ticker}) ${p.weight}% · ${eur(p.euros)}`).join('\n');
+      return { text: `Demo account: ${eur(v)} from ${eur(metric('demo_summary', 'Deposited (€)'))} deposited (€1,000 every Friday). The same deposits in MSCI World: ${eur(metric('demo_summary', 'MSCI World, same deposits (€)'))}.\n\nHoldings:\n${h}\n\nRules: 70% main-index ETF, 30% its 3 strongest stocks, no shorts, no leverage, 0.2% cost per trade.`, go: ['demo'] };
+    },
+    backtest() {
+      const b = rowsOf('ip_backtest'); const g = (k) => (b.find((r) => r.key === k) || {}); const h = rowsOf('hist_rotation'); const hg = (k) => (h.find((r) => r.key === k) || {});
+      if (!b.length) return null;
+      return { text: `2012–today on real ETF prices in euros: the weekly pick made ${g('pick').cagr}%/yr (worst fall ${g('pick').max_dd}%), vs MSCI World ${g('world').cagr}%/yr, S&P 500 ${g('us').cagr}%/yr and Nasdaq-100 ${g('ndx').cagr}%/yr.` + (h.length ? `\nOn 1990–2026 regional data: pick ${hg('pick').cagr}%/yr vs North America ${hg('US').cagr}%/yr and the developed world ${hg('Developed').cagr}%/yr.` : '') + `\n\nHonest reading: most of the 2012–today edge came from holding the Nasdaq-100; over 35 years the rule did not beat simply holding the US.`, go: ['indexes'] };
+    },
+    news() {
+      const n = rowsOf('news_feed').slice(0, 6); if (!n.length) return null;
+      return { text: 'Latest headlines:\n' + n.map((r) => `• ${r.title} (${r.source})`).join('\n'), go: ['news'] };
+    },
+    gauges() {
+      const g = rowsOf('indicators'); if (!g.length) return null;
+      return { text: 'Market gauges now:\n' + g.map((r) => `${r.name}: ${r.display} (${r.status})`).join('\n') + '\n\nVIX, NFCI and the Sahm rule set the weekly amount; they plus the yield curve make up 55% of the meter.', go: ['gauges'] };
+    },
+    us() {
+      return { text: 'The Research pages use US data for two reasons: only the US has free, reliable monthly stock data back to 1927 (Kenneth French data library), and 2x/3x leveraged funds a euro investor can buy exist mainly for US indexes. The gauges are US measures because US recessions, credit stress and the VIX move every market. None of it decides which index you buy; IndexPilot picks from six indexes worldwide each week.', go: ['history', 'gauges'] };
+    },
+    risk() {
+      return { text: 'Main risks: the pick follows momentum and reacts weeks late to sharp reversals; most of its 2012–today edge came from the Nasdaq-100; single stocks and especially shorts can lose far more than an index; leverage (Research: plans) suffered near-total losses in the 100-year test. Taxes, spreads and fees are only partly modelled. This is simulation and research, not financial advice.', go: ['strategy'] };
+    },
+    buffer() {
+      return { text: 'The 5-point buffer: each Friday the six index ETFs are ranked by their 52-week return in euros. The leader only replaces the current pick if its 52-week return is more than 5 percentage points higher. Small leads are mostly noise, so this cut switching from about 7 times a year to about 1, and in the 2012–today ETF test it also raised the return slightly; on 1990–2026 regional data it lowered it.', go: ['indexes'] };
+    },
+    help() {
+      return { text: 'You can ask, for example:\n• Which index should I buy this week, and why?\n• How much should I invest this week?\n• What are the top stocks and their weights?\n• How is the demo account doing?\n• Does the strategy work? (backtests)\n• What do the gauges say? Why US data?\n• About any stock or index by name, e.g. "TSMC" or "Nasdaq".' };
+    },
+  };
+  function lookup(q) {
+    const t = q.toLowerCase();
+    const AL = { world: /msci world|world index|\bworld\b|eunl/, us: /s&p|snp|sp ?500|sxr8/, ndx: /nasdaq|sxrv/, europe: /europe|eunk/, japan: /japan|nikkei|eunn/, em: /emerging|iema/ };
+    const ir = rowsOf('index_rank').find((r) => AL[r.key] && AL[r.key].test(t));
+    const st = rowsOf('pick_rank').find((r) => (r.ticker && new RegExp('\\b' + r.ticker.split('.')[0].toLowerCase().replace(/[^a-z0-9]/g, '') + '\\b').test(t.replace(/[^a-z0-9 ]/g, ' '))) || (r.company && r.company.length > 3 && t.includes(r.company.toLowerCase().split(' ')[0]) && r.company.split(' ')[0].length > 3));
+    if (st) return { text: `${st.company} (${st.ticker}) ranks #${st.rank} of ${rowsOf('pick_rank').length} in this week's index: score ${st.score}, 12-1 month return ${pct(st.momentum)}, 1 year ${pct(st.r1y)}, ${st.off_52w_high}% from its 52-week high, price ${SX.money(st.price, st.currency)}.${st.note ? ' Note: ' + st.note + '.' : ''}`, go: ['stocks'] };
+    if (ir) return { text: `${ir.index} (${ir.fund}, ${ir.etf}): rank ${ir.rank} of 6 this week. 52 weeks ${pct(ir.r52)}, 6 months ${pct(ir.r26)}, 4 weeks ${pct(ir.r4)}, ${ir.from_high_52w}% from its 52-week high, ${ir.trend === 'Above' ? 'above' : 'below'} its 40-week trend. ${ir.status || (ir.gap_to_pick ? `It is ${Math.abs(ir.gap_to_pick)} points behind this week's pick.` : '')}`, go: ['indexes'] };
+    return null;
+  }
+  function search(q) {
+    const words = q.toLowerCase().match(/[a-zäöå0-9%€]{3,}/g) || []; if (!words.length) return null;
+    let best = [];
+    document.querySelectorAll('.sx section[data-page]').forEach((sec) => {
+      sec.querySelectorAll('p, li, summary, h2, h3').forEach((el) => {
+        const tx = el.textContent.replace(/\s+/g, ' ').trim(); if (tx.length < 25 || tx.includes('——')) return;
+        const low = tx.toLowerCase(); const sc = words.reduce((a, w) => a + (low.includes(w) ? 1 : 0), 0);
+        if (sc) best.push({ sc: sc + (el.tagName === 'P' ? 0.2 : 0), tx, page: sec.id });
+      });
+    });
+    best.sort((a, b) => b.sc - a.sc); best = best.filter((b, i, a) => a.findIndex((x) => x.tx === b.tx) === i).slice(0, 2);
+    if (!best.length || best[0].sc < Math.min(2, words.length)) return null;
+    return { text: best.map((b) => b.tx.slice(0, 420)).join('\n\n'), go: [...new Set(best.map((b) => b.page))] };
+  }
+  function local(q) {
+    const t = q.toLowerCase();
+    const tests = [
+      [/^(hi|hello|hey|moi|help|what can you)/, 'help'],
+      [/why.*\b(us|american|usa)\b|\bus data|\bus tab|research/, 'us'],
+      [/extra|weight|%.*stock|how much of each|short.*pick|long.*pick/, 'extra'],
+      [/demo|paper|simulat|portfolio/, 'demo'],
+      [/backtest|does it work|strategy work|perform|history|since 2012|proof|tested/, 'backtest'],
+      [/news|headline|happening/, 'news'],
+      [/gauge|vix|nfci|sahm|recession|yield curve|credit|inflation|fed\b/, 'gauges'],
+      [/risk|safe|lose|danger|worst fall/, 'risk'],
+      [/buffer|5.?point|switch/, 'buffer'],
+      [/meter|signal|strength|sentiment/, 'meter'],
+      [/how much|amount|€|euro|invest this week|budget|tier/, 'amount'],
+      [/weak|worst stock|bottom|avoid|sell/, 'stocks:bottom'],
+      [/stock|share|compan|top|best/, 'stocks'],
+      [/index|which.*buy|what.*buy|pick|etf|isin|switch|buffer/, 'pick'],
+    ];
+    const run = (k) => { const [n, arg] = k.split(':'); return A[n](arg); };
+    const generic = ['stocks', 'stocks:bottom', 'pick'];
+    for (const [re, k] of tests) if (!generic.includes(k) && re.test(t)) { const a = run(k); if (a) return a; }
+    const hit = lookup(q); if (hit) return hit;
+    for (const [re, k] of tests) if (generic.includes(k) && re.test(t)) { const a = run(k); if (a) return a; }
+    const s = search(q); if (s) return s;
+    return { text: 'I couldn’t find that in the site’s data. Try asking about this week’s index, the amount, the stocks, Extra profit, the demo account, the backtests, the gauges or the news.' + (sample || keyMode() ? '' : '\n\nTip: in the claude.ai dashboard, or with your own Claude API key (⚙), I can answer free-form questions too.'), go: ['strategy'] };
+  }
+  SX.askLocal = local;   // for testing
+})();
+</script>
+
 
 </div>
 
