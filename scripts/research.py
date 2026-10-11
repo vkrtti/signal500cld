@@ -54,6 +54,34 @@ def monthly_block(txt, cols):
     df = pd.DataFrame(rows, columns=['month'] + hdr[1:])
     return df[['month'] + cols].assign(**{c: pd.to_numeric(df[c]) for c in cols})
 
+# ------------------------------------------------------------ momentum stocks: why the demo account holds what it holds
+def overlay():
+    """US stocks sorted into 10 groups by 12-1 month momentum (value-weighted, monthly, Kenneth French data library).
+    Compares the market with the demo's mix (70% market + 30% top-decile momentum stocks) and alternatives."""
+    cache = os.path.join(args.research, 'mom_deciles.csv')
+    if args.offline:
+        if not os.path.exists(cache): return
+        d = pd.read_csv(cache, dtype={'month': str}).set_index('month')
+    else:
+        m = monthly_block(fetch_zip_csv('10_Portfolios_Prior_12_2_CSV.zip'), ['Hi PRIOR', 'Lo PRIOR'])
+        d = m.set_index('month')[['Hi PRIOR', 'Lo PRIOR']].rename(columns={'Hi PRIOR': 'hi', 'Lo PRIOR': 'lo'}) / 100
+        d = d.join(f.set_index('month')[['mkt', 'rf']], how='inner')
+        d.round(6).to_csv(cache)
+    strat = {'market': ('100% US market', lambda x: x.mkt),
+             'demo': ('Demo mix: 70% market + 30% top momentum stocks', lambda x: 0.7 * x.mkt + 0.3 * x.hi),
+             'top': ('100% top momentum stocks', lambda x: x.hi),
+             'ls': ('70% market + 15% long top / 15% short bottom', lambda x: 0.7 * x.mkt + 0.15 * x.hi - 0.15 * x.lo + 0.15 * x.rf)}
+    rows = []
+    for per, a, b in [('1927–today', '192601', '999999'), ('1990–today', '199001', '999999'), ('2000–2009', '200001', '200912'), ('2007–today', '200701', '999999'), ('2015–today', '201501', '999999')]:
+        x = d[(d.index >= a) & (d.index <= b)]
+        row = dict(period=per)
+        for k, (nm, fn_) in strat.items():
+            r = fn_(x); eq = (1 + r).cumprod(); n = len(r)
+            row[k] = round((eq.iloc[-1] ** (12 / n) - 1) * 100, 1); row[k + '_dd'] = round(float((eq / eq.cummax() - 1).min()) * 100, 0)
+        rows.append(row)
+    save('hist_overlay', rows, 'Momentum stocks since 1927', 'Yearly return and worst fall of the US market, the demo account mix (70% market + 30% top-decile momentum stocks), all-momentum and a long/short version, by period (Kenneth French data library, before costs).')
+
+
 # ------------------------------------------------------------ load data
 if args.offline:
     f = pd.read_csv(os.path.join(args.offline, 'ff_us_monthly.csv'), dtype={'month': str})
@@ -163,6 +191,8 @@ if f is not None:
         dec.append(dict(decade=f'{d}s', market=cg(p1[idx]), plan20=cg(p2[idx]), plan30=cg(p3[idx]), value=cg(g.hml.values), momentum=cg(g.mom.values), mix=cg(g.vm.values), cash=cg(g.rf.values)))
     save('hist_decades', dec, 'Returns by decade', f'Yearly returns by decade {period}: US market, 20%/30% plans, value, momentum, their mix and cash.')
     log('US research done through', last_label)
+    try: overlay()
+    except Exception as e: log('WARN momentum overlay', e)
 
 def rotation(df):
     """The weekly index pick tested on 35 years of regional data (monthly, US dollars):

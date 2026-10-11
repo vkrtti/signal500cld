@@ -217,7 +217,7 @@
         <p class="note" style="margin-top:8px">Set by the whole world market (MSCI World in euros) and US stress gauges: more after falls, less near records. <button class="chip" data-go="week" style="margin-left:4px">The rule</button></p>
       </div>
       <div class="card"><h3>Signal strength</h3><div class="gauge-box" id="gauge-home" data-source="meter_now" style="min-height:170px"></div>
-        <p class="note" style="margin:0;text-align:center">−100 strong sell … +100 strong buy. Sizes the demo account's index position.</p></div>
+        <p class="note" style="margin:0;text-align:center">−100 strong sell … +100 strong buy. Market context; it does not change what to buy.</p></div>
     </div>
 
     <div class="card tbl" style="margin-bottom:12px">
@@ -250,7 +250,7 @@
       <button class="chip" data-go="indexes"><span class="tag">TEST</span>Pick since 2012: <span data-source="ip_backtest" data-field="cagr" data-where="key=pick">—</span>%/yr</button>
       <button class="chip" data-go="week"><span class="tag">WEEK</span>Buy €<span data-source="weekly_now" data-field="amount" data-row="0">—</span></button>
       <button class="chip" data-go="week"><span class="tag">SIGNAL</span><span data-source="weekly_now" data-field="meter" data-row="0">—</span> · <span data-source="weekly_now" data-field="meter_label" data-row="0">—</span></button>
-      <button class="chip" data-go="demo"><span class="tag">DEMO</span>P/L €<span data-source="demo_summary" data-field="value" data-where="metric=Total P/L (€)">—</span></button>
+      <button class="chip" data-go="demo"><span class="tag">DEMO</span>€1,000 → €<span data-source="demo_summary" data-field="value" data-where="metric=Account value (€)">—</span></button>
       <button class="chip" data-go="markets"><span class="tag">MARKETS</span>World markets</button>
     </div>
 
@@ -434,7 +434,7 @@
       </div>
       <div class="card" id="meter-card">
         <h3 id="meter-h">Signal strength</h3>
-        <p class="note">−100 strong sell … +100 strong buy. Drives the demo account's index position.</p>
+        <p class="note">−100 strong sell … +100 strong buy. Market context: the demo account stays invested whatever it says, because timing rules lost in the tests.</p>
         <div class="gauge-box" id="gauge-week" data-source="meter_now"></div>
       </div>
     </div>
@@ -542,7 +542,7 @@ pick            = leader   if momentum(leader) − momentum(current pick) &gt; 5
       <span class="lbl">Budget</span><p>Averaged €80–110 a week; in a 2008-style crash it asks for €200 a week for over a year (~€13,000).</p>
     </div></details>
 
-    <details class="mth" id="s-meter"><summary>Signal-strength meter (−100 … +100)<span class="k">sizes the demo index leg</span></summary><div class="body">
+    <details class="mth" id="s-meter"><summary>Signal-strength meter (−100 … +100)<span class="k">market context</span></summary><div class="body">
       <p>Six readings on the world market and US stress gauges (the US drives global credit and recessions), each scored −1 to +1, multiplied by a weight and summed: <code>meter = 100 × Σ weight × score</code>.</p>
       <table><thead><tr><th>Component</th><th class="n">Weight</th><th>Score</th></tr></thead><tbody>
         <tr><td>World trend</td><td class="n">25%</td><td><code>clip((MSCI World ÷ 40-week line − 1) ÷ 5%, −1, +1)</code></td></tr>
@@ -599,11 +599,10 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
       <p>Loss-making companies get the lowest earnings rank. P/E under 6 is flagged as a likely data error. Value and momentum are the two factors with the strongest academic record (Fama-French, AQR), and they work best combined because they tend to move in opposite directions.</p>
     </div></details>
 
-    <details class="mth" id="s-extra"><summary>Extra profit picks and the demo account<span class="k">simulation</span></summary><div class="body">
-      <p><b>Stock leg (Extra profit):</b> €83.33 long in each of the 3 highest-ranked stocks and €83.33 short in each of the 3 lowest-ranked (skipping flagged P/E data; longs must be profitable). Long and short balance, so the result depends on the picks rather than on the market direction.</p>
-      <p><b>Index leg:</b> position in this week's main-index ETF of <code>€500 × |meter| ÷ 100</code>, long if the meter is positive, short if negative, nothing if |meter| &lt; 10. Total weekly stake never exceeds €1,000.</p>
-      <p><b>Booking:</b> open at the Friday close, close at the next Friday close. <code>P/L = stake × (exit ÷ entry − 1)</code> for longs, the negative for shorts. No fees, spreads or borrow costs.</p>
-      <p><b>Index leg backtest:</b> 1990–2026 monthly €4.27 profit per €1 of average stake vs €3.41 always long; 2017–2026 weekly €1.14 vs €1.30. The stock leg cannot be backtested (no free price history for every index member); its record starts 9 Oct 2026, the IndexPilot version on the same date. The academic version of the idea (value + momentum, all US stocks) earned about 5.6% a year above cash since 1927 and was up in 80% of years, but has made roughly nothing since 2007.</p>
+    <details class="mth" id="s-extra"><summary>Demo account and the Extra profit record<span class="k">simulation</span></summary><div class="body">
+      <p><b>Demo account (€1,000, long only):</b> started with €1,000, no further deposits, profits stay in. 70% in the main-index ETF (switched only with the pick, rebalanced if outside 60–80%). 30% in the 3 highest-ranked stocks of that index, 10% each; a stock is kept while it stays in the top 20% and is sold if it drops out, falls 25% below its highest close since purchase, or the main index changes. 0.2% cost per trade; stock values converted to euros at Yahoo Finance exchange rates. Benchmark: €1,000 put into the MSCI World ETF on the same day.</p>
+      <p><b>Why this mix:</b> on 100 years of US data, holding the strongest 10% of stocks by 12-1 month momentum beat the market in every period tested, before costs: <b data-source="hist_overlay" data-field="top" data-where="period=1927–today">—</b>%/yr vs <b data-source="hist_overlay" data-field="market" data-where="period=1927–today">—</b>% since 1927 and <b data-source="hist_overlay" data-field="top" data-where="period=2007–today">—</b>% vs <b data-source="hist_overlay" data-field="market" data-where="period=2007–today">—</b>% since 2007. The 70/30 mix keeps most of the index's diversification: <b data-source="hist_overlay" data-field="demo" data-where="period=2007–today">—</b>%/yr since 2007. Adding shorts lowered the worst fall but, inside a €1,000 limit, the money tied up in shorts cost more return than it added (<b data-source="hist_overlay" data-field="ls" data-where="period=2007–today">—</b>%/yr). Timing the index with the meter and leverage were left out because they lost in the tests.</p>
+      <p><b>Extra profit record:</b> separate paper record of the weekly picks: €83.33 long in each of the 3 highest-ranked stocks and €83.33 short in each of the 3 lowest-ranked (skipping flagged data), opened at the Friday close and closed at the next. <code>P/L = stake × (exit ÷ entry − 1)</code> for longs, the negative for shorts. No costs. Record starts 9 Oct 2026.</p>
     </div></details>
 
     <details class="mth" id="s-test"><summary>How everything was tested<span class="k">methodology</span></summary><div class="body">
@@ -654,7 +653,7 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
   <!-- ================= EXTRA PROFIT ================= -->
   <section id="extra" data-page hidden>
     <h1 class="ttl">Extra profit: 3 longs and 3 shorts a week</h1>
-    <p class="lede">On top of your index buying: each Friday close, the 3 highest-ranked stocks of this week's main index (<b data-source="weekly_now" data-field="pick_index" data-row="0">—</b>) are bought and the 3 lowest-ranked are sold short, €83 each, held for one week. The long and short sides balance, so the result depends on the picks rather than on whether the market goes up or down.</p>
+    <p class="lede">On top of your index buying: each Friday close, the 3 highest-ranked stocks of this week's main index (<b data-source="weekly_now" data-field="pick_index" data-row="0">—</b>) are bought and the 3 lowest-ranked are sold short, €83 each, held for one week. The long and short sides balance, so the result depends on the picks rather than on whether the market goes up or down. This is a separate paper record of the weekly picks; the €1,000 demo account runs its own long-only rules.</p>
     <div class="ex">
       <div class="card"><div class="ex-h l">▲ Long: buy this week</div>
         <table id="ex-long-table" data-source="extra_picks" data-row-key="ticker">
@@ -918,41 +917,50 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
 
   <!-- ================= DEMO ================= -->
   <section id="demo" data-page hidden>
-    <div class="warnbox">Simulated paper account: no broker, no real money. Each Friday close it books last week's positions at real public prices (Yahoo Finance; ETFs in euros, stocks in their own currency) and opens new ones. Up to €1,000 a week: the index leg is €0–500 of this week's main-index ETF, long or short by the meter; the stock leg is €500 split over that index's 3 top-ranked longs and 3 bottom-ranked shorts. No fees, slippage or borrow costs.</div>
+    <h1 class="ttl">Demo account: €1,000, run by the rules</h1>
+    <p class="lede">A simulated portfolio, no broker and no real money. It started with €1,000 on <b data-source="demo_summary" data-field="value" data-where="metric=Since">—</b>, never gets more, and keeps its profits. Every Friday close: <b>70%</b> in this week's main-index ETF and <b>30%</b> in the 3 strongest stocks of that index (10% each). No shorts, no leverage. Prices from Yahoo Finance, converted to euros; 0.2% cost on every trade.</p>
     <div class="kpis">
-      <div class="card kpi"><div class="lab">Total profit/loss (€)</div><div class="num" data-source="demo_summary" data-field="value" data-where="metric=Total P/L (€)">—</div></div>
-      <div class="card kpi"><div class="lab">Index leg (€)</div><div class="num" data-source="demo_summary" data-field="value" data-where="metric=Index leg P/L (€)">—</div></div>
-      <div class="card kpi"><div class="lab">Stock leg (€)</div><div class="num" data-source="demo_summary" data-field="value" data-where="metric=Stock leg P/L (€)">—</div></div>
-      <div class="card kpi"><div class="lab">Closed trades</div><div class="num" data-source="demo_summary" data-field="value" data-where="metric=Closed trades">—</div><div class="note">Win rate <span data-source="demo_summary" data-field="value" data-where="metric=Win rate (%25)">—</span>%</div></div>
+      <div class="card kpi"><div class="lab">Account value (€)</div><div class="num" data-source="demo_summary" data-field="value" data-where="metric=Account value (€)">—</div><div class="note">Return <span data-source="demo_summary" data-field="value" data-where="metric=Return (%25)">—</span>%</div></div>
+      <div class="card kpi"><div class="lab">Same €1,000 in MSCI World (€)</div><div class="num" data-source="demo_summary" data-field="value" data-where="metric=MSCI World, same €1,000 (€)">—</div><div class="note">The benchmark to beat</div></div>
+      <div class="card kpi"><div class="lab">Ahead / behind (€)</div><div class="num" id="demo-diff" data-source="demo_summary" data-field="value" data-where="metric=vs MSCI World (€)">—</div></div>
+      <div class="card kpi"><div class="lab">Trades · costs</div><div class="num"><span data-source="demo_summary" data-field="value" data-where="metric=Trades">—</span> · €<span data-source="demo_summary" data-field="value" data-where="metric=Costs paid (€)">—</span></div></div>
     </div>
 
-    <h2 id="demo-open-h">Open this week</h2>
+    <h2 id="demo-open-h">Holdings now</h2>
     <div class="card tbl">
       <table id="pos-table" data-source="demo_positions" data-row-key="id">
-        <thead><tr><th data-field="ticker">Ticker</th><th data-field="company">Name</th><th data-field="side">Side</th><th data-field="euros" class="n">Stake (€)</th><th data-field="entry_price" class="n">Entry price</th><th data-field="entry_date">Opened at close of</th><th data-field="reason">Why</th></tr></thead>
+        <thead><tr><th data-field="ticker">Holding</th><th data-field="leg">Part</th><th data-field="weight" class="n">Weight (%)</th><th data-field="euros" class="n">Value (€)</th><th data-field="pnl_eur" class="n">P/L (€)</th><th data-field="return_pct" class="n">Return (%)</th><th data-field="entry_price" class="n">Bought at</th><th data-field="price" class="n">Now</th><th data-field="entry_date">Since</th><th data-field="reason">Status</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
 
-    <h2 id="demo-pl-h">Profit/loss over time</h2>
+    <h2 id="demo-pl-h">Account vs MSCI World</h2>
     <div class="card">
-      <p class="note" id="demo-empty">No closed weeks yet. The first positions close at Friday's close and are booked on Saturday morning.</p>
+      <div class="legend" id="demo-legend"></div>
+      <p class="note" id="demo-empty">The account opened this week. The line starts after the first full week, at the next Friday close.</p>
       <div class="chart" id="demo-chart" data-source="demo_weekly" style="min-height:220px"></div>
     </div>
 
-    <h2 id="demo-ledger-h">Closed trades</h2>
+    <h2 id="demo-rules-h">The rules</h2>
+    <div class="grid">
+      <div class="card"><h3>Core: 70%</h3><ul class="m"><li>Held in this week's main-index ETF (the Index pick page).</li><li>Sold and switched only when the pick switches, about once a year.</li><li>Brought back to 70% only if it drifts outside 60–80%.</li></ul></div>
+      <div class="card"><h3>Stocks: 30%</h3><ul class="m"><li>The 3 highest-ranked stocks of the main index, 10% of the account each.</li><li>A stock stays while it is in the top 20% of the ranking.</li><li>Sold if it drops out of the top 20%, falls 25% below its highest close since purchase, or the main index changes.</li></ul></div>
+      <div class="card"><h3>Left out on purpose</h3><ul class="m"><li><b>Shorts:</b> they lower the worst fall but, within €1,000, cost more return than they add (table below).</li><li><b>Timing the index with the meter:</b> no timing rule beat staying invested.</li><li><b>Leverage:</b> near-total losses in the 100-year test.</li></ul></div>
+    </div>
+
+    <h2 id="demo-why-h">Why this mix: momentum stocks since 1927</h2>
+    <p class="note">US stocks sorted each month by their 12-1 month return (Kenneth French data library, value-weighted, before costs). "Top momentum" = the strongest 10% of all US stocks; the demo holds only 3, so its results will swing much more.</p>
     <div class="card tbl">
-      <table id="ledger-table" data-source="demo_ledger" data-row-key="id">
-        <thead><tr><th data-field="closed_on">Closed</th><th data-field="ticker">Ticker</th><th data-field="side">Side</th><th data-field="euros" class="n">Stake (€)</th><th data-field="entry_price" class="n">Entry</th><th data-field="exit_price" class="n">Exit</th><th data-field="return_pct" class="n">Return (%)</th><th data-field="pnl_eur" class="n">P/L (€)</th><th data-field="note">Note</th></tr></thead>
+      <table id="ov-table" data-source="hist_overlay" data-row-key="period">
+        <thead><tr><th data-field="period">Period</th><th data-field="market" class="n">100% market (%/yr)</th><th data-field="demo" class="n">Demo mix (%/yr)</th><th data-field="top" class="n">100% top momentum</th><th data-field="ls" class="n">With 15/15 long/short</th><th data-field="market_dd" class="n">Worst fall: market</th><th data-field="demo_dd" class="n">Demo mix</th><th data-field="ls_dd" class="n">Long/short</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
 
-    <h2 id="demo-bt-h">How the index leg would have done (S&amp;P 500 history)</h2>
-    <p class="note">Same sizing rule on history. “Profit per €1 staked” = total profit divided by the average stake, so strategies of different sizes compare fairly. The stock leg can't be backtested: there is no free price history for every index member.</p>
+    <h2 id="demo-ledger-h">Trades</h2>
     <div class="card tbl">
-      <table id="dbt-table" data-source="demo_backtest" data-row-key="id">
-        <thead><tr><th data-field="period">Period</th><th data-field="strategy">Strategy</th><th data-field="pnl_eur" class="n">Profit (€)</th><th data-field="avg_stake_eur" class="n">Avg stake (€)</th><th data-field="pnl_per_eur" class="n">Profit per €1 staked</th><th data-field="short_periods" class="n">Short periods</th><th data-field="max_drawdown_eur" class="n">Worst drawdown (€)</th></tr></thead>
+      <table id="ledger-table" data-source="demo_ledger" data-row-key="id">
+        <thead><tr><th data-field="date">Date</th><th data-field="action">Action</th><th data-field="ticker">Ticker</th><th data-field="company">Name</th><th data-field="value_eur" class="n">Value (€)</th><th data-field="price" class="n">Price</th><th data-field="cost_eur" class="n">Cost (€)</th><th data-field="pnl_eur" class="n">P/L (€)</th><th data-field="note">Why</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
@@ -1048,32 +1056,32 @@ dash.calc('risk_counts', {
 });
 
 dash.calc('demo_summary', {
-  inputs: ['demo_ledger'],
+  inputs: ['demo_value', 'demo_ledger'],
   title: 'Demo account totals',
-  description: 'Sums profit/loss from closed demo trades, overall and by leg, and the share of trades that made money.',
-  fn: (demo_ledger) => {
+  description: 'Account value, profit/loss since the €1,000 start, the same money in the MSCI World ETF, and trade counts.',
+  fn: (demo_value, demo_ledger) => {
+    const last = demo_value[demo_value.length - 1] || { value: 1000, benchmark: 1000 };
+    const r2 = (x) => Math.round(x * 100) / 100;
     const trades = demo_ledger.filter((r) => r.leg !== 'Account');
-    const sum = (rows) => Math.round(rows.reduce((a, r) => a + Number(r.pnl_eur), 0) * 100) / 100;
-    const n = trades.length;
+    const sells = trades.filter((r) => r.action === 'Sell');
     return [
-      { metric: 'Total P/L (€)', value: sum(trades) },
-      { metric: 'Index leg P/L (€)', value: sum(trades.filter((r) => r.leg === 'Index')) },
-      { metric: 'Stock leg P/L (€)', value: sum(trades.filter((r) => r.leg === 'Stocks')) },
-      { metric: 'Closed trades', value: n },
-      { metric: 'Win rate (%)', value: n ? Math.round((trades.filter((r) => Number(r.pnl_eur) > 0).length / n) * 1000) / 10 : 0 },
+      { metric: 'Account value (€)', value: r2(last.value) },
+      { metric: 'Total P/L (€)', value: r2(last.value - 1000) },
+      { metric: 'Return (%)', value: r2((last.value / 1000 - 1) * 100) },
+      { metric: 'MSCI World, same €1,000 (€)', value: r2(last.benchmark) },
+      { metric: 'vs MSCI World (€)', value: r2(last.value - last.benchmark) },
+      { metric: 'Costs paid (€)', value: r2(trades.reduce((a, r) => a + Number(r.cost_eur || 0), 0)) },
+      { metric: 'Trades', value: trades.length },
+      { metric: 'Win rate (%)', value: sells.length ? Math.round((sells.filter((r) => Number(r.pnl_eur) > 0).length / sells.length) * 1000) / 10 : 0 },
+      { metric: 'Since', value: demo_value.length ? demo_value[0].date : '' },
     ];
   },
 });
 dash.calc('demo_weekly', {
-  inputs: ['demo_ledger'],
-  title: 'Demo profit/loss by week',
-  description: 'Profit/loss of all trades closed each week, and the running total.',
-  fn: (demo_ledger) => {
-    const by = {};
-    demo_ledger.forEach((r) => { by[r.closed_on] = (by[r.closed_on] || 0) + Number(r.pnl_eur); });
-    let c = 0;
-    return Object.keys(by).sort().map((week) => { c += by[week]; return { week, pnl: Math.round(by[week] * 100) / 100, cumulative: Math.round(c * 100) / 100 }; });
-  },
+  inputs: ['demo_value'],
+  title: 'Demo account by week',
+  description: 'Account value each Friday close next to €1,000 put into the MSCI World ETF on the same start day.',
+  fn: (demo_value) => demo_value.map((r) => ({ week: r.date, value: r.value, benchmark: r.benchmark, diff: Math.round((r.value - r.benchmark) * 100) / 100, pick: r.pick })),
 });
 
 dash.calc('plans_now', {
@@ -1109,32 +1117,32 @@ dash.calc('spx_change', {
 });
 
 dash.calc('extra_picks', {
-  inputs: ['demo_positions', 'pick_rank'],
+  inputs: ['extra_positions', 'pick_rank'],
   title: 'Extra profit picks',
   description: 'This week’s 3 long and 3 short stocks of the main index (the demo account’s stock leg) with their ranking details.',
-  fn: (demo_positions, pick_rank) => {
+  fn: (extra_positions, pick_rank) => {
     const info = {}; pick_rank.forEach((r) => { info[r.ticker] = r; });
-    return demo_positions.filter((p) => p.leg === 'Stocks').map((p) => { const r = info[p.ticker] || {};
+    return extra_positions.filter((p) => p.leg === 'Stocks').map((p) => { const r = info[p.ticker] || {};
       return { ticker: p.ticker, company: p.company, side: p.side, euros: p.euros, entry_price: p.entry_price, currency: p.currency || r.currency || 'USD', rank: r.rank ?? null, score: r.score ?? null, sector: r.sector || r.country || '', off_52w_high: r.off_52w_high ?? null, week_of: p.week_of }; });
   },
 });
 dash.calc('extra_weeks', {
-  inputs: ['demo_ledger'],
+  inputs: ['extra_ledger'],
   title: 'Extra profit by week',
   description: 'Profit/loss of the weekly stock picks (longs, shorts, total) and the running total.',
-  fn: (demo_ledger) => {
+  fn: (extra_ledger) => {
     const by = {};
-    demo_ledger.filter((r) => r.leg === 'Stocks').forEach((r) => { const w = (by[r.closed_on] = by[r.closed_on] || { longs: 0, shorts: 0 }); w[r.side === 'Long' ? 'longs' : 'shorts'] += Number(r.pnl_eur); });
+    extra_ledger.filter((r) => r.leg === 'Stocks').forEach((r) => { const w = (by[r.closed_on] = by[r.closed_on] || { longs: 0, shorts: 0 }); w[r.side === 'Long' ? 'longs' : 'shorts'] += Number(r.pnl_eur); });
     let c = 0; const r2 = (x) => Math.round(x * 100) / 100;
     return Object.keys(by).sort().map((week) => { const p = by[week].longs + by[week].shorts; c += p; return { week, longs: r2(by[week].longs), shorts: r2(by[week].shorts), pnl: r2(p), cumulative: r2(c) }; });
   },
 });
 dash.calc('extra_summary', {
-  inputs: ['demo_ledger'],
+  inputs: ['extra_ledger'],
   title: 'Extra profit totals',
   description: 'Totals of the weekly stock picks: profit/loss overall, longs, shorts, weeks and share of winning trades.',
-  fn: (demo_ledger) => {
-    const t = demo_ledger.filter((r) => r.leg === 'Stocks'); const sum = (rows) => Math.round(rows.reduce((a, r) => a + Number(r.pnl_eur), 0) * 100) / 100;
+  fn: (extra_ledger) => {
+    const t = extra_ledger.filter((r) => r.leg === 'Stocks'); const sum = (rows) => Math.round(rows.reduce((a, r) => a + Number(r.pnl_eur), 0) * 100) / 100;
     return [
       { metric: 'Total P/L (€)', value: sum(t) },
       { metric: 'Longs P/L (€)', value: sum(t.filter((r) => r.side === 'Long')) },
@@ -1594,14 +1602,26 @@ SX.line = (box, series, o) => {
       SX.table('sector-table', 'sectors');
     }
     if (SX.active === 'demo') {
-      const side = (td, v) => { td.textContent = v; td.className = v === 'Long' ? 'p-good' : 'p-bad'; };
-      SX.table('pos-table', 'demo_positions', { side, ticker: (td, v) => { td.textContent = v; td.style.fontWeight = '600'; } });
-      SX.table('ledger-table', 'demo_ledger', { side, pnl_eur: (td, v) => { td.textContent = v; td.style.color = v > 0 ? 'var(--color-ok)' : v < 0 ? 'var(--color-bad)' : ''; } });
-      SX.table('dbt-table', 'demo_backtest', { strategy: (td, v) => { td.textContent = v; td.style.fontWeight = '500'; } });
+      const eur = (td, v) => { td.textContent = v == null ? '—' : d3.format(',.2f')(v); };
+      const sg = (td, v) => { td.textContent = v == null ? '—' : (v > 0 ? '+' : '') + d3.format(',.2f')(v); td.style.color = v > 0 ? 'var(--up)' : v < 0 ? 'var(--down)' : ''; };
+      SX.table('pos-table', 'demo_positions', {
+        ticker: (td, v, r) => { const d = document.createElement('div'); d.className = 'nm'; const c = document.createElement('span'); c.className = 'co'; c.textContent = r.company; const t = document.createElement('span'); t.className = 'tk'; t.textContent = v; d.append(SX.icon(v), c, t); td.appendChild(d); },
+        leg: (td, v) => { const p = document.createElement('span'); p.className = 'lst ' + (v === 'Index' ? 'top' : 'bot'); p.style.color = v === 'Index' ? '' : 'var(--accent)'; p.textContent = v === 'Index' ? 'Core' : 'Stock'; td.appendChild(p); },
+        euros: eur, pnl_eur: sg, return_pct: (td, v) => { pc(td, v); },
+        entry_price: (td, v, r) => { td.textContent = SX.money(v, r.currency); }, price: (td, v, r) => { td.textContent = SX.money(v, r.currency); },
+        reason: (td, v) => { td.textContent = v; td.style.color = 'var(--muted)'; td.style.fontWeight = '500'; } });
+      SX.table('ledger-table', 'demo_ledger', { action: (td, v) => { td.textContent = v; td.className = v === 'Buy' ? 'p-good' : v === 'Sell' ? 'p-bad' : ''; }, value_eur: eur, cost_eur: eur, pnl_eur: sg,
+        price: (td, v, r) => { td.textContent = v ? SX.money(v, r.currency) : ''; }, note: (td, v) => { td.textContent = v || ''; td.className = 'wrapc'; td.style.color = 'var(--muted)'; } });
+      SX.table('ov-table', 'hist_overlay', { period: (td, v) => { td.textContent = v; td.style.fontWeight = '700'; }, market: num, demo: (td, v) => { num(td, v); td.style.fontWeight = '800'; }, top: num, ls: num,
+        market_dd: (td, v) => { td.textContent = v + '%'; td.style.color = 'var(--down)'; }, demo_dd: (td, v) => { td.textContent = v + '%'; td.style.color = 'var(--down)'; }, ls_dd: (td, v) => { td.textContent = v + '%'; td.style.color = 'var(--down)'; } });
+      const ds = SX.rows('demo_summary'); const dv = ds && ds.find((r) => r.metric === 'vs MSCI World (€)'); const dd = document.getElementById('demo-diff');
+      if (dv) { dd.textContent = (dv.value > 0 ? '+' : '') + d3.format(',.2f')(dv.value); dd.style.color = dv.value > 0 ? 'var(--up)' : dv.value < 0 ? 'var(--down)' : ''; }
       const dw = SX.rows('demo_weekly'); const db = document.getElementById('demo-chart');
       document.getElementById('demo-empty').hidden = !!(dw && dw.length > 1);
-      db.querySelector('svg')?.remove();
-      if (dw && dw.length > 1) SX.line(db, [{ name: 'Running total', color: dash.colors[0], pts: dw.map((r) => ({ x: pm(r.week), y: +r.cumulative })) }], { h: 220, yfmt: (v) => '€' + d3.format(',.0f')(v), tipfmt: (v) => '€' + d3.format(',.2f')(v), refs: [{ y: 0, label: '€0' }] });
+      db.querySelector('svg')?.remove(); db.style.minHeight = dw && dw.length > 1 ? '220px' : '0';
+      const ser = [['value', 'Demo account', dash.colors[0], 2.5], ['benchmark', 'MSCI World, same €1,000', 'var(--cds-chart-muted)', 1.8]];
+      document.getElementById('demo-legend').replaceChildren(...ser.map((k) => { const sp = document.createElement('span'); const i = document.createElement('i'); i.style.background = k[2]; sp.append(i, k[1]); return sp; }));
+      if (dw && dw.length > 1) SX.line(db, ser.map((k) => ({ name: k[1], color: k[2], w: k[3], pts: dw.map((r) => ({ x: pm(r.week), y: +r[k[0]] })) })), { h: 220, yfmt: (v) => '€' + d3.format(',.0f')(v), tipfmt: (v) => '€' + d3.format(',.2f')(v), refs: [{ y: 1000, label: '€1,000' }] });
     }
     if (SX.active === 'news') {
       const ft = document.getElementById('feed-table'); ft._f = (r) => !SX.ng || SX.ng === 'all' || r.group === SX.ng;

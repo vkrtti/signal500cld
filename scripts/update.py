@@ -212,7 +212,8 @@ if args.weekly:
     open('work/summary.md', 'w').write(
         f"### Week of {summary['week_of']}\n\n- **Main index: {summary['pick']}** ({summary['etf']}){' (switched this week)' if summary['switched'] else ''}\n"
         f"- **Buy €{summary['amount']}** ({summary['tier']})\n- Signal strength **{summary['meter']:+d}** ({summary['label']})\n"
-        f"- Demo: {summary['closed']} trades closed, week P/L €{summary['week_pnl']}, total €{summary['total_pnl']}\n"
-        f"- New positions: {', '.join(f'{t} {s} €{e}' for t, s, e in summary['positions'])}\n"
+        f"- Demo account: €{summary['demo_value']} (MSCI World benchmark €{summary['demo_bench']}), {summary['trades']} trades this week\n"
+        f"- Holdings: {', '.join(f'{t} {w}' for t, w, e in summary['positions'])}\n"
+        f"- Extra profit record: last week €{summary['extra_week']}, total €{summary['extra_total']}\n"
         f"- Backtest of the pick since 2012: {b['cagr']}%/yr, worst fall {b['max_dd']}%\n")
 log('done')

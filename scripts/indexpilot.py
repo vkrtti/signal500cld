@@ -6,7 +6,8 @@ Each week it
   2. sets the weekly amount (EUR 40-200) and the signal meter from the world market (MSCI World ETF)
      and US macro stress gauges (VIX, financial conditions, Sahm rule, yield curve),
   3. ranks the stocks of the picked index (value + momentum for the S&P 500, price momentum elsewhere),
-  4. rolls the simulated demo account (picked ETF long/short by the meter, top 3 long / bottom 3 short stocks),
+  4. keeps the Extra profit record (3 longs / 3 shorts a week) and runs the demo account: a EUR 1,000 long-only portfolio,
+     70% in the picked index ETF and 30% in its 3 strongest stocks,
   5. re-runs the 2012-today backtest of the whole routine on real ETF prices.
 
 Prices: Yahoo Finance via the yfinance package (daily closes, adjusted). ETF history is cached in
@@ -271,8 +272,20 @@ def run(S, D, research, fin, cons, log, offline=None):
     members['world'] = sp_members + members['europe'] + members['japan'] + members['emerging']
     uname = {'sp500': 'S&P 500 members', 'world': 'S&P 500 + Europe + Japan + emerging-market lists',
              **{k: uni[k]['name'] for k in ['nasdaq100', 'europe', 'japan', 'emerging']}}[U]
-    positions = L('demo_positions', []) or []
-    need = [m['ticker'] for m in members[U]] + [p['ticker'] for p in positions if p.get('leg') == 'Stocks']
+    # ---- extra profit (paper record of the weekly 3 longs / 3 shorts) ----------------------------
+    # and the demo account (EUR 1,000 portfolio: 70% picked index ETF + 30% in its 3 strongest stocks)
+    old_pos = L('demo_positions', []) or []
+    if old_pos and old_pos[0].get('v') == 2 and not os.path.exists(os.path.join(D, 'extra_positions.json')):
+        # migration from the weekly-bet demo: its stock leg becomes the Extra profit record, the demo restarts as a portfolio
+        L_extra_pos = [p for p in old_pos if p.get('leg') == 'Stocks']
+        L_extra_led = [l for l in (L('demo_ledger', []) or []) if l.get('leg') in ('Stocks', 'Account')]
+    else:
+        L_extra_pos = L('extra_positions', []) or []
+        L_extra_led = L('extra_ledger', []) or []
+    state = L('demo_state', {}) or {}
+    if state.get('v') != 3: state = {}
+    held_t = [h['ticker'] for h in state.get('holdings', []) if h['leg'] == 'Stocks']
+    need = [m['ticker'] for m in members[U]] + [p['ticker'] for p in L_extra_pos] + held_t
     px = download(need, (last_trading - pd.Timedelta(days=430)).strftime('%Y-%m-%d'), log, offline)
     if U == 'sp500':
         pr = {r['ticker']: r for r in price_rank(members[U], px, dstr)}
@@ -291,42 +304,135 @@ def run(S, D, research, fin, cons, log, offline=None):
     out['pick_rank'] = keep
     log(f'ranked {len(rows)} stocks in {uname}')
 
-    # ---- demo account
-    ledger = L('demo_ledger', []) or []
+    # ---- prices for booking
     etf_px = {E[k]['etf']: float(daily[k][daily.index <= last_trading].iloc[-1]) for k in EK}
     fin_px = {r['ticker']: r['price'] for r in sp_rows}
-    def exit_price(p):
-        t = p['ticker']
+    rank_of = {r['ticker']: r for r in rows}
+    def last_px(t):
         if t == 'S&P 500': return float(spx.iloc[-1])
         if t in etf_px: return etf_px[t]
         if t in px and px[t].dropna().size and (last_trading - px[t].dropna().index[-1]).days <= 10: return float(px[t].dropna().iloc[-1])
         return fin_px.get(t)
-    reopen = positions and positions[0]['entry_date'] == dstr and positions[0].get('v') != 2   # same-week positions from the old S&P-only rules
-    if reopen: log('replacing this week\'s old-rule demo positions with IndexPilot positions (same entry date)')
-    if reopen or not (positions and positions[0]['entry_date'] == dstr):
-        if not reopen:
-            for p in positions:
-                xp = exit_price(p); n = ''
-                if xp is None: xp, n = p['entry_price'], 'No price: closed flat'
-                sgn = 1 if p['side'] == 'Long' else -1
-                ret = sgn * (xp / p['entry_price'] - 1)
-                ledger.append(dict(id=f"{p['week_of']}-{p['ticker']}", week_of=p['week_of'], closed_on=dstr, leg=p['leg'], ticker=p['ticker'],
-                                   side=p['side'], euros=p['euros'], entry_price=p['entry_price'], exit_price=round(xp, 4 if xp < 10 else 2),
-                                   return_pct=round(ret * 100, 2), pnl_eur=round(p['euros'] * ret, 2), note=n))
-        positions = []
-        stake = 0 if abs(meter) < 10 else round(500 * abs(meter) / 100)
-        e = E[pick]
-        if stake:
-            positions.append(dict(v=2, id=f"{week_of}-{e['etf']}", week_of=week_of, entry_date=dstr, leg='Index', ticker=e['etf'], company=f"{e['index']} ETF (EUR)",
-                                  side='Long' if meter > 0 else 'Short', euros=stake, entry_price=round(etf_px[e['etf']], 2), currency='EUR', reason=f'Meter {meter:+d} ({label})'))
+    def hi_since(t, since):
+        if t in px:
+            s_ = px[t].dropna(); s_ = s_[(s_.index >= pd.Timestamp(since)) & (s_.index <= last_trading)]
+            if len(s_): return float(s_.max())
+        return None
+    # FX: units of each currency per euro (yfinance EURxxx=X), for valuing stocks in euros
+    ccys = sorted({ccy(t) for t in held_t + [r['ticker'] for r in rows[:10]]} - {'EUR'})
+    fxd = download([f"EUR{ {'GBp': 'GBP', 'ZAc': 'ZAR'}.get(c, c) }=X" for c in ccys], (last_trading - pd.Timedelta(days=20)).strftime('%Y-%m-%d'), log, offline) if ccys else pd.DataFrame()
+    def fx(c):
+        if c == 'EUR': return 1.0
+        base = {'GBp': 'GBP', 'ZAc': 'ZAR'}.get(c, c)
+        col = f'EUR{base}=X'
+        v = float(fxd[col].dropna().iloc[-1]) if col in fxd and fxd[col].dropna().size else None
+        if v is None: log('WARN no FX for', c); return None
+        return v * (100 if c in ('GBp', 'ZAc') else 1)
+    COST = 0.002   # 0.2% per trade: spread + currency exchange (commission-free broker assumed)
+
+    # ---- Extra profit: weekly 3 longs / 3 shorts, EUR 83.33 each, closed every week (unchanged rules)
+    extra_pos, extra_led = L_extra_pos, L_extra_led
+    if not (extra_pos and extra_pos[0]['entry_date'] == dstr):
+        for p in extra_pos:
+            xp = last_px(p['ticker']); n = ''
+            if xp is None: xp, n = p['entry_price'], 'No price: closed flat'
+            sgn = 1 if p['side'] == 'Long' else -1
+            ret = sgn * (xp / p['entry_price'] - 1)
+            extra_led.append(dict(id=f"{p['week_of']}-{p['ticker']}", week_of=p['week_of'], closed_on=dstr, leg='Stocks', ticker=p['ticker'],
+                                  side=p['side'], euros=p['euros'], entry_price=p['entry_price'], exit_price=round(xp, 4 if xp < 10 else 2),
+                                  return_pct=round(ret * 100, 2), pnl_eur=round(p['euros'] * ret, 2), note=n))
+        extra_pos = []
         longs = [r for r in rows if not r['note']][:3]
         shorts = [r for r in rows[::-1] if 'verify' not in r['note']][:3]
         for r, side in [(r, 'Long') for r in longs] + [(r, 'Short') for r in shorts]:
-            positions.append(dict(v=2, id=f"{week_of}-{r['ticker']}", week_of=week_of, entry_date=dstr, leg='Stocks', ticker=r['ticker'], company=r['company'],
+            extra_pos.append(dict(v=2, id=f"{week_of}-{r['ticker']}", week_of=week_of, entry_date=dstr, leg='Stocks', ticker=r['ticker'], company=r['company'],
                                   side=side, euros=83.33, entry_price=r['price'], currency=r.get('currency', 'USD'), reason=f"Rank {r['rank']} of {len(rows)} in {E[pick]['index']} (score {r['score']})"))
-    if not ledger: ledger = [dict(id='open', week_of=dstr, closed_on=dstr, leg='Account', ticker='', side='', euros=0, entry_price=0, exit_price=0, return_pct=0, pnl_eur=0, note='Account opened')]
-    out['demo_positions'], out['demo_ledger'] = positions, ledger
+    if not extra_led: extra_led = [dict(id='open', week_of=dstr, closed_on=dstr, leg='Account', ticker='', side='', euros=0, entry_price=0, exit_price=0, return_pct=0, pnl_eur=0, note='Record started')]
+    out['extra_positions'], out['extra_ledger'] = extra_pos, extra_led
 
+    # ---- Demo account: EUR 1,000 portfolio, long only, profits stay in, no money added
+    #   core  70%: this week's main-index ETF; switched only when the pick switches; rebalanced to 70% if it drifts outside 60-80%
+    #   stocks 30%: the 3 strongest stocks of the picked index, 10% each; a stock is kept while it stays in the top 20% of the
+    #               ranking and has not fallen 25% from its highest close since purchase; replaced otherwise
+    CORE, SLOT, NSLOT, BAND, KEEP, TRAIL = 0.70, 0.10, 3, 0.10, 0.20, 0.25
+    led = (L('demo_ledger', []) or []) if state else []
+    led = [l for l in led if l.get('v') == 3]
+    val_rows = (L('demo_value', []) or []) if state else []
+    if not state:
+        state = dict(v=3, start=dstr, cash=1000.0, holdings=[], bench_ticker=E['world']['etf'], bench_start=etf_px[E['world']['etf']], last_date=None)
+        led = [dict(v=3, id='open', date=dstr, action='Open account', leg='Account', ticker='', company='', side='', shares=0, price=0, currency='EUR',
+                    value_eur=1000.0, cost_eur=0, pnl_eur=0, return_pct=0, note='€1,000 starting capital, no further deposits')]
+        log('demo: opened EUR 1,000 portfolio on', dstr)
+    H_ = state['holdings']
+    def value_of(h):
+        p_ = last_px(h['ticker']); f_ = fx(h['currency'])
+        if p_ is None or f_ is None: p_, f_ = h.get('last_price', h['entry_price']), h.get('last_fx', h['entry_fx'])
+        h['last_price'], h['last_fx'] = p_, f_
+        return h['shares'] * p_ / f_
+    def book(action, h, shares, note):
+        p_ = h['last_price']; f_ = h['last_fx']; v_ = shares * p_ / f_; c_ = v_ * COST
+        pnl = v_ - shares * h['entry_price'] / h['entry_fx'] if action == 'Sell' else 0
+        led.append(dict(v=3, id=f"{dstr}-{action}-{h['ticker']}", date=dstr, action=action, leg=h['leg'], ticker=h['ticker'], company=h['company'], side='Long',
+                        shares=round(shares, 6), price=round(p_, 4), currency=h['currency'], value_eur=round(v_, 2), cost_eur=round(c_, 2),
+                        pnl_eur=round(pnl - c_, 2), return_pct=round((p_ / f_) / (h['entry_price'] / h['entry_fx']) * 100 - 100, 2) if action == 'Sell' else None, note=note))
+        return v_, c_
+    def sell(h, shares, note):
+        v_, c_ = book('Sell', h, shares, note); state['cash'] += v_ - c_; h['shares'] -= shares
+    def buy(leg, ticker, company, ccy_, euros, note):
+        p_ = last_px(ticker); f_ = fx(ccy_)
+        if not p_ or not f_ or euros < 1: return
+        euros = min(euros, state['cash'] / (1 + COST))
+        sh = euros / (p_ / f_)
+        h = dict(leg=leg, ticker=ticker, company=company, currency=ccy_, shares=sh, entry_price=p_, entry_fx=f_, entry_date=dstr, last_price=p_, last_fx=f_, high=p_)
+        book('Buy', h, sh, note); state['cash'] -= euros * (1 + COST); H_.append(h)
+    if state.get('last_date') != dstr:
+        for h in H_: value_of(h)
+        eq = state['cash'] + sum(value_of(h) for h in H_)
+        e = E[pick]
+        # core
+        core = [h for h in H_ if h['leg'] == 'Index']
+        for h in core:
+            if h['ticker'] != e['etf']: sell(h, h['shares'], f"Pick switched to {e['index']}")
+        H_[:] = [h for h in H_ if h['shares'] > 1e-9]
+        # stocks: drop those out of the top 20%, from another index, or down 25% from their high since purchase
+        top_n = max(NSLOT, int(math.ceil(KEEP * len(rows))))
+        for h in [h for h in H_ if h['leg'] == 'Stocks']:
+            r = rank_of.get(h['ticker']); hi = max(h.get('high', h['entry_price']), hi_since(h['ticker'], h['entry_date']) or 0)
+            h['high'] = hi
+            if r is None: sell(h, h['shares'], f"Not in this week's index ({e['index']})")
+            elif r['rank'] > top_n: sell(h, h['shares'], f"Fell to rank {r['rank']} (outside top {top_n})")
+            elif h['last_price'] <= hi * (1 - TRAIL): sell(h, h['shares'], 'Trailing stop: 25% below its high since purchase')
+        H_[:] = [h for h in H_ if h['shares'] > 1e-9]
+        eq = state['cash'] + sum(value_of(h) for h in H_)
+        # core buy / rebalance
+        core = [h for h in H_ if h['leg'] == 'Index']
+        cv = sum(value_of(h) for h in core)
+        if not core: buy('Index', e['etf'], f"{e['index']} ETF ({e['fund']})", 'EUR', CORE * eq, f"Main index: {e['index']}")
+        elif abs(cv / eq - CORE) > BAND:
+            if cv > CORE * eq: sell(core[0], core[0]['shares'] * (cv - CORE * eq) / cv, 'Rebalance to 70%')
+            else: buy('Index', e['etf'], f"{e['index']} ETF ({e['fund']})", 'EUR', CORE * eq - cv, 'Rebalance to 70%')
+        # fill stock slots from the top of the ranking
+        have = {h['ticker'] for h in H_ if h['leg'] == 'Stocks'}
+        for r in [r for r in rows if not r['note'] and r['ticker'] not in have]:
+            if len([h for h in H_ if h['leg'] == 'Stocks']) >= NSLOT: break
+            buy('Stocks', r['ticker'], r['company'], r.get('currency', 'USD'), min(SLOT * eq, state['cash'] / (1 + COST)), f"Rank {r['rank']} of {len(rows)} in {e['index']}")
+        state['last_date'] = dstr
+    # positions view and weekly value
+    eq = state['cash'] + sum(value_of(h) for h in H_)
+    bench = 1000 * etf_px[state['bench_ticker']] / state['bench_start']
+    positions = []
+    for h in H_:
+        v_ = value_of(h); cost_ = h['shares'] * h['entry_price'] / h['entry_fx']
+        r = rank_of.get(h['ticker'], {})
+        positions.append(dict(v=3, id=f"{h['entry_date']}-{h['ticker']}", leg=h['leg'], ticker=h['ticker'], company=h['company'], side='Long', currency=h['currency'],
+                              shares=round(h['shares'], 6), entry_date=h['entry_date'], entry_price=round(h['entry_price'], 4), price=round(h['last_price'], 4),
+                              euros=round(v_, 2), weight=round(v_ / eq * 100, 1), pnl_eur=round(v_ - cost_, 2), return_pct=round((v_ / cost_ - 1) * 100, 2) if cost_ else 0,
+                              rank=r.get('rank'), reason=('Core: main index' if h['leg'] == 'Index' else f"Rank {r.get('rank', '—')} now")))
+    positions.sort(key=lambda p: (p['leg'] != 'Index', -p['euros']))
+    val_rows = [r for r in val_rows if r['date'] != dstr] + [dict(date=dstr, value=round(eq, 2), benchmark=round(bench, 2), cash=round(state['cash'], 2),
+                core=round(sum(p['euros'] for p in positions if p['leg'] == 'Index'), 2), stocks=round(sum(p['euros'] for p in positions if p['leg'] == 'Stocks'), 2), pick=pick)]
+    out['demo_state'], out['demo_positions'], out['demo_ledger'], out['demo_value'] = state, positions, led, val_rows
+    ledger = led
     # ---- backtest 2012-today on the ETF prices (weekly, in euros)
     R = W.pct_change().shift(-1).reindex(H.index.map(pd.Timestamp))   # next week's return, decided at this week's close
     R.index = H.index
@@ -415,8 +521,9 @@ def run(S, D, research, fin, cons, log, offline=None):
     out['weekly_history'] = weekly_history
     out['meter_now'] = meter_rows
     summary = dict(week_of=week_of, date=dstr, pick=e['index'], etf=e['etf'], switched=switched, amount=amount, tier=tier, meter=meter, label=label,
-                   positions=[(p['ticker'], p['side'], p['euros']) for p in positions],
-                   closed=len([l for l in ledger if l['closed_on'] == dstr and l['leg'] != 'Account']),
-                   week_pnl=round(sum(l['pnl_eur'] for l in ledger if l['closed_on'] == dstr), 2), total_pnl=round(sum(l['pnl_eur'] for l in ledger), 2),
+                   positions=[(p['ticker'], f"{p['weight']}%", p['euros']) for p in positions],
+                   demo_value=val_rows[-1]['value'], demo_bench=val_rows[-1]['benchmark'],
+                   trades=len([l for l in led if l['date'] == dstr and l['leg'] != 'Account']),
+                   extra_week=round(sum(l['pnl_eur'] for l in extra_led if l['closed_on'] == dstr), 2), extra_total=round(sum(l['pnl_eur'] for l in extra_led), 2),
                    bt=next(b for b in bt if b['key'] == 'pick'))
     return out, summary

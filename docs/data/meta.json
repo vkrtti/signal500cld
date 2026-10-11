@@ -30,14 +30,14 @@
   "updated": "2026-10-11T17:23:44Z"
  },
  "demo_positions": {
-  "title": "Demo: open positions",
-  "description": "Simulated positions opened at the Friday close: the picked index ETF plus 3 long and 3 short stocks from that index.",
+  "title": "Demo: holdings",
+  "description": "The demo account's current holdings: 70% main-index ETF, 30% in its 3 strongest stocks, valued in euros.",
   "refresh": "weekly",
   "updated": "2026-10-11T17:23:44Z"
  },
  "demo_ledger": {
-  "title": "Demo: closed trades",
-  "description": "Simulated closed trades and profit/loss.",
+  "title": "Demo: trades",
+  "description": "Every buy and sell of the EUR 1,000 demo account, with costs and profit/loss.",
   "refresh": "weekly",
   "updated": "2026-10-11T17:23:44Z"
  },
@@ -262,5 +262,25 @@
   "description": "Yearly return by decade of the momentum index pick vs holding the developed world or North America.",
   "refresh": "weekly",
   "updated": "2026-10-11T17:24:14Z"
+ },
+ "extra_positions": {
+  "title": "Extra profit: this week's picks",
+  "description": "The weekly 3 longs and 3 shorts of the main index, EUR 83.33 each (paper record, separate from the demo account).",
+  "refresh": "weekly"
+ },
+ "extra_ledger": {
+  "title": "Extra profit: closed picks",
+  "description": "Every closed weekly pick with its return and profit/loss.",
+  "refresh": "weekly"
+ },
+ "demo_value": {
+  "title": "Demo account value",
+  "description": "The EUR 1,000 demo account's value each Friday close next to the same EUR 1,000 in the MSCI World ETF.",
+  "refresh": "weekly"
+ },
+ "hist_overlay": {
+  "title": "Momentum stocks since 1927",
+  "description": "Market vs the demo mix (70% market + 30% top-decile momentum stocks) and alternatives, US data (Kenneth French).",
+  "refresh": "weekly"
  }
 }
