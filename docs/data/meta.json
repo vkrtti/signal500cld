@@ -45,19 +45,19 @@
   "title": "Market indicators",
   "description": "Trend, fear, recession, credit, rates and valuation readings. FRED (daily); FactSet, multpl.com, AAII and LPL Research (as of 9 Oct 2026, not auto-updated).",
   "refresh": "daily",
-  "updated": "2026-10-11T17:23:44Z"
+  "updated": "2026-10-11T17:30:53Z"
  },
  "signal_now": {
   "title": "Monthly signal",
   "description": "Rule-based monthly signal from FRED data.",
   "refresh": "daily",
-  "updated": "2026-10-11T17:23:44Z"
+  "updated": "2026-10-11T17:30:53Z"
  },
  "spx_weekly": {
   "title": "S&P 500 weekly closes",
   "description": "Last two years. FRED SP500.",
   "refresh": "daily",
-  "updated": "2026-10-11T17:23:44Z"
+  "updated": "2026-10-11T17:30:53Z"
  },
  "history": {
   "title": "Monthly history 1990\u20132026",
@@ -189,7 +189,7 @@
   "title": "Markets today",
   "description": "S&P 500 (also in euros), Nasdaq, Dow, Nikkei 225, EUR/USD, dollar index, Brent oil and Bitcoin. Federal Reserve (FRED).",
   "refresh": "daily",
-  "updated": "2026-10-11T17:23:44Z"
+  "updated": "2026-10-11T17:30:53Z"
  },
  "regions": {
   "title": "World stock markets since 1990",
@@ -249,7 +249,7 @@
   "title": "Headlines",
   "description": "Latest headlines from the Fed, ECB, Bank of Japan, CNBC, MarketWatch and Google News on the picked index and stocks (titles and links only).",
   "refresh": "daily",
-  "updated": "2026-10-11T17:24:14Z"
+  "updated": "2026-10-11T17:31:12Z"
  },
  "hist_rotation": {
   "title": "Index pick on 35 years of regional data",
