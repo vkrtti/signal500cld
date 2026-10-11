@@ -1,13 +1,13 @@
 {
  "weekly_now": {
   "title": "This week's pick and amount",
-  "description": "The main index pick, the weekly EUR 40-200 buy amount and the signal meter, decided at the Friday close. Yahoo Finance ETF prices, Federal Reserve (FRED) stress gauges.",
+  "description": "The main index pick, the weekly EUR 40-200 buy amount and the market meter, decided at the Friday close. Yahoo Finance ETF prices, Federal Reserve (FRED) stress gauges.",
   "refresh": "weekly",
   "updated": "2026-10-11T20:47:36Z"
  },
  "weekly_history": {
   "title": "Weekly history",
-  "description": "Every week since Jan 2012: the main index pick, the MSCI World ETF close, the rule amount, the meter and each index's 52-week return.",
+  "description": "Every week since Jan 2012: the main index pick, the MSCI World ETF close, the rule amount, the market meter and each index's 52-week return and score.",
   "refresh": "weekly",
   "updated": "2026-10-11T20:47:36Z"
  },

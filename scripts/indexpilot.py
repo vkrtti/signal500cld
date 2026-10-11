@@ -5,7 +5,7 @@ Each week it
      by return per unit of risk (52-week return / 52-week volatility); the leader only replaces the current pick when
      its score is more than 0.25 higher (tested against the old 52-week-return rule: better on 2012-today ETF data
      and on 1990-2026 regional data),
-  2. sets the weekly amount (EUR 40-200) and the signal meter from the world market (MSCI World ETF)
+  2. sets the weekly amount (EUR 40-200) and the market meter from the world market (MSCI World ETF)
      and US macro stress gauges (VIX, financial conditions, Sahm rule, yield curve),
   3. ranks the stocks of the picked index (value + momentum for the S&P 500, price momentum elsewhere),
   4. keeps the Extra profit record (3 longs / 3 shorts a week, weighted by inverse volatility) and runs the demo account:

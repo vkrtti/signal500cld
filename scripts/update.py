@@ -3,7 +3,7 @@
 Daily (every run): refreshes the market gauges (VIX, yield curve, Sahm rule, credit) and the markets table
 from the Federal Reserve (FRED), plus the S&P 500 company list used for the US stock universe.
 Weekly (--weekly, the Saturday run): also picks the main index, sets next week's buy amount and the
-signal meter, ranks the picked index's stocks and rolls the demo account (via indexpilot.py).
+market meter, ranks the picked index's stocks and rolls the demo account (via indexpilot.py).
 
 Usage: python scripts/update.py [--weekly] [--data docs/data] [--offline DIR]
 --offline DIR reads <SERIES>.csv / fin.csv / cons.csv from DIR instead of the internet (for testing).
