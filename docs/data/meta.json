@@ -3,61 +3,61 @@
   "title": "This week's amount",
   "description": "Weekly \u20ac40\u2013\u20ac200 buy amount and signal meter, decided at the Friday US close. Federal Reserve (FRED) data.",
   "refresh": "weekly",
-  "updated": "2026-10-11T16:18:36Z"
+  "updated": "2026-10-11T16:58:03Z"
  },
  "weekly_history": {
   "title": "Weekly history",
   "description": "Weekly S&P 500 closes, rule amounts and meter since Jul 2017. FRED SP500.",
   "refresh": "weekly",
-  "updated": "2026-10-11T16:18:36Z"
+  "updated": "2026-10-11T16:58:03Z"
  },
  "meter_now": {
   "title": "Signal strength",
   "description": "The \u2212100\u2026+100 meter and its six components. FRED.",
   "refresh": "weekly",
-  "updated": "2026-10-11T16:18:36Z"
+  "updated": "2026-10-11T16:58:03Z"
  },
  "rank_top": {
   "title": "Top 50 ranked stocks",
   "description": "Value + momentum ranking of S&P 500 members, decided each Friday close. Public S&P 500 fundamentals dataset (GitHub datasets).",
   "refresh": "weekly",
-  "updated": "2026-10-11T16:18:36Z"
+  "updated": "2026-10-11T16:58:03Z"
  },
  "rank_bottom": {
   "title": "Bottom 50 ranked stocks",
   "description": "Same ranking, lowest first.",
   "refresh": "weekly",
-  "updated": "2026-10-11T16:18:36Z"
+  "updated": "2026-10-11T16:58:03Z"
  },
  "demo_positions": {
   "title": "Demo: open positions",
   "description": "Simulated positions opened at the Friday close.",
   "refresh": "weekly",
-  "updated": "2026-10-11T16:18:36Z"
+  "updated": "2026-10-11T16:58:03Z"
  },
  "demo_ledger": {
   "title": "Demo: closed trades",
   "description": "Simulated closed trades and profit/loss.",
   "refresh": "weekly",
-  "updated": "2026-10-11T16:18:36Z"
+  "updated": "2026-10-11T16:58:03Z"
  },
  "indicators": {
   "title": "Market indicators",
   "description": "Trend, fear, recession, credit, rates and valuation readings. FRED (daily); FactSet, multpl.com, AAII and LPL Research (as of 9 Oct 2026, not auto-updated).",
   "refresh": "daily",
-  "updated": "2026-10-11T16:18:36Z"
+  "updated": "2026-10-11T16:58:03Z"
  },
  "signal_now": {
   "title": "Monthly signal",
   "description": "Rule-based monthly signal from FRED data.",
   "refresh": "daily",
-  "updated": "2026-10-11T16:18:36Z"
+  "updated": "2026-10-11T16:58:03Z"
  },
  "spx_weekly": {
   "title": "S&P 500 weekly closes",
   "description": "Last two years. FRED SP500.",
   "refresh": "daily",
-  "updated": "2026-10-11T16:18:36Z"
+  "updated": "2026-10-11T16:58:03Z"
  },
  "history": {
   "title": "Monthly history 1990\u20132026",
@@ -153,42 +153,54 @@
   "title": "Plans over 100 years",
   "description": "The 10/20/30% plans simulated 1927\u20132026 on Kenneth French US market total returns (monthly), with daily-reset drag, fees and cash at the T-bill rate.",
   "refresh": "weekly",
-  "updated": "2026-10-11T16:56:50Z"
+  "updated": "2026-10-11T16:58:13Z"
  },
  "hist_plans_growth": {
   "title": "Plan growth since 1927",
   "description": "Value of 1 unit invested in Jan 1927, at each year end.",
   "refresh": "weekly",
-  "updated": "2026-10-11T16:56:50Z"
+  "updated": "2026-10-11T16:58:13Z"
  },
  "hist_weekly_rule": {
   "title": "Weekly rule over 100 years",
   "description": "Money-weighted yearly return of the EUR 40-200 drawdown tiers vs a flat amount, US market total returns (French).",
   "refresh": "weekly",
-  "updated": "2026-10-11T16:56:50Z"
+  "updated": "2026-10-11T16:58:13Z"
  },
  "hist_factors": {
   "title": "Value and momentum since 1927",
   "description": "Long/short factor returns 1927\u20132026 (Kenneth French data library), premium over cash, before costs.",
   "refresh": "weekly",
-  "updated": "2026-10-11T16:56:50Z"
+  "updated": "2026-10-11T16:58:13Z"
  },
  "hist_factor_growth": {
   "title": "Factor growth since 1927",
   "description": "Value of 1 unit in each long/short factor, year-end.",
   "refresh": "weekly",
-  "updated": "2026-10-11T16:56:50Z"
+  "updated": "2026-10-11T16:58:13Z"
  },
  "hist_decades": {
   "title": "Returns by decade",
   "description": "Yearly returns by decade 1927\u20132026: US market, 20%/30% plans, value, momentum, their mix and cash.",
   "refresh": "weekly",
-  "updated": "2026-10-11T16:56:50Z"
+  "updated": "2026-10-11T16:58:13Z"
  },
  "markets": {
   "title": "Markets today",
   "description": "S&P 500 (also in euros), Nasdaq, Dow, Nikkei 225, EUR/USD, dollar index, Brent oil and Bitcoin. Federal Reserve (FRED).",
   "refresh": "daily",
-  "updated": ""
+  "updated": "2026-10-11T16:58:03Z"
+ },
+ "regions": {
+  "title": "World stock markets since 1990",
+  "description": "Total returns in US dollars by region, Jul 1990 to the latest month (Kenneth French data library).",
+  "refresh": "weekly",
+  "updated": "2026-10-11T16:58:13Z"
+ },
+ "regions_years": {
+  "title": "World markets by year",
+  "description": "Calendar-year total returns by region in US dollars.",
+  "refresh": "weekly",
+  "updated": "2026-10-11T16:58:13Z"
  }
 }
