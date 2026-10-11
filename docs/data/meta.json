@@ -37,25 +37,25 @@
  },
  "weekly_tiers": {
   "title": "Weekly amount rule",
-  "description": "The five tiers.",
+  "description": "The five weekly amount tiers, measured on the MSCI World ETF.",
   "refresh": "static",
   "updated": "2026-10-11T15:55:00Z"
  },
  "plans_summary": {
   "title": "Return plans",
-  "description": "10/20/30% plan backtests. Static.",
+  "description": "The 10/20/30% leveraged plans tested on US data 1990\u20132026 (research only).",
   "refresh": "static",
   "updated": "2026-10-11T15:55:00Z"
  },
  "plans_growth": {
   "title": "Plan growth since 1990",
-  "description": "Static.",
+  "description": "Growth of the three research plans since 1990, monthly.",
   "refresh": "static",
   "updated": "2026-10-11T15:55:00Z"
  },
  "plans_years": {
   "title": "Plan returns by year",
-  "description": "Static.",
+  "description": "Calendar-year returns of the three research plans.",
   "refresh": "static",
   "updated": "2026-10-11T15:55:00Z"
  },
@@ -175,7 +175,7 @@
  },
  "extra_positions": {
   "title": "Extra profit: this week's picks",
-  "description": "The weekly 3 longs and 3 shorts of the main index, EUR 83.33 each (paper record, separate from the demo account).",
+  "description": "The weekly 3 longs and 3 shorts of the main index, with weights (% of your money on each side, inverse volatility).",
   "refresh": "weekly",
   "updated": "2026-10-11T20:06:59Z"
  },

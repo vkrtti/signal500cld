@@ -13,6 +13,7 @@
 <body>
 <div id="dash-root">
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400..800&family=Geist+Mono:wght@400;600&display=swap');
 #dash-root{--dash-gutter:0}
 #dash-root .sx{font-family:var(--font-anthropic-sans);color:var(--color-fg);font-variant-numeric:tabular-nums;--up:var(--color-ok);--down:var(--color-bad);--accent:#5b6cf9;--muted:var(--color-fg-muted);--line:var(--color-border-line);--panel:var(--color-panel);--r:14px;font-size:14px}
 .sx .wrap{max-width:1400px;margin-inline:auto;padding:0 16px}
@@ -207,15 +208,166 @@
 .sx .statusbar{position:sticky;bottom:0;z-index:4;display:flex;gap:18px;overflow-x:auto;padding:8px 16px;font-size:12px;color:var(--muted);background:var(--color-bg);border-top:1px solid var(--line);margin-top:24px;scrollbar-width:none;white-space:nowrap}
 .sx .statusbar b{color:var(--color-fg);font-weight:700}
 .sx section[data-page]{padding:0 16px 84px}
+/* ================= IndexPilot design layer: night cockpit ================= */
+/* light */
+.sx{--color-bg:#F6F8FC;--color-panel:#FFFFFF;--raised:#EEF2F9;--color-fg:#0D1421;--color-fg-muted:#5F6B84;--color-border-line:#E3E8F1;
+  --color-ok:#0FA36B;--color-bad:#D9343E;--color-warn:#C98208;--accent:#4F5CF0;--accent2:#8B5CF6;--glow:rgba(79,92,240,.22);
+  --cds-chart-muted:#B9C1D3;--cds-chart-grid:#EDF0F6;--cds-chart-axis:#D3D9E5;--cds-chart-reference:#8A94AA;--cds-chart-status-critical:#D9343E;
+  --cds-surface-popover:#FFFFFF;--cds-border:#E3E8F1;--cds-shadow-popover:0 12px 32px rgba(13,20,33,.12);--cds-text-secondary:#5F6B84;
+  --font-ui:"Geist","Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--r:16px;color-scheme:light}
+/* dark (default on the site) */
+:root[data-theme=dark] .sx{--color-bg:#0A0F1C;--color-panel:#0F1626;--raised:#151E33;--color-fg:#E8EDF7;--color-fg-muted:#8590AA;--color-border-line:#1C2640;
+  --color-ok:#16C784;--color-bad:#EA3943;--color-warn:#F5A524;--accent:#7C8CFF;--accent2:#B48CFF;--glow:rgba(124,140,255,.35);
+  --cds-chart-muted:#3A4566;--cds-chart-grid:#151E33;--cds-chart-axis:#26314F;--cds-chart-reference:#6E7A96;--cds-chart-status-critical:#EA3943;
+  --cds-surface-popover:#121A2C;--cds-border:#26314F;--cds-shadow-popover:0 16px 40px rgba(0,0,0,.55);--cds-text-secondary:#8590AA;color-scheme:dark}
+@media (prefers-color-scheme: dark){:root:not([data-theme=light]) .sx{--color-bg:#0A0F1C;--color-panel:#0F1626;--raised:#151E33;--color-fg:#E8EDF7;--color-fg-muted:#8590AA;--color-border-line:#1C2640;
+  --color-ok:#16C784;--color-bad:#EA3943;--color-warn:#F5A524;--accent:#7C8CFF;--accent2:#B48CFF;--glow:rgba(124,140,255,.35);
+  --cds-chart-muted:#3A4566;--cds-chart-grid:#151E33;--cds-chart-axis:#26314F;--cds-chart-reference:#6E7A96;--cds-chart-status-critical:#EA3943;
+  --cds-surface-popover:#121A2C;--cds-border:#26314F;--cds-shadow-popover:0 16px 40px rgba(0,0,0,.55);--cds-text-secondary:#8590AA;color-scheme:dark}}
+#dash-root .sx{--panel:var(--color-panel);--line:var(--color-border-line);--muted:var(--color-fg-muted);--up:var(--color-ok);--down:var(--color-bad);
+  background:var(--color-bg);font-family:var(--font-ui);font-size:14px;letter-spacing:-.005em;-webkit-font-smoothing:antialiased;min-height:100vh}
+.sx *:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+.sx ::selection{background:color-mix(in srgb,var(--accent) 35%,transparent)}
+/* type scale */
+.sx h1,.sx .ttl{font-family:var(--font-ui);font-size:28px;font-weight:700;letter-spacing:-.025em;line-height:1.15;margin:28px 0 6px}
+.sx h2{font-size:19px;font-weight:650;letter-spacing:-.015em;margin:40px 0 12px}
+.sx h3{font-size:14px;font-weight:650;letter-spacing:-.005em}
+.sx .lede{font-size:15px;line-height:1.6;max-width:68ch;color:var(--muted)}
+.sx .note{font-size:12.5px;line-height:1.5}
+.sx p{line-height:1.55}
+/* top bar & navigation */
+.sx .topbar{position:sticky;top:0;z-index:15;gap:16px;padding:12px 24px;background:color-mix(in srgb,var(--color-bg) 82%,transparent);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid var(--line)}
+.sx .brand{font-size:17px;font-weight:750;letter-spacing:-.03em;gap:10px}
+.sx .brand svg rect{fill:url(#ipg)}
+.sx .search{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:9px 12px 9px 34px;transition:border-color .15s,box-shadow .15s}
+.sx .search:focus{outline:none;border-color:color-mix(in srgb,var(--accent) 60%,var(--line));box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 14%,transparent)}
+.sx .badge{background:transparent;border:1px solid var(--line);border-radius:10px;padding:6px 10px}
+.sx .tabs{padding:4px 24px 0;gap:2px 26px;border-bottom:1px solid var(--line)}
+.sx .tabs button{font-size:15px;font-weight:550;padding:12px 0 13px;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s}
+.sx .tabs button:hover{color:var(--color-fg)}
+.sx .tabs button[aria-selected=true]{font-weight:650;color:var(--color-fg);border-bottom-color:var(--accent);box-shadow:0 8px 18px -10px var(--accent)}
+.sx .subtabs{border-bottom:0;padding:18px 0 0;gap:6px}
+.sx .subtabs button{font-size:13px;font-weight:600;padding:7px 14px;border:1px solid var(--line);border-radius:999px;margin:0}
+.sx .subtabs button[aria-selected=true]{border-color:color-mix(in srgb,var(--accent) 55%,var(--line));background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--color-fg);box-shadow:0 0 18px -6px var(--glow)}
+.sx section[data-page]{max-width:1360px;margin:0 auto;padding:0 24px 96px}
+/* surfaces: one hairline, no shadows */
+.sx .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.sx .grid,.sx .kpis,.sx .hl{gap:14px}
+.sx .kpi .lab{font-size:12.5px;font-weight:550;color:var(--muted)}
+.sx .kpi .num{font-size:24px;font-weight:700;letter-spacing:-.02em;margin-top:6px}
+.sx .hl .card{padding:16px 18px}
+.sx .hl h3 button::after{content:"";display:inline-block;width:6px;height:6px;border-right:1.5px solid var(--muted);border-top:1.5px solid var(--muted);transform:rotate(45deg);margin-left:6px;vertical-align:2px}
+/* hero: the one place with glow */
+.sx .heroX{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;margin:18px 0 14px}
+@media (max-width:900px){.sx .heroX{grid-template-columns:1fr}}
+.sx .hero-side{display:grid;gap:14px;grid-template-rows:auto 1fr}
+.sx .hero-pick{position:relative;overflow:hidden;padding:26px 28px;border-radius:22px;isolation:isolate;
+  background:linear-gradient(var(--panel),var(--panel)) padding-box,linear-gradient(135deg,color-mix(in srgb,var(--accent) 70%,transparent),color-mix(in srgb,var(--accent2) 30%,transparent) 40%,var(--line) 70%) border-box;border:1px solid transparent}
+.sx .hero-pick::before{content:"";position:absolute;z-index:-1;width:520px;height:520px;right:-180px;top:-260px;border-radius:50%;background:radial-gradient(closest-side,var(--glow),transparent 70%);filter:blur(10px)}
+.sx .hero-pick::after{content:"";position:absolute;z-index:-1;width:360px;height:360px;left:-140px;bottom:-220px;border-radius:50%;background:radial-gradient(closest-side,color-mix(in srgb,var(--accent2) 22%,transparent),transparent 70%)}
+.sx .hero-pick .eyebrow{font-size:13px;color:var(--muted);font-weight:550;display:flex;align-items:center;gap:8px}
+.sx .hero-pick .pick-name{font-size:clamp(34px,5vw,56px);font-weight:750;letter-spacing:-.04em;line-height:1;margin:14px 0 10px;
+  background:linear-gradient(180deg,var(--color-fg) 30%,color-mix(in srgb,var(--color-fg) 62%,var(--accent)));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sx .pick-fund{font-size:13px;font-weight:500}
+.sx .hero-pick .why{font-size:15px;margin:14px 0 0;max-width:56ch;color:var(--color-fg)}
+.sx .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin-top:22px;border-radius:14px;overflow:hidden;background:var(--line);border:1px solid var(--line)}
+.sx .stats>div{background:color-mix(in srgb,var(--panel) 88%,var(--color-bg));padding:12px 14px}
+.sx .stats .l{font-size:12px;color:var(--muted);font-weight:550}
+.sx .stats .v{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-top:4px}
+@media (max-width:520px){.sx .stats{grid-template-columns:1fr}}
+.sx .hero-pick .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.sx .amount-num{font-size:44px;font-weight:750;letter-spacing:-.04em;line-height:1;margin:10px 0 2px;color:var(--color-fg)}
+.sx .amount-num small{font-size:15px;font-weight:550;color:var(--muted);letter-spacing:0;margin-left:6px}
+.sx .track{height:4px;background:linear-gradient(90deg,color-mix(in srgb,var(--color-ok) 25%,var(--raised)),var(--color-ok));margin:16px 0 6px}
+.sx .track i{width:14px;height:14px;background:var(--color-bg);border:2px solid var(--color-ok);box-shadow:0 0 12px color-mix(in srgb,var(--color-ok) 60%,transparent)}
+.sx .swb{text-transform:none;letter-spacing:0;font-size:12px;font-weight:650;border-radius:999px;padding:3px 10px;background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--accent);margin-left:0}
+/* tables: CoinMarketCap rhythm */
+.sx table{font-size:14px}
+.sx th,.sx td{padding:14px 12px;border-bottom:1px solid var(--line)}
+.sx td{font-weight:550}
+.sx th{background:var(--panel);font-size:12px;font-weight:600;color:var(--muted);border-top:0;padding-top:12px;padding-bottom:12px}
+.sx th button:hover{color:var(--color-fg)}
+.sx tbody tr{transition:background-color .12s}
+.sx tbody tr:hover{background:var(--raised)}
+.sx tbody tr:last-child td{border-bottom:0}
+.sx .card.tbl,.sx .tbl{border-radius:var(--r)}
+.sx .card.tbl{padding:4px 6px}
+.sx tr.picked td{background:color-mix(in srgb,var(--accent) 9%,transparent)}
+.sx tr.picked td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
+.sx .nm .co{font-weight:650}
+.sx .ic{width:26px;height:26px;font-size:9.5px;font-weight:750;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+.sx .lst{border-radius:999px;font-size:11.5px;font-weight:650;padding:3px 9px}
+.sx .idx-st{border-radius:999px;font-size:11.5px;padding:3px 10px}
+.sx .idx-st.on{background:linear-gradient(90deg,var(--accent),var(--accent2));box-shadow:0 0 14px -2px var(--glow)}
+.sx .rbar{height:4px;background:var(--raised)}
+.sx .up::before,.sx .down::before{font-size:.7em}
+/* chips, filters, pills */
+.sx .chip{background:transparent;border:1px solid var(--line);font-weight:550;padding:7px 14px;transition:border-color .15s,background-color .15s}
+.sx .chip:hover{border-color:color-mix(in srgb,var(--accent) 50%,var(--line));background:color-mix(in srgb,var(--accent) 7%,transparent)}
+.sx .chip .tag{background:none;color:var(--muted);font-size:12.5px;font-weight:550;padding:0;letter-spacing:0;text-transform:none}
+.sx .flt{border-radius:999px;padding:6px 12px;font-weight:550}
+.sx .flt[aria-pressed=true]{background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--color-fg)}
+.sx .pill{border-radius:999px;background:var(--raised)}
+.sx .ex-h{text-transform:none;letter-spacing:0;font-size:13px;font-weight:650}
+.sx .lbl{text-transform:none;letter-spacing:0;font-size:12.5px;font-weight:650;color:var(--color-fg);margin:14px 0 2px}
+.sx .warnbox{background:transparent;border:1px solid var(--line);border-radius:14px;padding:12px 16px;font-size:13px;line-height:1.55}
+.sx .warnbox::before{background:none;border:1.5px solid var(--accent);color:var(--accent);font-style:normal}
+.sx input.q{background:var(--raised);border-radius:10px}
+.sx .mini li{padding:8px 0;border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
+.sx .mini li:last-child{border-bottom:0}
+.sx .exrec{border-top-color:var(--line)}
+.sx .mt{background:var(--raised)}
+/* strategy page: the explained methods */
+.sx .toc{gap:6px}
+.sx .flow{gap:12px}
+.sx .flow .st{background:var(--panel);border-radius:14px;padding:16px}
+.sx .flow .st::before{background:none;border:1px solid color-mix(in srgb,var(--accent) 60%,var(--line));color:var(--accent);font-weight:700}
+.sx details.mth{border-radius:14px;padding:0 20px;margin:8px 0;transition:border-color .15s}
+.sx details.mth[open]{border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
+.sx details.mth summary{font-size:15px;font-weight:650;padding:16px 0}
+.sx details.mth summary::after{content:"";width:8px;height:8px;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:rotate(45deg);margin:4px 2px 0 6px;flex:none;transition:transform .2s}
+.sx details.mth[open] summary::after{content:"";transform:rotate(225deg);margin-top:8px}
+.sx details.mth .body{max-width:78ch;color:color-mix(in srgb,var(--color-fg) 88%,var(--muted))}
+.sx code{background:var(--raised);font-family:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+.sx details.whyus{border-radius:14px;background:transparent}
+/* charts & tooltip */
+.sx .tip{border-radius:12px;backdrop-filter:blur(10px)}
+.sx .legend{gap:16px}
+/* status bar */
+.sx .statusbar{background:color-mix(in srgb,var(--color-bg) 85%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:9px 24px;gap:22px}
+/* Ask IndexPilot AI: glass + glow */
+.sx .askbar{border-radius:18px;padding:11px 12px 11px 16px;
+  background:linear-gradient(color-mix(in srgb,var(--panel) 80%,transparent),color-mix(in srgb,var(--panel) 80%,transparent)) padding-box,linear-gradient(100deg,color-mix(in srgb,var(--accent) 80%,transparent),color-mix(in srgb,var(--accent2) 55%,transparent),color-mix(in srgb,var(--accent) 30%,transparent)) border-box;
+  border:1px solid transparent;box-shadow:0 10px 40px -8px var(--glow),0 0 0 6px color-mix(in srgb,var(--accent) 5%,transparent)}
+.sx .askbar:hover{box-shadow:0 12px 46px -6px var(--glow),0 0 0 6px color-mix(in srgb,var(--accent) 8%,transparent)}
+.sx .askpanel{border-radius:20px;background:var(--panel);box-shadow:0 30px 80px -10px rgba(0,0,0,.5),0 0 60px -20px var(--glow)}
+.sx .msg.me{background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 60%,var(--accent2)))}
+.sx .msg.bot{background:var(--raised);border-color:transparent}
+.sx .askform button{background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 60%,var(--accent2)))}
+@media (max-width:640px){.sx .topbar{padding:10px 16px}.sx .tabs{padding:0 16px}.sx section[data-page]{padding:0 16px 96px}.sx .hero-pick{padding:22px 20px}.sx h1,.sx .ttl{font-size:24px}}
+.sx .search,.sx input.q,.sx .askform input,.sx .askset input{box-sizing:border-box}
+.sx .hero-pick{display:flex;flex-direction:column}
+.sx .hero-pick .stats{margin-top:auto}
+.sx .hero-pick .why{margin-bottom:22px}
+.sx #gauge-home{width:100%;max-width:270px;margin:0 auto;min-height:150px}
+.sx .amount-num small{display:inline-block}
+.sx .card table{min-width:0} .sx #tier-table td.wrapc,.sx #meter-table td{white-space:normal}
+.sx .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.sx .hero-spark{position:relative;height:120px;margin:4px -6px 18px}
+.sx .hero-spark svg{display:block;overflow:visible}
+.sx .hero-spark .cap{position:absolute;right:6px;top:0;font-size:12px;color:var(--muted)}
+.sx .hero-spark path.ln{filter:drop-shadow(0 0 6px var(--glow)) drop-shadow(0 0 14px var(--glow))}
+@media (max-width:640px){.sx .topbar{position:static;gap:10px}.sx .topbar .badge{display:none}.sx .topbar .searchbox{order:3;flex:1 1 100%}.sx .brand{flex:1}}
+@media (prefers-reduced-motion:reduce){.sx *{transition:none!important}}
 </style>
 
 <div class="sx">
   <div class="topbar">
-    <div class="brand" id="top"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="8" fill="#5b6cf9"/><path d="M6 18l4.5-5 3.5 3 6-8" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="8" r="1.8" fill="#fff"/></svg><span>IndexPilot</span></div>
+    <div class="brand" id="top"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><defs><linearGradient id="ipg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7C8CFF"/><stop offset="1" stop-color="#B48CFF"/></linearGradient></defs><rect width="26" height="26" rx="8" fill="#6E7BFF"/><path d="M6 18l4.5-5 3.5 3 6-8" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="8" r="1.8" fill="#fff"/></svg><span>IndexPilot</span></div>
     <span class="sp"></span>
     <div class="searchbox"><input class="search" id="q-home" placeholder="Search this week's stocks" aria-label="Search stocks of the picked index"></div>
     <span class="badge">Data to <b data-source="weekly_now" data-field="decided_on" data-row="0">—</b></span>
-    <button class="themebtn" onclick="toggleTheme()" aria-label="Switch light/dark theme" title="Light / dark">◐</button>
+    <button class="themebtn" onclick="toggleTheme()" aria-label="Switch light/dark theme" title="Light / dark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
   </div>
 
   <div class="tabs" role="tablist">
@@ -233,26 +385,33 @@
 
   <!-- ================= OVERVIEW ================= -->
   <section id="home" data-page>
-    <h1 class="ttl">This week's main index</h1>
-    <p class="lede" id="takeaway"><span class="dash-skeleton">—</span></p>
+    <h1 class="ttl vh">This week's main index</h1>
+    <p class="lede" id="takeaway" style="margin-top:22px"><span class="dash-skeleton">—</span></p>
 
-    <div class="hero3">
-      <div class="card" id="pick-card">
-        <div class="note">Buy this index (week of <span data-source="weekly_now" data-field="week_of" data-row="0">—</span>)<span class="swb" id="pick-switch" hidden>New pick</span></div>
+    <div class="heroX">
+      <div class="card hero-pick" id="pick-card">
+        <div class="eyebrow">Buy this index · week of <span data-source="weekly_now" data-field="week_of" data-row="0">—</span><span class="swb" id="pick-switch" hidden>New pick</span></div>
         <div class="pick-name" data-source="weekly_now" data-field="pick_index" data-row="0">—</div>
         <div class="pick-fund"><b data-source="weekly_now" data-field="pick_fund" data-row="0">—</b> · <span data-source="weekly_now" data-field="pick_etf" data-row="0">—</span> · ISIN <span data-source="weekly_now" data-field="pick_isin" data-row="0">—</span></div>
-        <p style="margin:10px 0 0" data-source="weekly_now" data-field="pick_reason" data-row="0">—</p>
-        <p class="note" style="margin-top:8px">52-week return in euros: <b id="pick-r52" data-source="weekly_now" data-field="pick_r52" data-row="0">—</b>. The pick changes only when another index leads by more than 5 points. <button class="chip" data-go="indexes" style="margin-left:4px">All six indexes</button></p>
+        <p class="why" data-source="weekly_now" data-field="pick_reason" data-row="0">—</p>
+        <div class="hero-spark" id="pick-spark" aria-label="ETF price over the last 52 weeks"></div>
+        <div class="stats">
+          <div><div class="l">52 weeks, in euros</div><div class="v" id="pick-r52" data-source="weekly_now" data-field="pick_r52" data-row="0">—</div></div>
+          <div><div class="l">Rule since 2012</div><div class="v"><span data-source="ip_backtest" data-field="cagr" data-where="key=pick">—</span>%<small style="font-size:12px;color:var(--muted);font-weight:550"> /yr</small></div></div>
+          <div><div class="l">Switches a year</div><div class="v" data-source="ip_backtest" data-field="switches_per_year" data-where="key=pick">—</div></div>
+        </div>
+        <div class="acts"><button class="chip" data-go="indexes">All six indexes</button><button class="chip" data-go="strategy">How it's chosen</button></div>
       </div>
-      <div class="card" id="amount-card">
-        <div class="note">How much this week</div>
-        <div class="pick-name" style="color:var(--up)">€<span data-source="weekly_now" data-field="amount" data-row="0">—</span></div>
-        <div class="track" id="hl-track"><i></i></div><div class="note" style="display:flex;justify-content:space-between;margin:0"><span>€40</span><b data-source="weekly_now" data-field="tier" data-row="0">—</b><span>€200</span></div>
-        <p style="margin:10px 0 0;font-size:13px" data-source="weekly_now" data-field="reason" data-row="0">—</p>
-        <p class="note" style="margin-top:8px">Set by the whole world market (MSCI World in euros) and US stress gauges: more after falls, less near records. <button class="chip" data-go="week" style="margin-left:4px">The rule</button></p>
+      <div class="hero-side">
+        <div class="card" id="amount-card">
+          <div class="note" style="margin:0">How much this week</div>
+          <div class="amount-num">€<span data-source="weekly_now" data-field="amount" data-row="0">—</span><small data-source="weekly_now" data-field="tier" data-row="0">—</small></div>
+          <div class="track" id="hl-track"><i></i></div><div class="note" style="display:flex;justify-content:space-between;margin:0"><span>€40</span><span>€200</span></div>
+          <p class="note" style="margin:12px 0 0" data-source="weekly_now" data-field="reason" data-row="0">—</p>
+        </div>
+        <div class="card" style="display:flex;flex-direction:column"><h3 style="margin:0 0 4px">Signal strength</h3><div class="gauge-box" id="gauge-home" data-source="meter_now" style="min-height:150px;flex:1"></div>
+          <p class="note" style="margin:0;text-align:center">Market context. It doesn't change what to buy.</p></div>
       </div>
-      <div class="card"><h3>Signal strength</h3><div class="gauge-box" id="gauge-home" data-source="meter_now" style="min-height:170px"></div>
-        <p class="note" style="margin:0;text-align:center">−100 strong sell … +100 strong buy. Market context; it does not change what to buy.</p></div>
     </div>
 
     <div class="card tbl" style="margin-bottom:12px">
@@ -270,8 +429,8 @@
     <div class="card" id="extra-card" style="margin-bottom:12px">
       <h3 style="display:flex;justify-content:space-between;align-items:center"><span><button data-go="extra" style="font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;font-weight:700">Extra profit: this week's picks ›</button></span><span class="note" style="margin:0">From <span data-source="weekly_now" data-field="pick_index" data-row="0">—</span></span></h3>
       <div class="ex">
-        <div><div class="ex-h l">▲ Long: buy</div><ul class="mini ex-list" id="ex-long-home" data-source="extra_picks"></ul></div>
-        <div><div class="ex-h s">▼ Short: sell</div><ul class="mini ex-list" id="ex-short-home" data-source="extra_picks"></ul></div>
+        <div><div class="ex-h l">Long</div><ul class="mini ex-list" id="ex-long-home" data-source="extra_picks"></ul></div>
+        <div><div class="ex-h s">Short</div><ul class="mini ex-list" id="ex-short-home" data-source="extra_picks"></ul></div>
       </div>
       <div class="exrec">
         <span>Track record: <b data-source="extra_summary" data-field="value" data-where="metric=Weeks">—</b> weeks</span>
@@ -282,11 +441,11 @@
     </div>
 
     <div class="chips" id="chips">
-      <button class="chip" data-go="indexes"><span class="tag">TEST</span>Pick since 2012: <span data-source="ip_backtest" data-field="cagr" data-where="key=pick">—</span>%/yr</button>
-      <button class="chip" data-go="week"><span class="tag">WEEK</span>Buy €<span data-source="weekly_now" data-field="amount" data-row="0">—</span></button>
-      <button class="chip" data-go="week"><span class="tag">SIGNAL</span><span data-source="weekly_now" data-field="meter" data-row="0">—</span> · <span data-source="weekly_now" data-field="meter_label" data-row="0">—</span></button>
-      <button class="chip" data-go="demo"><span class="tag">DEMO</span>€1,000 → €<span data-source="demo_summary" data-field="value" data-where="metric=Account value (€)">—</span></button>
-      <button class="chip" data-go="markets"><span class="tag">MARKETS</span>World markets</button>
+      <button class="chip" data-go="indexes"><span class="tag">Backtest</span>Pick since 2012: <span data-source="ip_backtest" data-field="cagr" data-where="key=pick">—</span>%/yr</button>
+      <button class="chip" data-go="week"><span class="tag">Amount</span>Buy €<span data-source="weekly_now" data-field="amount" data-row="0">—</span></button>
+      <button class="chip" data-go="week"><span class="tag">Signal</span><span data-source="weekly_now" data-field="meter" data-row="0">—</span> · <span data-source="weekly_now" data-field="meter_label" data-row="0">—</span></button>
+      <button class="chip" data-go="demo"><span class="tag">Demo</span>€1,000 → €<span data-source="demo_summary" data-field="value" data-where="metric=Account value (€)">—</span></button>
+      <button class="chip" data-go="markets"><span class="tag">Markets</span>Around the world</button>
     </div>
 
     <h2 id="home-stocks-h">Stocks in <span data-source="weekly_now" data-field="pick_index" data-row="0">—</span>, ranked</h2>
@@ -462,6 +621,8 @@
 
   <!-- ================= THIS WEEK ================= -->
   <section id="week" data-page hidden>
+    <h1 class="ttl">This week</h1>
+    <p class="lede">How much to buy, and how the market looks, at the last Friday close.</p>
     <div class="hero">
       <div class="card" id="week-card">
         <div class="note">Buy this week (week of <span data-source="weekly_now" data-field="week_of" data-row="0">—</span>)</div>
@@ -540,7 +701,7 @@
       <a class="chip" href="#s-routine">Weekly routine</a><a class="chip" href="#s-pick">Index pick</a><a class="chip" href="#s-amount">Weekly amount</a><a class="chip" href="#s-meter">Signal meter</a><a class="chip" href="#s-ind">Market gauges</a><a class="chip" href="#s-rank">Stock ranking</a><a class="chip" href="#s-extra">Extra profit &amp; demo</a><a class="chip" href="#s-test">How it was tested</a><a class="chip" href="#s-risk">Risk management</a><a class="chip" href="#s-data">Data &amp; updates</a><a class="chip" href="#s-limits">Limits</a><a class="chip" href="#s-trend">Research: plans</a><a class="chip" href="#history" data-go="history">Research: 100 years</a>
     </div>
 
-    <h2 id="s-routine">1 · The weekly routine</h2>
+    <h2 id="s-routine">The weekly routine</h2>
     <div class="flow">
       <div class="st"><b>Friday close</b><span>All decisions use closing prices of the last trading day of the week. Nothing is decided mid-week.</span></div>
       <div class="st"><b>Data refresh (Saturday morning)</b><span>Six index ETFs and the stocks of the picked index from Yahoo Finance; VIX, financial conditions, Sahm rule and yield curve from the Federal Reserve.</span></div>
@@ -551,7 +712,7 @@
     </div>
     <p class="note" style="margin-top:8px">You place the trades yourself at your broker; the site only decides and records.</p>
 
-    <h2 id="s-methods">2 · The methods</h2>
+    <h2 id="s-methods">The methods</h2>
 
     <details class="mth" id="s-pick" open><summary>Main index pick (weekly)<span class="k">core strategy: what to buy</span></summary><div class="body">
       <p>Six euro-listed, accumulating index ETFs: MSCI World (EUNL), S&amp;P 500 (SXR8), Nasdaq-100 (SXRV), MSCI Europe (EUNK), MSCI Japan (EUNN) and MSCI Emerging Markets (IEMA).</p>
@@ -681,10 +842,10 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
     <h1 class="ttl">Extra profit: 3 longs and 3 shorts a week</h1>
     <p class="lede">On top of your index buying: each Friday close, the 3 highest-ranked stocks of this week's main index (<b data-source="weekly_now" data-field="pick_index" data-row="0">—</b>) are bought and the 3 lowest-ranked are sold short, held for one week. Each side is split by the weights below (calmer stocks get more), so it works for any stake: put the shown % of your long money into each long and the shown % of your short money into each short. The long and short sides balance, so the result depends on the picks rather than on whether the market goes up or down. This is a separate paper record of the weekly picks; the €1,000 demo account runs its own long-only rules.</p>
     <div class="ex">
-      <div class="card"><div class="ex-h l">▲ Long: buy this week</div>
+      <div class="card"><div class="ex-h l">Long this week</div>
         <table id="ex-long-table" data-source="extra_picks" data-row-key="ticker">
           <thead><tr><th data-field="ticker">Stock</th><th data-field="weight" class="n">Weight (%)</th><th data-field="entry_price" class="n">Price</th><th data-field="rank" class="n">Rank</th><th data-field="score" class="n">Score</th><th data-field="vol" class="n">Volatility (%)</th><th data-field="off_52w_high" class="n">From 52w high (%)</th></tr></thead><tbody></tbody></table></div>
-      <div class="card"><div class="ex-h s">▼ Short: sell this week</div>
+      <div class="card"><div class="ex-h s">Short this week</div>
         <table id="ex-short-table" data-source="extra_picks" data-row-key="ticker">
           <thead><tr><th data-field="ticker">Stock</th><th data-field="weight" class="n">Weight (%)</th><th data-field="entry_price" class="n">Price</th><th data-field="rank" class="n">Rank</th><th data-field="score" class="n">Score</th><th data-field="vol" class="n">Volatility (%)</th><th data-field="off_52w_high" class="n">From 52w high (%)</th></tr></thead><tbody></tbody></table></div>
     </div>
@@ -1045,8 +1206,8 @@ dash.calc('extra_summary', {
 // ---- signal-strength gauge ----
 SX.gauge = (box, v, label) => {
   box.querySelector('svg')?.remove();
-  const W = Math.min(box.clientWidth || 300, 340); if (!W) return; const H = Math.round(W * 0.62);
-  const cx = W / 2, cy = H - Math.max(18, W / 11), r = W / 2 - 14;
+  const W = Math.min(box.clientWidth || 300, 340); if (!W) return; const H = Math.round(W * 0.7);
+  const cx = W / 2, cy = H - Math.max(34, W / 7.5), r = W / 2 - 14;
   const svg = d3.select(box).insert('svg', ':first-child').attr('width', W).attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
   const a = (x) => (Math.max(-100, Math.min(100, x)) / 100) * (Math.PI / 2);
   const zones = [[-100, -25, 'var(--color-bad)', 1], [-25, -10, 'var(--color-warn)', 1], [-10, 15, 'var(--cds-chart-muted)', 1], [15, 40, 'var(--color-ok)', 0.55], [40, 100, 'var(--color-ok)', 1]];
@@ -1056,7 +1217,7 @@ SX.gauge = (box, v, label) => {
   const ang = a(v) - Math.PI / 2;
   svg.append('line').attr('x1', cx).attr('y1', cy).attr('x2', cx + Math.cos(ang) * r * 0.9).attr('y2', cy + Math.sin(ang) * r * 0.9).attr('stroke', 'var(--color-fg)').attr('stroke-width', 3).attr('stroke-linecap', 'round');
   svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 6).attr('fill', 'var(--color-fg)');
-  svg.append('text').attr('x', cx).attr('y', cy + Math.max(16, W / 13)).attr('text-anchor', 'middle').attr('font-weight', 800).attr('font-size', Math.max(13, Math.min(22, W / 11))).attr('fill', 'var(--color-fg)').text((v > 0 ? '+' : '') + v + '  ' + label);
+  svg.append('text').attr('x', cx).attr('y', cy + Math.max(26, W / 9.5)).attr('text-anchor', 'middle').attr('font-weight', 800).attr('font-size', Math.max(13, Math.min(22, W / 11))).attr('fill', 'var(--color-fg)').text((v > 0 ? '+' : '') + v + '  ' + label);
 };
 
 // ---- tabs ----
@@ -1295,6 +1456,18 @@ SX.line = (box, series, o) => {
         ['hl-top-h', 'hl-bottom-h'].forEach((id, k) => { document.getElementById(id).textContent = (k ? 'Weakest in ' : 'Strongest in ') + (w.pick_index || 'the index'); });
       }
       SX.table('idx-home', 'index_rank', SX.idxFmt); SX.markPick('idx-home');
+      const hs = document.getElementById('pick-spark'); const pk = (SX.rows('index_rank') || []).find((r) => (r.status || '').startsWith('This'));
+      if (hs && pk && pk.spark && pk.spark.length > 2 && hs.clientWidth) {
+        hs.replaceChildren(); const W = hs.clientWidth, H = 120, arr = pk.spark;
+        const x = d3.scaleLinear([0, arr.length - 1], [4, W - 4]); const y = d3.scaleLinear(d3.extent(arr), [H - 6, 18]);
+        const svg = d3.select(hs).append('svg').attr('width', W).attr('height', H).attr('viewBox', `0 0 ${W} ${H}`);
+        const gid = 'hsg' + Math.round(W); const g = svg.append('defs').append('linearGradient').attr('id', gid).attr('x1', 0).attr('y1', 0).attr('x2', 0).attr('y2', 1);
+        g.append('stop').attr('offset', 0).attr('stop-color', 'var(--accent)').attr('stop-opacity', 0.32); g.append('stop').attr('offset', 1).attr('stop-color', 'var(--accent)').attr('stop-opacity', 0);
+        svg.append('path').attr('d', d3.area().x((v, i) => x(i)).y0(H).y1(y).curve(d3.curveMonotoneX)(arr)).attr('fill', `url(#${gid})`);
+        svg.append('path').attr('class', 'ln').attr('d', d3.line().x((v, i) => x(i)).y(y).curve(d3.curveMonotoneX)(arr)).attr('fill', 'none').attr('stroke', 'var(--accent)').attr('stroke-width', 2.2).attr('stroke-linecap', 'round');
+        svg.append('circle').attr('cx', x(arr.length - 1)).attr('cy', y(arr[arr.length - 1])).attr('r', 4).attr('fill', 'var(--accent)').attr('stroke', 'var(--color-panel)').attr('stroke-width', 2);
+        const cap = document.createElement('span'); cap.className = 'cap'; cap.textContent = `${pk.etf} · last 52 weeks · €${d3.format(',.2f')(arr[arr.length - 1])}`; hs.appendChild(cap);
+      }
       const mini = (ulId, rows, good) => {
         const ul = document.getElementById(ulId); if (!rows) return;
         ul.replaceChildren(...rows.map((r) => {
@@ -1364,7 +1537,7 @@ SX.line = (box, series, o) => {
           { h: 220, yMin: -30, yfmt: d3.format('+d'), tipDate: d3.utcFormat('Week of %b %-d, %Y'), refs: [{ y: -10, label: 'Sell below', color: 'var(--color-bad)' }, { y: 40, label: 'Strong buy', color: 'var(--color-ok)' }] });
       }
       const wn = SX.rows('weekly_now'); const cur = wn && wn[0] ? wn[0].tier : null;
-      SX.table('tier-table', 'weekly_tiers', { tier: (td, v) => { td.textContent = v; td.style.fontWeight = '600'; } });
+      SX.table('tier-table', 'weekly_tiers', { tier: (td, v) => { td.textContent = v; td.style.fontWeight = '600'; }, condition: (td, v) => { td.textContent = v; td.className = 'wrapc'; td.style.minWidth = '12rem'; } });
       document.querySelectorAll('#tier-table tbody tr').forEach((tr) => { const on = tr.dataset.key === cur; tr.style.background = on ? 'var(--color-bg)' : ''; tr.style.outline = on ? '2px solid var(--color-ok)' : ''; });
       SX.table('wk-test', 'ip_buying', { plan: (td, v) => { td.textContent = v; td.className = 'wrapc'; td.style.fontWeight = '600'; }, invested: (td, v) => { td.textContent = SX.fmt(v); }, value: (td, v) => { td.textContent = SX.fmt(v); }, irr: num });
       const box = document.getElementById('wk-chart'); const wh = SX.rows('weekly_history');
@@ -1460,6 +1633,7 @@ SX.line = (box, series, o) => {
         price: (td, v, r) => { td.textContent = v ? SX.money(v, r.currency) : ''; }, note: (td, v) => { td.textContent = v || ''; td.className = 'wrapc'; td.style.color = 'var(--muted)'; } });
       SX.table('ov-table', 'hist_overlay', { period: (td, v) => { td.textContent = v; td.style.fontWeight = '700'; }, market: num, demo: (td, v) => { num(td, v); td.style.fontWeight = '800'; }, top: num, ls: num,
         market_dd: (td, v) => { td.textContent = v + '%'; td.style.color = 'var(--down)'; }, demo_dd: (td, v) => { td.textContent = v + '%'; td.style.color = 'var(--down)'; }, ls_dd: (td, v) => { td.textContent = v + '%'; td.style.color = 'var(--down)'; } });
+      document.querySelectorAll('#demo .kpi [data-source="demo_summary"]').forEach((el) => { const m = decodeURIComponent((el.dataset.where || '').replace(/^metric=/, '')); const r = (SX.rows('demo_summary') || []).find((x) => x.metric === m); if (r && m.includes('(€)') && typeof r.value === 'number') el.textContent = (el.id === 'demo-diff' ? '' : '€') + d3.format(',.2f')(r.value); });
       const ds = SX.rows('demo_summary'); const dv = ds && ds.find((r) => r.metric === 'vs MSCI World (€)'); const dd = document.getElementById('demo-diff');
       if (dv) { dd.textContent = (dv.value > 0 ? '+' : '') + d3.format(',.2f')(dv.value); dd.style.color = dv.value > 0 ? 'var(--up)' : dv.value < 0 ? 'var(--down)' : ''; }
       const dw = SX.rows('demo_weekly'); const db = document.getElementById('demo-chart');
@@ -1502,7 +1676,7 @@ SX.line = (box, series, o) => {
     dash.setLink('plans'); SX.draw();
   }));
 
-  const named = location.hash.slice(1);
+  const named = location.hash.replace(/^#\/?/, '');
   if (['home', 'indexes', 'markets', 'week', 'strategy', 'extra', 'plans', 'gauges', 'history', 'stocks', 'demo', 'news', 'research'].includes(named)) SX.active = named === 'research' ? 'history' : named;
   let first = true;
   dash.onData(() => {
@@ -1746,8 +1920,8 @@ SX.line = (box, series, o) => {
 </div>
 
 <footer class="site-foot" id="sources">
-  <b>Data sources and last update</b>
-  <table id="src-table"><tbody></tbody></table>
+  <details><summary><b>Data sources and last update</b></summary>
+  <table id="src-table"><tbody></tbody></table></details>
   <p>IndexPilot is a personal research tool. Backtests, rankings and the demo account are simulations, not financial advice. Data: Yahoo Finance (ETF and stock prices), Federal Reserve Bank of St. Louis (FRED), Kenneth French data library, Robert Shiller's S&amp;P 500 dataset, the public S&amp;P 500 companies datasets on GitHub, FactSet Earnings Insight, multpl.com, AAII; headlines from the Federal Reserve, ECB, Bank of Japan, CNBC, MarketWatch and Google News.</p>
 </footer>
 <script>

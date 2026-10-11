@@ -1,7 +1,8 @@
 // IndexPilot runtime: loads docs/data/*.json and gives the page the small data API it was written against
 // (dash.data, dash.calc, dash.onData, dash.colors, dash.setLink).
 (function () {
-  try { const saved = localStorage.getItem('theme'); if (saved) document.documentElement.dataset.theme = saved; } catch (e) {}
+  let saved = null; try { saved = localStorage.getItem('theme'); } catch (e) {}
+  document.documentElement.dataset.theme = saved || 'dark';
   const DATASETS = ['indicators', 'weekly_now', 'weekly_history', 'weekly_tiers', 'meter_now', 'meter_test', 'demo_positions', 'demo_ledger', 'demo_value', 'plans_summary', 'plans_growth', 'plans_years', 'markets', 'regions', 'regions_years', 'hist_plans', 'hist_plans_growth', 'hist_weekly_rule', 'hist_factors', 'hist_factor_growth', 'hist_decades', 'index_rank', 'pick_rank', 'ip_backtest', 'ip_buying', 'ip_growth', 'ip_years', 'ip_periods', 'news_feed', 'hist_rotation', 'hist_rotation_decades', 'extra_positions', 'extra_ledger', 'hist_overlay'];
   const store = {}, calcs = {}, callbacks = [];
   const css = getComputedStyle(document.documentElement);
@@ -21,7 +22,7 @@
     },
     calc(id, opts) { calcs[id] = opts; },
     onData(fn) { callbacks.push(fn); try { fn(); } catch (e) { console.error(e); } },
-    setLink(name) { try { history.replaceState(null, '', '#' + name); } catch (e) {} },
+    setLink(name) { try { history.replaceState(null, '', '#/' + name); } catch (e) {} },
     params() { return {}; }, setParams() {}, resetParams() {}, refresh() {},
   };
   window.dash = dash;
