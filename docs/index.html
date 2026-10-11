@@ -79,6 +79,26 @@
 .sx .mini.ex-list li{grid-template-columns:26px 1fr auto auto}
 .sx .exrec{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
 .sx .exrec b{color:var(--color-fg)}
+/* strategy page */
+.sx .toc{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 16px}
+.sx .flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:10px;counter-reset:st}
+.sx .flow .st{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;position:relative}
+.sx .flow .st::before{counter-increment:st;content:counter(st);position:absolute;top:10px;right:12px;font-size:12px;font-weight:800;color:#fff;background:var(--accent);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center}
+.sx .flow .st b{display:block;margin-bottom:4px;padding-right:24px}
+.sx .flow .st span{color:var(--muted);font-size:13px}
+.sx details.mth{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin:10px 0;padding:0 16px}
+.sx details.mth summary{cursor:pointer;list-style:none;padding:14px 0;font-weight:700;font-size:15px;display:flex;justify-content:space-between;gap:12px}
+.sx details.mth summary::-webkit-details-marker{display:none}
+.sx details.mth summary::after{content:"+";color:var(--muted);font-weight:400;font-size:18px;line-height:1}
+.sx details.mth[open] summary::after{content:"−"}
+.sx details.mth summary .k{color:var(--muted);font-weight:500;font-size:13px;margin-left:auto;white-space:nowrap}
+.sx details.mth .body{padding:0 0 16px;line-height:1.55}
+.sx details.mth .body p{margin:6px 0}
+.sx details.mth table{margin:8px 0;font-size:13px} .sx details.mth th,.sx details.mth td{padding:7px 8px;white-space:normal}
+.sx details.mth td{font-weight:500}
+.sx code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;background:var(--color-bg);border-radius:6px;padding:2px 6px}
+.sx .formula{display:block;padding:10px 12px;margin:8px 0;white-space:pre-wrap;line-height:1.6}
+.sx .lbl{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:10px 0 2px}
 /* chips & filters */
 .sx .chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:none}
 .sx .chip{font:inherit;font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--panel);color:var(--color-fg);border-radius:999px;padding:6px 12px;white-space:nowrap;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
@@ -141,6 +161,7 @@
   <div class="tabs" role="tablist">
     <button role="tab" data-tab="home" id="tab-home" aria-selected="true">Overview</button>
     <button role="tab" data-tab="week" id="tab-week" aria-selected="false">This week</button>
+    <button role="tab" data-tab="strategy" id="tab-strategy" aria-selected="false">Strategy</button>
     <button role="tab" data-tab="extra" id="tab-extra" aria-selected="false">Extra profit</button>
     <button role="tab" data-tab="plans" id="tab-plans" aria-selected="false">Return plans</button>
     <button role="tab" data-tab="signal" id="tab-signal" aria-selected="false">Market signal</button>
@@ -270,6 +291,146 @@
       </table>
     </div>
     <div class="warnbox">Budget check: the rule averaged about €80–110 a week, but in a 2008-style crash it asks for €200 every week for over a year (around €13,000). Only follow it if you could keep that up. Not financial advice.</div>
+  </section>
+
+  <!-- ================= STRATEGY ================= -->
+  <section id="strategy" data-page hidden>
+    <h1 class="ttl">The strategy</h1>
+    <p class="lede">Everything this site does, in one place: the weekly routine, every rule and formula, where the data comes from, how each method was tested, and what is still unproven.</p>
+
+    <div class="card" id="strat-now">
+      <h3>Where the strategy stands this week</h3>
+      <div class="kpis">
+        <div class="kpi"><div class="lab">Buy into the S&amp;P 500 ETF</div><div class="num">€<span data-source="weekly_now" data-field="amount" data-row="0">—</span></div><div class="note"><span data-source="weekly_now" data-field="tier" data-row="0">—</span> tier</div></div>
+        <div class="kpi"><div class="lab">Signal strength</div><div class="num"><span data-source="weekly_now" data-field="meter" data-row="0">—</span></div><div class="note" data-source="weekly_now" data-field="meter_label" data-row="0">—</div></div>
+        <div class="kpi"><div class="lab">20% plan</div><div class="num" style="font-size:16px" data-source="plans_now" data-field="action" data-where="plan=20%25">—</div></div>
+        <div class="kpi"><div class="lab">Decided at close of</div><div class="num" style="font-size:16px" data-source="weekly_now" data-field="decided_on" data-row="0">—</div></div>
+      </div>
+    </div>
+
+    <div class="toc">
+      <a class="chip" href="#s-routine">Weekly routine</a><a class="chip" href="#s-amount">Weekly amount</a><a class="chip" href="#s-meter">Signal meter</a><a class="chip" href="#s-trend">Trend rule &amp; plans</a><a class="chip" href="#s-monthly">Monthly signal</a><a class="chip" href="#s-ind">Indicators</a><a class="chip" href="#s-val">Valuation</a><a class="chip" href="#s-rank">Stock ranking</a><a class="chip" href="#s-extra">Extra profit &amp; demo</a><a class="chip" href="#s-test">How it was tested</a><a class="chip" href="#s-risk">Risk management</a><a class="chip" href="#s-data">Data &amp; updates</a><a class="chip" href="#s-limits">Limits</a>
+    </div>
+
+    <h2 id="s-routine">1 · The weekly routine</h2>
+    <div class="flow">
+      <div class="st"><b>Friday US close</b><span>All decisions use closing prices of the last trading day of the week. Nothing is decided mid-week.</span></div>
+      <div class="st"><b>Data refresh (Saturday morning)</b><span>S&amp;P 500, VIX, financial conditions, Sahm rule and yield curve from the Federal Reserve; prices and fundamentals for ~500 stocks.</span></div>
+      <div class="st"><b>Core buy</b><span>The weekly amount rule sets €40–€200 for the S&amp;P 500 index ETF. This is the main strategy.</span></div>
+      <div class="st"><b>Return plan check</b><span>If you run the 20% or 30% plan: stay in the 2x/3x fund above the 200-day line, move to cash below it.</span></div>
+      <div class="st"><b>Extra profit (optional)</b><span>Close last week's 3 longs and 3 shorts, open this week's from the new ranking.</span></div>
+      <div class="st"><b>Record &amp; review</b><span>The demo account books every result, so each method builds a live track record.</span></div>
+    </div>
+    <p class="note" style="margin-top:8px">You place the trades yourself at your broker; the site only decides and records.</p>
+
+    <h2 id="s-methods">2 · The methods</h2>
+
+    <details class="mth" id="s-amount" open><summary>Weekly buy amount (€40–€200)<span class="k">core strategy</span></summary><div class="body">
+      <p>Buy more when the market is cheaper than its record, less when it is near the top, never stop. Money not spent in calm weeks stays with you; nothing waits in cash.</p>
+      <span class="lbl">Rule (checked in this order)</span>
+      <table><thead><tr><th>Tier</th><th>Condition at the Friday close</th><th class="n">Buy</th></tr></thead><tbody>
+        <tr><td>Stress</td><td>Price below its 200-day trend line <b>and</b> (Sahm rule ≥ 0.5 <b>or</b> Chicago Fed NFCI &gt; 0) <b>and</b> VIX &lt; 30</td><td class="n">€40</td></tr>
+        <tr><td>Bear market / panic</td><td>20%+ below the record close, or VIX ≥ 30</td><td class="n">€200</td></tr>
+        <tr><td>Correction</td><td>10–20% below the record</td><td class="n">€150</td></tr>
+        <tr><td>Dip</td><td>5–10% below the record</td><td class="n">€100</td></tr>
+        <tr><td>Normal</td><td>Within 5% of the record</td><td class="n">€60</td></tr></tbody></table>
+      <span class="lbl">Evidence</span>
+      <p>Money-weighted yearly return vs a flat weekly amount (price only): 1990–2026 9.24% vs 8.99%; 2000–2026 10.01% vs 9.86%; 2007–2026 12.45% vs 12.03%; 2016–2026 14.55% vs 14.01%. Exact weekly test Jul 2017–Oct 2026: with the same €42,490 total, the rule ended 2.66% higher. Small but consistent in every period.</p>
+      <span class="lbl">Budget</span><p>Averaged €80–110 a week; in a 2008-style crash it asks for €200 a week for over a year (~€13,000).</p>
+    </div></details>
+
+    <details class="mth" id="s-meter"><summary>Signal-strength meter (−100 … +100)<span class="k">sizes the demo index leg</span></summary><div class="body">
+      <p>Six readings, each scored −1 to +1, multiplied by a weight and summed: <code>meter = 100 × Σ weight × score</code>.</p>
+      <table><thead><tr><th>Component</th><th class="n">Weight</th><th>Score</th></tr></thead><tbody>
+        <tr><td>Trend</td><td class="n">25%</td><td><code>clip((price ÷ trend line − 1) ÷ 5%, −1, +1)</code></td></tr>
+        <tr><td>Discount from record</td><td class="n">20%</td><td><code>clip(−drawdown ÷ 15%, 0, +1)</code>: falls are bullish (contrarian)</td></tr>
+        <tr><td>Fear (VIX)</td><td class="n">15%</td><td>≥ 30: +1 · 20–30: +0.5 · under 13: −0.5 (complacency) · else 0</td></tr>
+        <tr><td>Credit (Chicago Fed NFCI)</td><td class="n">15%</td><td>above 0: −1 · −0.3 to 0: −0.3 · below −0.3: +0.3</td></tr>
+        <tr><td>Recession (Sahm rule)</td><td class="n">15%</td><td>≥ 0.5: −1 · 0.3–0.5: −0.5 · below 0.3: +0.3</td></tr>
+        <tr><td>Yield curve (10Y − 3M)</td><td class="n">10%</td><td>inverted: −0.5 · positive: +0.2</td></tr></tbody></table>
+      <p>Labels: ≥ +40 Strong buy · +15 to +40 Buy · −10 to +15 Neutral · −25 to −10 Sell · ≤ −25 Strong sell.</p>
+      <span class="lbl">Evidence (monthly, 1990–2026)</span>
+      <p>Meter ≤ −10: S&amp;P 500 averaged −0.69% the next month (25 months). −10 to +10: +0.30%. +10 to +30: +1.15%. Above +30: +0.82%. Historical range −29 (2008, 2020) to +64. Valuation is deliberately left out: it predicts 10-year returns, not next week's.</p>
+    </div></details>
+
+    <details class="mth" id="s-trend"><summary>200-day trend rule and the 10/20/30% plans<span class="k">risk control for leverage</span></summary><div class="body">
+      <p><b>Trend line:</b> the average of the last 200 daily closes (the weekly job uses the 40-week average of Friday closes, which tracks it within about 0.3%). Checked once a week at the Friday close.</p>
+      <table><thead><tr><th>Plan</th><th>Holds</th><th>Rule</th><th class="n">1990–2026</th><th class="n">Worst fall</th><th class="n">2017–26 daily</th></tr></thead><tbody>
+        <tr><td>10% Steady</td><td>1x S&amp;P 500 ETF</td><td>Weekly amount rule, never sell</td><td class="n">11.0%/yr</td><td class="n">−49%</td><td class="n">14.8%/yr</td></tr>
+        <tr><td>20% Growth</td><td>2x daily-leveraged ETF</td><td>Hold above the trend line, cash below</td><td class="n">16.4%/yr</td><td class="n">−38%</td><td class="n">18.9%/yr</td></tr>
+        <tr><td>30% Aggressive</td><td>3x daily-leveraged ETP</td><td>Same rule</td><td class="n">17.9%/yr</td><td class="n">−58%</td><td class="n">25.3%/yr</td></tr></tbody></table>
+      <p>Share of 10-year spans that reached the target: 48% (10% plan), 15% (20%), 0% (30%; best 29.0%/yr). Without the trend rule, 3x lost 99% between 2000 and 2009. About 3 sell/buy-back switches a year.</p>
+    </div></details>
+
+    <details class="mth" id="s-monthly"><summary>Monthly market signal (BUY / BUY EXTRA / HOLD)<span class="k">risk gauge</span></summary><div class="body">
+      <p><b>HOLD</b>: monthly price below its 10-month average <b>and</b> (Sahm ≥ 0.5 <b>or</b> NFCI &gt; 0), unless a panic is already easing. <b>BUY EXTRA</b>: 15%+ below the peak or VIX ≥ 30 without worsening credit stress. <b>BUY</b>: everything else. Uses only data known at the end of the previous month.</p>
+      <p><b>Result:</b> €500/month 1990–2026 (€220,500 invested): plain monthly buying €2.58M, trend rule only €2.57M, this signal €2.46M, buy-the-dip €2.31M. No timing rule beat plain buying, because cash waiting on the sidelines cost more than the crashes avoided. But HOLD months were followed by +1.9% on average over 12 months, vs +10.9% after BUY months, so it is kept as a risk gauge, not a reason to stop buying.</p>
+    </div></details>
+
+    <details class="mth" id="s-ind"><summary>Indicator board (19 readings)<span class="k">context</span></summary><div class="body">
+      <p>Grouped as trend (S&amp;P 500, distance from 200-day average and from the record, market breadth), fear (VIX, AAII sentiment), recession risk (yield curve, Sahm rule, unemployment), credit (high-yield spread, NFCI), rates and inflation (Fed funds, 10-year yield, CPI, oil), valuation (forward P/E, CAPE, equity risk premium) and earnings growth. Each gets a status from its usual professional threshold, e.g. VIX ≥ 30 panic, curve below 0 recession warning, Sahm ≥ 0.5 recession signal, high-yield spread above 5 pp stress, NFCI above 0 tight conditions.</p>
+    </div></details>
+
+    <details class="mth" id="s-val"><summary>Valuation: CAPE and the equity risk premium<span class="k">long-term expectations</span></summary><div class="body">
+      <p><b>CAPE</b> = price ÷ 10-year average of inflation-adjusted earnings (Shiller). Average real return over the next 10 years by starting CAPE, 1881–2013: under 10: 11.3%/yr · 15–20: 6.0% · 25–30: 4.4% · over 35: −2.6% (mostly 1999–2000).</p>
+      <p><b>Equity risk premium</b> = forward earnings yield (1 ÷ forward P/E) − 10-year Treasury yield. Near zero means stocks pay little extra over safe bonds.</p>
+      <p>Used to set expectations, not to time purchases.</p>
+    </div></details>
+
+    <details class="mth" id="s-rank"><summary>Stock ranking: value + momentum<span class="k">top/bottom 50, extra profit</span></summary><div class="body">
+      <p>All S&amp;P 500 members with complete data (~486) are scored within their own sector, so banks are compared with banks and tech with tech.</p>
+      <code class="formula">value    = 50% × rank(earnings ÷ price) + 25% × rank(sales ÷ price) + 25% × rank(book ÷ price)
+momentum = rank(position in 52-week range: (price − low) ÷ (high − low))
+score    = 50% × value + 50% × momentum      (0–100; ranks are sector percentiles)</code>
+      <p>Loss-making companies get the lowest earnings rank. P/E under 6 is flagged as a likely data error. Value and momentum are the two factors with the strongest academic record (Fama-French, AQR), and they work best combined because they tend to move in opposite directions.</p>
+    </div></details>
+
+    <details class="mth" id="s-extra"><summary>Extra profit picks and the demo account<span class="k">simulation</span></summary><div class="body">
+      <p><b>Stock leg (Extra profit):</b> €83.33 long in each of the 3 highest-ranked stocks and €83.33 short in each of the 3 lowest-ranked (skipping flagged P/E data; longs must be profitable). Long and short balance, so the result depends on the picks rather than on the market direction.</p>
+      <p><b>Index leg:</b> S&amp;P 500 position of <code>€500 × |meter| ÷ 100</code>, long if the meter is positive, short if negative, nothing if |meter| &lt; 10. Total weekly stake never exceeds €1,000.</p>
+      <p><b>Booking:</b> open at the Friday close, close at the next Friday close. <code>P/L = stake × (exit ÷ entry − 1)</code> for longs, the negative for shorts. No fees, spreads or borrow costs.</p>
+      <p><b>Index leg backtest:</b> 1990–2026 monthly €4.27 profit per €1 of average stake vs €3.41 always long; 2017–2026 weekly €1.14 vs €1.30. The stock leg cannot be backtested (no free price history for all stocks); its record starts 9 Oct 2026.</p>
+    </div></details>
+
+    <details class="mth" id="s-test"><summary>How everything was tested<span class="k">methodology</span></summary><div class="body">
+      <ul class="m">
+        <li><b>No look-ahead:</b> each decision uses only data available before it is acted on (previous month or previous Friday).</li>
+        <li><b>Total return:</b> dividends reinvested (Shiller dividend yield; 1.4%/yr in daily tests). Uninvested cash earns the Fed funds rate.</li>
+        <li><b>Leveraged funds (monthly test):</b> <code>monthly return = L × index − (L − 1) × cash rate − (L² − L) ÷ 2 × variance − fee</code>, with variance from the VIX. This reproduces the daily-reset drag of real 2x/3x funds. Fees 0.07% (1x), 0.6% (2x), 0.75% (3x) a year.</li>
+        <li><b>Daily check:</b> the plans were re-run day by day on Federal Reserve data for Jul 2017–Oct 2026 with weekly decisions, as you would actually trade them.</li>
+        <li><b>Measures:</b> yearly growth rate, money-weighted return (each euro counted from when it went in), worst fall from a peak, worst calendar year, rolling 10-year returns, profit per euro staked.</li>
+        <li><b>Known bias:</b> the 1990–2026 data uses monthly average prices, which smooths falls; real drawdowns were somewhat deeper. Thresholds were chosen with this history in view, which flatters results.</li>
+      </ul>
+    </div></details>
+
+    <details class="mth" id="s-risk"><summary>Risk management<span class="k">built in and up to you</span></summary><div class="body">
+      <ul class="m">
+        <li><b>Diversified core:</b> the main strategy is the whole S&amp;P 500 index, bought every week.</li>
+        <li><b>Budget cap:</b> €40–€200 a week; know that crashes ask for the maximum for many months.</li>
+        <li><b>Trend exit for leverage:</b> 2x/3x only while the S&amp;P 500 is above its 200-day line, checked weekly.</li>
+        <li><b>Position size:</b> leveraged plans and the extra-profit trades only with money you could see halve (or worse).</li>
+        <li><b>Shorts:</b> can lose more than the stake; consider a stop-loss or skip them.</li>
+        <li><b>Not modelled:</b> taxes on each sale, euro/dollar swings, spreads and broker fees.</li>
+      </ul>
+    </div></details>
+
+    <details class="mth" id="s-data"><summary>Data sources and update schedule<span class="k">automatic</span></summary><div class="body">
+      <table><thead><tr><th>Source</th><th>Used for</th><th>Updates</th></tr></thead><tbody>
+        <tr><td>Federal Reserve (FRED): SP500, VIXCLS, NFCI, SAHMREALTIME, T10Y3M, BAMLH0A0HYM2, DFF, DGS10, UNRATE, CPIAUCSL</td><td>Weekly amount, meter, trend rule, indicators, monthly signal</td><td>Every weekday after the US close; weekly decisions Saturday morning</td></tr>
+        <tr><td>Public S&amp;P 500 datasets (GitHub): constituents and fundamentals</td><td>Stock ranking, extra profit, demo stock prices</td><td>Saturday</td></tr>
+        <tr><td>Robert Shiller's S&amp;P 500 data (1871 onward)</td><td>Long-run backtests, CAPE study</td><td>Fixed research data</td></tr>
+        <tr><td>FactSet Earnings Insight, multpl.com, AAII, LPL Research</td><td>Forward P/E, earnings growth, CAPE, sentiment, news</td><td>As of 9 Oct 2026 (manual)</td></tr></tbody></table>
+    </div></details>
+
+    <details class="mth" id="s-limits"><summary>Limits and honest caveats<span class="k">read this</span></summary><div class="body">
+      <ul class="m">
+        <li>Backtests describe the past; the future can be worse. Results are before tax and in dollars.</li>
+        <li>No rule here has reliably beaten plain, steady buying of the index; the gains from the weekly amount rule are small.</li>
+        <li>The 20% and 30% plans did not reach their targets over the full 1990–2026 history.</li>
+        <li>The stock picks are untested historically; judge them by the live record over months, not weeks.</li>
+        <li>The site is a personal research tool, not financial advice. You make and place every trade yourself.</li>
+      </ul>
+    </div></details>
   </section>
 
   <!-- ================= EXTRA PROFIT ================= -->
@@ -1087,6 +1248,10 @@ SX.line = (box, series, o) => {
   });
   const hq = document.getElementById('q-home');
   hq.addEventListener('input', () => { document.getElementById('home-table')._q = hq.value; if (SX.active !== 'home') SX.show('home'); else SX.draw(); });
+  document.querySelectorAll('#strategy .toc a').forEach((a) => a.addEventListener('click', (ev) => {
+    ev.preventDefault(); const el = document.getElementById(a.getAttribute('href').slice(1)); if (!el) return;
+    if (el.tagName === 'DETAILS') el.open = true; el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }));
   SX.plan = '20%';
   document.querySelectorAll('#plan-tabs button').forEach((b) => b.addEventListener('click', () => {
     SX.plan = b.dataset.plan;
@@ -1098,7 +1263,7 @@ SX.line = (box, series, o) => {
   qi.addEventListener('input', () => { document.getElementById('top-table')._q = qi.value; SX.draw(); });
 
   const named = location.hash.slice(1);
-  if (['home', 'week', 'extra', 'plans', 'signal', 'backtest', 'stocks', 'demo', 'news'].includes(named)) SX.active = named;
+  if (['home', 'week', 'strategy', 'extra', 'plans', 'signal', 'backtest', 'stocks', 'demo', 'news'].includes(named)) SX.active = named;
   let first = true;
   dash.onData(() => {
     if (first) { first = false; SX.show(SX.active); return; }
