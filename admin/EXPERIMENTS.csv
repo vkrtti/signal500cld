@@ -1,0 +1,10 @@
+date,id,area,hypothesis,variant,etf_cagr,etf_sharpe,etf_halves,regional_cagr,regional_sharpe,regional_halves,us1927,verdict,notes
+2026-10-11,E001,index_pick,baseline (previous rule),52-week return; 5-point buffer,16.2,0.92,10.0/22.2,8.2,0.53,7.5/8.9,,baseline,live until 2026-10-08
+2026-10-11,E002,index_pick,adjusting momentum for volatility picks steadier leaders,return per unit of risk; 0.25 buffer,16.7,0.99,13.9/19.2,9.8,0.62,8.9/10.8,,ADOPTED,live from 2026-10-09; edge mostly from Nasdaq-100 (without it 11.0%/yr vs World 13.1%)
+2026-10-11,E003,index_pick,wider buffer cuts whipsaw,52-week return; 10-point buffer,17.9,1.02,15.4/20.2,8.6,0.55,6.5/10.7,,rejected,best on ETFs but regional below E002
+2026-10-11,E004,index_pick,no buffer reacts faster,52-week return; no buffer,15.5,0.91,10.2/20.5,10.3,0.64,12.1/8.5,,rejected,regional best but ETF worse; 7.5 switches/yr
+2026-10-11,E005,index_pick,shorter lookback,26-week return; 5-point buffer,13.7,0.81,11.5/15.7,7.2,0.48,8.1/6.3,,rejected,worse everywhere
+2026-10-11,E006,index_pick,risk-adjusted without buffer,return per unit of risk; no buffer,14.9,0.91,9.8/19.6,8.7,0.56,7.8/9.7,,rejected,buffer matters
+2026-10-11,E007,index_pick,trend filter avoids crashes,52-week return + World when below 40-week line,15.3,0.90,9.2/21.1,9.5,0.61,8.7/10.2,,rejected,costs return in both
+2026-10-11,E008,meter,meter predicts next-year returns,meter buckets vs next 52 weeks (ETF 2012-today),,,,,,,corr ~0 since 1927,rejected as signal,very strong weeks +6.3% next year vs weak +41.8% (8 weeks); kept as description only
+2026-10-11,E009,demo,15/15 long/short lowers risk without cost,US momentum deciles 1927-today,,,,,,,demo mix 12.4%/yr dd -80%; long/short 10.4%/yr dd -62%,rejected,shorts cut the worst fall but cost return
