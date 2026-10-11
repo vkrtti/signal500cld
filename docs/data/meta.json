@@ -3,61 +3,61 @@
   "title": "This week's amount",
   "description": "Weekly \u20ac40\u2013\u20ac200 buy amount and signal meter, decided at the Friday US close. Federal Reserve (FRED) data.",
   "refresh": "weekly",
-  "updated": "2026-10-11T15:55:00Z"
+  "updated": "2026-10-11T16:18:36Z"
  },
  "weekly_history": {
   "title": "Weekly history",
   "description": "Weekly S&P 500 closes, rule amounts and meter since Jul 2017. FRED SP500.",
   "refresh": "weekly",
-  "updated": "2026-10-11T15:55:00Z"
+  "updated": "2026-10-11T16:18:36Z"
  },
  "meter_now": {
   "title": "Signal strength",
   "description": "The \u2212100\u2026+100 meter and its six components. FRED.",
   "refresh": "weekly",
-  "updated": "2026-10-11T15:55:00Z"
+  "updated": "2026-10-11T16:18:36Z"
  },
  "rank_top": {
   "title": "Top 50 ranked stocks",
   "description": "Value + momentum ranking of S&P 500 members, decided each Friday close. Public S&P 500 fundamentals dataset (GitHub datasets).",
   "refresh": "weekly",
-  "updated": "2026-10-11T15:55:00Z"
+  "updated": "2026-10-11T16:18:36Z"
  },
  "rank_bottom": {
   "title": "Bottom 50 ranked stocks",
   "description": "Same ranking, lowest first.",
   "refresh": "weekly",
-  "updated": "2026-10-11T15:55:00Z"
+  "updated": "2026-10-11T16:18:36Z"
  },
  "demo_positions": {
   "title": "Demo: open positions",
   "description": "Simulated positions opened at the Friday close.",
   "refresh": "weekly",
-  "updated": "2026-10-11T15:55:00Z"
+  "updated": "2026-10-11T16:18:36Z"
  },
  "demo_ledger": {
   "title": "Demo: closed trades",
   "description": "Simulated closed trades and profit/loss.",
   "refresh": "weekly",
-  "updated": "2026-10-11T15:55:00Z"
+  "updated": "2026-10-11T16:18:36Z"
  },
  "indicators": {
   "title": "Market indicators",
   "description": "Trend, fear, recession, credit, rates and valuation readings. FRED (daily); FactSet, multpl.com, AAII and LPL Research (as of 9 Oct 2026, not auto-updated).",
   "refresh": "daily",
-  "updated": "2026-10-11T16:17:29Z"
+  "updated": "2026-10-11T16:18:36Z"
  },
  "signal_now": {
   "title": "Monthly signal",
   "description": "Rule-based monthly signal from FRED data.",
   "refresh": "daily",
-  "updated": "2026-10-11T16:17:29Z"
+  "updated": "2026-10-11T16:18:36Z"
  },
  "spx_weekly": {
   "title": "S&P 500 weekly closes",
   "description": "Last two years. FRED SP500.",
   "refresh": "daily",
-  "updated": "2026-10-11T16:17:29Z"
+  "updated": "2026-10-11T16:18:36Z"
  },
  "history": {
   "title": "Monthly history 1990\u20132026",
