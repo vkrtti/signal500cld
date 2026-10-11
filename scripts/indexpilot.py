@@ -1,0 +1,422 @@
+"""IndexPilot weekly roll. Called by update.py --weekly (the Saturday run).
+
+Each week it
+  1. ranks six euro-listed index ETFs by their 52-week return and picks the main index
+     (the leader, but it only replaces the current pick when it leads by more than 5 percentage points),
+  2. sets the weekly amount (EUR 40-200) and the signal meter from the world market (MSCI World ETF)
+     and US macro stress gauges (VIX, financial conditions, Sahm rule, yield curve),
+  3. ranks the stocks of the picked index (value + momentum for the S&P 500, price momentum elsewhere),
+  4. rolls the simulated demo account (picked ETF long/short by the meter, top 3 long / bottom 3 short stocks),
+  5. re-runs the 2012-today backtest of the whole routine on real ETF prices.
+
+Prices: Yahoo Finance via the yfinance package (daily closes, adjusted). ETF history is cached in
+research_data/etf_daily.csv so a failed download never loses data.
+"""
+import datetime as dt, json, math, os, time
+import numpy as np, pandas as pd
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+ETFS = [  # key, index, ETF symbol (Yahoo), fund name, ISIN, stock universe
+    ('world', 'MSCI World', 'EUNL.DE', 'iShares Core MSCI World UCITS ETF (Acc)', 'IE00B4L5Y983', 'world'),
+    ('us', 'S&P 500', 'SXR8.DE', 'iShares Core S&P 500 UCITS ETF (Acc)', 'IE00B5BMR087', 'sp500'),
+    ('ndx', 'Nasdaq-100', 'SXRV.DE', 'iShares Nasdaq 100 UCITS ETF (Acc)', 'IE00B53SZB19', 'nasdaq100'),
+    ('europe', 'MSCI Europe', 'EUNK.DE', 'iShares Core MSCI Europe UCITS ETF (Acc)', 'IE00B4K48X80', 'europe'),
+    ('japan', 'MSCI Japan', 'EUNN.DE', 'iShares Core MSCI Japan IMI UCITS ETF (Acc)', 'IE00B4L5YX21', 'japan'),
+    ('em', 'MSCI Emerging Markets', 'IEMA.AS', 'iShares MSCI EM UCITS ETF (Acc)', 'IE00B4L5YC18', 'emerging'),
+]
+EK = [e[0] for e in ETFS]
+E = {e[0]: dict(key=e[0], index=e[1], etf=e[2], fund=e[3], isin=e[4], universe=e[5]) for e in ETFS}
+BUFFER = 0.05          # a challenger must lead the current pick's 52-week return by more than 5 percentage points
+START = '2011-01-03'   # ETF prices before 2011 contain data errors (checked against the indexes)
+CCY = {'.DE': 'EUR', '.AS': 'EUR', '.PA': 'EUR', '.BR': 'EUR', '.MC': 'EUR', '.MI': 'EUR', '.HE': 'EUR', '.L': 'GBp', '.SW': 'CHF',
+       '.CO': 'DKK', '.ST': 'SEK', '.OL': 'NOK', '.T': 'JPY', '.TW': 'TWD', '.HK': 'HKD', '.KS': 'KRW', '.NS': 'INR', '.SA': 'BRL',
+       '.SR': 'SAR', '.JO': 'ZAc', '.JK': 'IDR', '.MX': 'MXN'}
+ccy = lambda t: next((v for k, v in CCY.items() if t.endswith(k)), 'USD')
+yahoo = lambda t: t.replace('.', '-') if '.' in t and not any(t.endswith(k) for k in CCY) else t   # BRK.B -> BRK-B
+
+
+def download(tickers, start, log, offline=None, chunk=80):
+    """Daily adjusted closes, one column per ticker. Missing tickers are simply absent."""
+    tickers = sorted(set(tickers))
+    if offline:
+        p = os.path.join(offline, 'prices.csv')
+        df = pd.read_csv(p, index_col=0, parse_dates=True) if os.path.exists(p) else pd.DataFrame()
+        return df[[t for t in tickers if t in df]]
+    import yfinance as yf
+    out = []
+    for i in range(0, len(tickers), chunk):
+        part = tickers[i:i + chunk]
+        for attempt in range(3):
+            try:
+                d = yf.download([yahoo(t) for t in part], start=start, interval='1d', auto_adjust=True, progress=False, threads=True, group_by='column')
+                c = d['Close'] if isinstance(d.columns, pd.MultiIndex) else d[['Close']].rename(columns={'Close': yahoo(part[0])})
+                c.columns = [next((t for t in part if yahoo(t) == col), col) for col in c.columns]
+                out.append(c.dropna(how='all', axis=1)); break
+            except Exception as e:
+                log(f'WARN price download {i}-{i + len(part)} attempt {attempt + 1}: {e}'); time.sleep(10 * (attempt + 1))
+        time.sleep(1)
+    if not out: return pd.DataFrame()
+    df = pd.concat(out, axis=1)
+    df.index = pd.to_datetime(df.index).tz_localize(None).normalize()
+    log(f'prices: {df.shape[1]} of {len(tickers)} tickers, {df.index[0].date()} to {df.index[-1].date()}')
+    return df
+
+
+def weekly(df):
+    """Last close of each week (weeks end Friday)."""
+    return df.resample('W-FRI').last().ffill(limit=2)
+
+
+def etf_prices(research, log, offline):
+    cache = os.path.join(research, 'etf_daily.csv')
+    old = pd.read_csv(cache, index_col=0, parse_dates=True) if os.path.exists(cache) else pd.DataFrame()
+    new = download([E[k]['etf'] for k in EK], '2009-09-01', log, offline)
+    if not new.empty:
+        new = new.rename(columns={E[k]['etf']: k for k in EK})
+        df = new.combine_first(old) if not old.empty else new
+        df = df[[k for k in EK if k in df]].sort_index()
+        if all(k in df for k in EK):
+            df.round(4).to_csv(cache)
+            return df
+        log('WARN some ETF prices missing, using cache for them')
+        return df.combine_first(old) if not old.empty else df
+    if old.empty: raise RuntimeError('no ETF prices and no cache')
+    log('WARN ETF download failed, using cached prices'); return old
+
+
+# ------------------------------------------------------------------ rules
+def pick_path(W):
+    """Week-by-week main index with the 5-point buffer. Returns (r52 frame, list of picks per week)."""
+    r52 = W / W.shift(52) - 1
+    r52 = r52.dropna()
+    held, path = None, []
+    for d, row in r52.iterrows():
+        lead = row.idxmax()
+        if held is None or row[lead] - row[held] > BUFFER: held = lead
+        path.append(held)
+    return r52, pd.Series(path, index=r52.index)
+
+
+def amount_rule(w, trend, ath, vix, nfci, sahm):
+    dd = w / ath - 1
+    if vix < 30 and w < trend and (sahm >= 0.5 or nfci > 0): return 40, 'Stress', dd
+    if vix >= 30 or dd <= -0.20: return 200, 'Bear market or panic', dd
+    if dd <= -0.10: return 150, 'Correction', dd
+    if dd <= -0.05: return 100, 'Dip', dd
+    return 60, 'Normal', dd
+
+
+clip = lambda x, a, b: max(a, min(b, x))
+
+
+def meter_parts(w, trend, dd, vix, nfci, sahm, curve):
+    return [
+        ('World trend', 0.25, clip((w / trend - 1) / 0.05, -1, 1), f'MSCI World {(w / trend - 1) * 100:+.1f}% vs its 40-week line'),
+        ('Discount from record', 0.20, clip(-dd / 0.15, 0, 1), f'MSCI World {dd * 100:.1f}% from its record (in euros)'),
+        ('Fear (VIX)', 0.15, 1 if vix >= 30 else 0.5 if vix >= 20 else -0.5 if vix < 13 else 0, f'VIX {vix:.1f}'),
+        ('Credit conditions (NFCI)', 0.15, -1 if nfci > 0 else -0.3 if nfci > -0.3 else 0.3, f'NFCI {nfci:.2f}'),
+        ('Recession risk (Sahm)', 0.15, -1 if sahm >= 0.5 else -0.5 if sahm >= 0.3 else 0.3, f'Sahm {sahm:.2f}'),
+        ('Yield curve', 0.10, -0.5 if curve < 0 else 0.2, f'10Y−3M {curve:+.2f}'),
+    ]
+
+
+meter_label = lambda m: 'Strong buy' if m >= 40 else 'Buy' if m >= 15 else 'Neutral' if m > -10 else 'Sell' if m > -25 else 'Strong sell'
+
+
+def irr(flows, values_end):
+    """Weekly money-weighted return. flows: amounts invested each week (positive), values_end: final value."""
+    def npv(r):
+        n = len(flows)
+        return sum(f * (1 + r) ** (n - i) for i, f in enumerate(flows)) - values_end
+    lo, hi = -0.02, 0.02
+    for _ in range(200):
+        mid = (lo + hi) / 2
+        if npv(mid) > 0: hi = mid
+        else: lo = mid
+    return (1 + mid) ** 52 - 1
+
+
+# ------------------------------------------------------------------ stock ranking
+def sp500_rank(fin, cons):
+    f = pd.read_csv(fin).merge(pd.read_csv(cons)[['Symbol', 'GICS Sector']], on='Symbol', how='left')
+    f = f.dropna(subset=['Price', 'Market Cap', '52 Week High', '52 Week Low'])
+    f = f[f['52 Week High'] > f['52 Week Low']].copy()
+    f['sector'] = f['GICS Sector'].fillna('Unclassified')
+    f['pe'] = f['Price/Earnings'].where(f['Price/Earnings'] > 0)
+    f['ey'] = 1 / f.pe; f['sp'] = 1 / f['Price/Sales']; f['bp'] = (1 / f['Price/Book']).where(f['Price/Book'] > 0)
+    f['range'] = (f.Price - f['52 Week Low']) / (f['52 Week High'] - f['52 Week Low'])
+    f['off_high'] = f.Price / f['52 Week High'] - 1
+    rk = lambda c: f.groupby('sector')[c].rank(pct=True).fillna(0)
+    f['value'] = 0.5 * rk('ey') + 0.25 * rk('sp') + 0.25 * rk('bp')
+    f['mom'] = f.groupby('sector')['range'].rank(pct=True)
+    f['score'] = (0.5 * f.value + 0.5 * f.mom) * 100
+    f = f.sort_values('score', ascending=False).reset_index(drop=True)
+    f['rank'] = np.arange(1, len(f) + 1)
+    note = lambda x: 'P/E unusually low: verify' if pd.notna(x.pe) and x.pe < 6 else 'Loss-making' if pd.isna(x.pe) else ''
+    return [dict(rank=int(x['rank']), ticker=x.Symbol, company=x.Name, sector=x.sector, score=round(x.score, 1),
+                 value=round(x.value * 100), momentum=round(x.mom * 100), pe=None if pd.isna(x.pe) else round(x.pe, 1),
+                 off_52w_high=round(x.off_high * 100, 1), price=round(x.Price, 2), note=note(x)) for _, x in f.iterrows()]
+
+
+def price_rank(members, px, date):
+    """Price-only ranking: 50% 12-1 month momentum + 50% position in the 52-week range, as percentile ranks."""
+    cut = pd.Timestamp(date)
+    rows = []
+    for m in members:
+        t = m['ticker']
+        if t not in px: continue
+        s = px[t].dropna(); s = s[s.index <= cut]
+        if len(s) < 230 or (cut - s.index[-1]).days > 10: continue
+        w = weekly(s.to_frame()).iloc[:, 0].dropna()
+        if len(w) < 53: continue
+        p, p4, p52 = float(s.iloc[-1]), float(w.iloc[-5]), float(w.iloc[-53])
+        y = s[s.index > cut - pd.Timedelta(days=365)]
+        hi, lo = float(y.max()), float(y.min())
+        if hi <= lo or p52 <= 0: continue
+        rows.append(dict(ticker=t, company=m['company'], country=m.get('country', ''), sector=m.get('sector', ''),
+                         mom=p4 / p52 - 1, r1y=p / p52 - 1, range=(p - lo) / (hi - lo), off=p / hi - 1, price=p))
+    if not rows: return []
+    df = pd.DataFrame(rows)
+    df['score'] = 50 * df.mom.rank(pct=True) + 50 * df.range.rank(pct=True)
+    df = df.sort_values('score', ascending=False).reset_index(drop=True)
+    out = []
+    for i, x in df.iterrows():
+        note = 'Huge 1-year move: verify' if x.r1y > 3 else 'Down over 60% in a year' if x.r1y < -0.6 else ''
+        out.append(dict(rank=i + 1, ticker=x.ticker, company=x.company, country=x.country, sector=x.sector, score=round(float(x.score), 1),
+                        value=None, momentum=round(float(x.mom) * 100, 1), r1y=round(float(x.r1y) * 100, 1),
+                        off_52w_high=round(float(x.off) * 100, 1), price=round(float(x.price), 2), currency=ccy(x.ticker), note=note))
+    return out
+
+
+# ------------------------------------------------------------------ main
+def run(S, D, research, fin, cons, log, offline=None):
+    L = lambda n, d=None: json.load(open(os.path.join(D, n + '.json'))) if os.path.exists(os.path.join(D, n + '.json')) else d
+    out = {}
+    uni = json.load(open(os.path.join(HERE, 'universes.json')))
+
+    # ---- ETF prices, weekly closes from 2011
+    daily = etf_prices(research, log, offline)
+    W = weekly(daily[daily.index >= START]).dropna()
+    date = W.index[-1]
+    last_trading = daily.index[daily.index <= date][-1]
+    dstr = last_trading.strftime('%Y-%m-%d')
+    week_of = (last_trading.date() + dt.timedelta(days=(7 - last_trading.weekday()) % 7 or 7)).isoformat()
+    log('IndexPilot week', dstr, '->', week_of)
+
+    # ---- macro inputs, weekly (value known at each Friday)
+    def wk(sid):
+        s = S[sid]; return s.resample('W-FRI').last().ffill().reindex(W.index, method='ffill')
+    mac = pd.DataFrame({k: wk(k) for k in ['VIXCLS', 'NFCI', 'SAHMREALTIME', 'T10Y3M']}).ffill()
+    spx = S['SP500'].resample('W-FRI').last().reindex(W.index, method='ffill')
+
+    # ---- full history: pick, amount, meter for every week
+    r52, path = pick_path(W)
+    world = W['world']; trend = world.rolling(40, min_periods=40).mean()
+    ath = daily['world'].cummax().resample('W-FRI').last().reindex(W.index, method='ffill')
+    hist = []
+    for d in r52.index:
+        if pd.isna(trend[d]) or mac.loc[d].isna().any(): continue
+        v, nf, sa, cu = (float(mac.loc[d, k]) for k in ['VIXCLS', 'NFCI', 'SAHMREALTIME', 'T10Y3M'])
+        amt, tier, dd = amount_rule(float(world[d]), float(trend[d]), float(ath[d]), v, nf, sa)
+        m = round(100 * sum(wt * sc for _, wt, sc, _ in meter_parts(float(world[d]), float(trend[d]), dd, v, nf, sa, cu)))
+        hist.append(dict(week=d.strftime('%Y-%m-%d'), pick=path[d], world=round(float(world[d]), 2), amount=amt, meter=m,
+                         **{f'r52_{k}': round(float(r52.loc[d, k]) * 100, 1) for k in EK}))
+    H = pd.DataFrame(hist).set_index('week')
+
+    # ---- this week's decision. Keep the pick the site published last week (live record), then apply the rule.
+    stored = L('weekly_history', [])
+    live_prev = [h for h in stored if h.get('pick') and h['week'] < H.index[-1]]
+    prev_pick = live_prev[-1]['pick'] if live_prev else (path.iloc[-2] if len(path) > 1 else None)
+    row = r52.loc[date]; leader = row.idxmax()
+    pick = leader if prev_pick is None or row[leader] - row[prev_pick] > BUFFER else prev_pick
+    pick = os.environ.get('IP_FORCE_PICK') or pick   # testing only
+    switched = prev_pick is not None and pick != prev_pick
+    H.loc[H.index[-1], 'pick'] = pick
+    # history: keep published live rows, fill the rest from the backtest
+    pub = {h['week']: h for h in stored if h.get('pick')}
+    weekly_history = [dict(r, week=w, pick=pub[w]['pick'] if w in pub and w != H.index[-1] else r['pick']) for w, r in H.to_dict('index').items()]
+
+    last = hist[-1]
+    v, nf, sa, cu = (float(mac.iloc[-1][k]) for k in ['VIXCLS', 'NFCI', 'SAHMREALTIME', 'T10Y3M'])
+    wv, tr, at = float(world.iloc[-1]), float(trend.iloc[-1]), float(ath.iloc[-1])
+    amount, tier, dd = amount_rule(wv, tr, at, v, nf, sa)
+    parts = meter_parts(wv, tr, dd, v, nf, sa, cu)
+    meter = round(100 * sum(w * s for _, w, s, _ in parts)); label = meter_label(meter)
+    meter_rows = [dict(component=c, weight=round(w * 100), score=round(s, 2), contribution=round(100 * w * s, 1), reading=t) for c, w, s, t in parts]
+    meter_rows.append(dict(component='Total', weight=100, score=None, contribution=meter, reading=label))
+
+    # ---- index table
+    def chg(k, n): return round((float(W[k].iloc[-1]) / float(W[k].iloc[-1 - n]) - 1) * 100, 1)
+    idx_rows = []
+    order = row.sort_values(ascending=False).index.tolist()
+    for k in EK:
+        s = W[k]; y = daily[k][daily.index > daily.index[-1] - pd.Timedelta(days=365)]
+        t40 = float(s.iloc[-40:].mean())
+        status = "This week's pick" if k == pick else ('Leader, but inside the 5-point buffer' if k == leader else '')
+        idx_rows.append(dict(rank=order.index(k) + 1, key=k, index=E[k]['index'], etf=E[k]['etf'], fund=E[k]['fund'], isin=E[k]['isin'],
+                             price=round(float(s.iloc[-1]), 2), r52=round(float(row[k]) * 100, 1), r26=chg(k, 26), r13=chg(k, 13), r4=chg(k, 4), r1=chg(k, 1),
+                             gap_to_pick=round((float(row[k]) - float(row[pick])) * 100, 1), from_high_52w=round((float(s.iloc[-1]) / float(y.max()) - 1) * 100, 1),
+                             trend='Above' if float(s.iloc[-1]) >= t40 else 'Below', vol=round(float(np.log(s / s.shift(1)).iloc[-52:].std() * math.sqrt(52) * 100), 1),
+                             spark=[round(float(x), 2) for x in s.iloc[-53:].values], status=status))
+    idx_rows.sort(key=lambda r: r['rank'])
+    out['index_rank'] = idx_rows
+
+    # ---- stocks of the picked index
+    sp_rows = sp500_rank(fin, cons)
+    out['rank_top'], out['rank_bottom'] = sp_rows[:50], sp_rows[-50:][::-1]
+    sp_members = [dict(ticker=r['ticker'], company=r['company'], sector=r['sector'], country='US') for r in sp_rows]
+    U = E[pick]['universe']
+    members = {'sp500': sp_members, 'nasdaq100': uni['nasdaq100']['members'], 'europe': uni['europe']['members'],
+               'japan': uni['japan']['members'], 'emerging': uni['emerging']['members']}
+    members['world'] = sp_members + members['europe'] + members['japan'] + members['emerging']
+    uname = {'sp500': 'S&P 500 members', 'world': 'S&P 500 + Europe + Japan + emerging-market lists',
+             **{k: uni[k]['name'] for k in ['nasdaq100', 'europe', 'japan', 'emerging']}}[U]
+    positions = L('demo_positions', []) or []
+    need = [m['ticker'] for m in members[U]] + [p['ticker'] for p in positions if p.get('leg') == 'Stocks']
+    px = download(need, (last_trading - pd.Timedelta(days=430)).strftime('%Y-%m-%d'), log, offline)
+    if U == 'sp500':
+        pr = {r['ticker']: r for r in price_rank(members[U], px, dstr)}
+        rows = []
+        for r in sp_rows:
+            p = pr.get(r['ticker'], {})
+            rows.append(dict(rank=r['rank'], ticker=r['ticker'], company=r['company'], country='US', sector=r['sector'], score=r['score'], value=r['value'],
+                             momentum=p.get('momentum'), r1y=p.get('r1y'), off_52w_high=r['off_52w_high'], price=p.get('price', r['price']), currency='USD', note=r['note']))
+        method = 'Value + momentum (S&P 500 fundamentals): 50% cheapness vs sector on earnings, sales and book, 50% position in the 52-week range'
+    else:
+        rows = price_rank(members[U], px, dstr)
+        method = 'Price momentum: 50% 12-1 month return, 50% position in the 52-week range (no free fundamentals outside the US)'
+    if len(rows) < 20: raise RuntimeError(f'only {len(rows)} stocks ranked for {U}')
+    keep = rows if len(rows) <= 300 else rows[:100] + rows[-100:]
+    for r in keep: r['side'] = 'Top' if r['rank'] <= len(rows) / 2 else 'Bottom'
+    out['pick_rank'] = keep
+    log(f'ranked {len(rows)} stocks in {uname}')
+
+    # ---- demo account
+    ledger = L('demo_ledger', []) or []
+    etf_px = {E[k]['etf']: float(daily[k][daily.index <= last_trading].iloc[-1]) for k in EK}
+    fin_px = {r['ticker']: r['price'] for r in sp_rows}
+    def exit_price(p):
+        t = p['ticker']
+        if t == 'S&P 500': return float(spx.iloc[-1])
+        if t in etf_px: return etf_px[t]
+        if t in px and px[t].dropna().size and (last_trading - px[t].dropna().index[-1]).days <= 10: return float(px[t].dropna().iloc[-1])
+        return fin_px.get(t)
+    reopen = positions and positions[0]['entry_date'] == dstr and positions[0].get('v') != 2   # same-week positions from the old S&P-only rules
+    if reopen: log('replacing this week\'s old-rule demo positions with IndexPilot positions (same entry date)')
+    if reopen or not (positions and positions[0]['entry_date'] == dstr):
+        if not reopen:
+            for p in positions:
+                xp = exit_price(p); n = ''
+                if xp is None: xp, n = p['entry_price'], 'No price: closed flat'
+                sgn = 1 if p['side'] == 'Long' else -1
+                ret = sgn * (xp / p['entry_price'] - 1)
+                ledger.append(dict(id=f"{p['week_of']}-{p['ticker']}", week_of=p['week_of'], closed_on=dstr, leg=p['leg'], ticker=p['ticker'],
+                                   side=p['side'], euros=p['euros'], entry_price=p['entry_price'], exit_price=round(xp, 4 if xp < 10 else 2),
+                                   return_pct=round(ret * 100, 2), pnl_eur=round(p['euros'] * ret, 2), note=n))
+        positions = []
+        stake = 0 if abs(meter) < 10 else round(500 * abs(meter) / 100)
+        e = E[pick]
+        if stake:
+            positions.append(dict(v=2, id=f"{week_of}-{e['etf']}", week_of=week_of, entry_date=dstr, leg='Index', ticker=e['etf'], company=f"{e['index']} ETF (EUR)",
+                                  side='Long' if meter > 0 else 'Short', euros=stake, entry_price=round(etf_px[e['etf']], 2), currency='EUR', reason=f'Meter {meter:+d} ({label})'))
+        longs = [r for r in rows if not r['note']][:3]
+        shorts = [r for r in rows[::-1] if 'verify' not in r['note']][:3]
+        for r, side in [(r, 'Long') for r in longs] + [(r, 'Short') for r in shorts]:
+            positions.append(dict(v=2, id=f"{week_of}-{r['ticker']}", week_of=week_of, entry_date=dstr, leg='Stocks', ticker=r['ticker'], company=r['company'],
+                                  side=side, euros=83.33, entry_price=r['price'], currency=r.get('currency', 'USD'), reason=f"Rank {r['rank']} of {len(rows)} in {E[pick]['index']} (score {r['score']})"))
+    if not ledger: ledger = [dict(id='open', week_of=dstr, closed_on=dstr, leg='Account', ticker='', side='', euros=0, entry_price=0, exit_price=0, return_pct=0, pnl_eur=0, note='Account opened')]
+    out['demo_positions'], out['demo_ledger'] = positions, ledger
+
+    # ---- backtest 2012-today on the ETF prices (weekly, in euros)
+    R = W.pct_change().shift(-1).reindex(H.index.map(pd.Timestamp))   # next week's return, decided at this week's close
+    R.index = H.index
+    picks = H['pick']
+    r52v = r52.reindex(pd.to_datetime(H.index)); r52v.index = H.index
+    nobuf = r52v.idxmax(axis=1)
+    def series(kind):
+        if kind in EK: return R[kind]
+        if kind == 'equal': return R[EK].mean(axis=1)
+        if kind == 'pick': return pd.Series([R.loc[d, k] for d, k in picks.items()], index=H.index)
+        if kind == 'nobuf': return pd.Series([R.loc[d, k] for d, k in nobuf.items()], index=H.index)
+    def tw(r):
+        r = r.dropna(); eq = (1 + r).cumprod(); yrs = len(r) / 52.18
+        return eq, round((eq.iloc[-1] ** (1 / yrs) - 1) * 100, 1), round(float((eq / eq.cummax() - 1).min()) * 100, 1), round(float(r.std() * math.sqrt(52) * 100), 1)
+    names = {'pick': 'IndexPilot pick (5-point buffer)', 'nobuf': 'Momentum leader, no buffer', 'equal': 'All six, equal weight',
+             **{k: f"Hold {E[k]['index']}" for k in EK}}
+    bt, curves = [], {}
+    for k in ['pick', 'nobuf', 'equal'] + EK:
+        eq, c, mdd, vol = tw(series(k)); curves[k] = eq
+        sw = None
+        if k in ('pick', 'nobuf'):
+            sq = picks if k == 'pick' else nobuf
+            sw = round(float((sq != sq.shift(1)).iloc[1:].sum()) / (len(sq) / 52.18), 1)
+        bt.append(dict(key=k, strategy=names[k], cagr=c, max_dd=mdd, vol=vol, switches_per_year=sw))
+    # money-weighted: the weekly amounts actually bought
+    amts = H['amount'].astype(float); flat = float(amts.mean())
+    def mw(kind, amounts, switch_all):
+        hold = {k: 0.0 for k in EK}; flows = []
+        for d in H.index[:-1]:
+            target = picks[d] if kind == 'pick' else kind
+            if switch_all and kind == 'pick':
+                tot = sum(hold.values()); hold = {k: 0.0 for k in EK}; hold[target] = tot
+            hold[target] += amounts[d]; flows.append(amounts[d])
+            for k in EK: hold[k] *= 1 + (R.loc[d, k] if pd.notna(R.loc[d, k]) else 0)
+        val = sum(hold.values())
+        return round(sum(flows)), round(val), round(irr(flows, val) * 100, 1)
+    mwrows = []
+    for label_, kind, amounts, sw in [('Flat amount into MSCI World', 'world', pd.Series(flat, index=H.index), False),
+                                      ('Weekly rule into MSCI World', 'world', amts, False),
+                                      ('Weekly rule into S&P 500', 'us', amts, False),
+                                      ('Weekly rule into the pick, new money only', 'pick', amts, False),
+                                      ('Weekly rule into the pick, move everything on a switch', 'pick', amts, True)]:
+        inv, val, r_ = mw(kind, amounts, sw)
+        mwrows.append(dict(plan=label_, invested=inv, value=val, irr=r_))
+    out['ip_backtest'] = bt
+    out['ip_buying'] = mwrows
+    step = max(1, len(H) // 300)
+    out['ip_growth'] = [dict(date=d, **{k: round(float(curves[k].get(d, np.nan)), 4) for k in ['pick', 'world', 'us', 'ndx', 'europe', 'equal']})
+                        for i, d in enumerate(H.index[:-1]) if i % step == 0 or i == len(H) - 2]
+    # calendar years
+    yrs = []
+    for y in sorted({d[:4] for d in H.index}):
+        m = [d for d in H.index[:-1] if d[:4] == y]
+        if not m: continue
+        r = {k: round((float((1 + series(k).loc[m].fillna(0)).prod()) - 1) * 100, 1) for k in ['pick'] + EK}
+        top = picks.loc[m].value_counts()
+        yrs.append(dict(year=y, held=E[top.index[0]]['index'], **r))
+    out['ip_years'] = yrs
+    # pick periods
+    per, cur = [], None
+    for d, k in picks.items():
+        if cur and cur['key'] == k: cur['to'] = d; cur['weeks'] += 1
+        else:
+            cur = dict(key=k, index=E[k]['index'], frm=d, to=d, weeks=1); per.append(cur)
+    for p in per:
+        seg = [d for d in H.index[:-1] if p['frm'] <= d <= p['to']]
+        p['ret'] = round((float((1 + R.loc[seg, p['key']].fillna(0)).prod()) - 1) * 100, 1) if seg else None
+        wseg = round((float((1 + R.loc[seg, 'world'].fillna(0)).prod()) - 1) * 100, 1) if seg else None
+        p['world_ret'] = wseg
+    out['ip_periods'] = per[::-1]
+
+    # ---- weekly_now / weekly_history / meter
+    trend_spx = float(spx.iloc[-40:].mean())
+    e = E[pick]
+    reason = (f"{e['index']} leads with a {row[pick] * 100:+.1f}% 52-week return in euros." if pick == leader else
+              f"{E[leader]['index']} leads ({row[leader] * 100:+.1f}%), but not by more than 5 points over {e['index']} ({row[pick] * 100:+.1f}%), so the pick stays.")
+    if switched: reason = f"Switch: {E[prev_pick]['index']} → {e['index']}. " + reason
+    out['weekly_now'] = [dict(week_of=week_of, decided_on=dstr, pick=pick, pick_index=e['index'], pick_etf=e['etf'], pick_fund=e['fund'], pick_isin=e['isin'],
+                              pick_r52=round(float(row[pick]) * 100, 1), switched=switched, prev_pick=E[prev_pick]['index'] if prev_pick else None,
+                              leader=E[leader]['index'], pick_reason=reason, universe=uname, rank_method=method,
+                              amount=amount, tier=tier,
+                              reason=f"MSCI World {dd * 100:.1f}% from its record; {'above' if wv >= tr else 'below'} its 40-week line; VIX {v:.1f}; NFCI {nf:.2f}; Sahm {sa:.2f}.",
+                              world_close=round(wv, 2), world_trend=round(tr, 2), world_ath=round(at, 2), from_ath_pct=round(dd * 100, 2),
+                              vix=v, nfci=nf, sahm=sa, curve=cu, meter=meter, meter_label=label,
+                              spx_close=round(float(spx.iloc[-1]), 2), ma200=round(trend_spx, 2), ath=round(float(S['SP500'].max()), 2))]
+    out['weekly_history'] = weekly_history
+    out['meter_now'] = meter_rows
+    summary = dict(week_of=week_of, date=dstr, pick=e['index'], etf=e['etf'], switched=switched, amount=amount, tier=tier, meter=meter, label=label,
+                   positions=[(p['ticker'], p['side'], p['euros']) for p in positions],
+                   closed=len([l for l in ledger if l['closed_on'] == dstr and l['leg'] != 'Account']),
+                   week_pnl=round(sum(l['pnl_eur'] for l in ledger if l['closed_on'] == dstr), 2), total_pnl=round(sum(l['pnl_eur'] for l in ledger), 2),
+                   bt=next(b for b in bt if b['key'] == 'pick'))
+    return out, summary

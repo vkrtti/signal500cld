@@ -1,37 +1,37 @@
 {
  "weekly_now": {
-  "title": "This week's amount",
-  "description": "Weekly \u20ac40\u2013\u20ac200 buy amount and signal meter, decided at the Friday US close. Federal Reserve (FRED) data.",
+  "title": "This week's pick and amount",
+  "description": "The main index pick, the weekly EUR 40-200 buy amount and the signal meter, decided at the Friday close. Yahoo Finance ETF prices, Federal Reserve (FRED) stress gauges.",
   "refresh": "weekly",
   "updated": "2026-10-11T16:58:03Z"
  },
  "weekly_history": {
   "title": "Weekly history",
-  "description": "Weekly S&P 500 closes, rule amounts and meter since Jul 2017. FRED SP500.",
+  "description": "Every week since Jan 2012: the main index pick, the MSCI World ETF close, the rule amount, the meter and each index's 52-week return.",
   "refresh": "weekly",
   "updated": "2026-10-11T16:58:03Z"
  },
  "meter_now": {
   "title": "Signal strength",
-  "description": "The \u2212100\u2026+100 meter and its six components. FRED.",
+  "description": "The \u2212100\u2026+100 meter and its six components (MSCI World trend and discount, VIX, NFCI, Sahm, yield curve).",
   "refresh": "weekly",
   "updated": "2026-10-11T16:58:03Z"
  },
  "rank_top": {
-  "title": "Top 50 ranked stocks",
-  "description": "Value + momentum ranking of S&P 500 members, decided each Friday close. Public S&P 500 fundamentals dataset (GitHub datasets).",
+  "title": "US screen: top 50",
+  "description": "Value + momentum ranking of S&P 500 members (US research), decided each Friday close.",
   "refresh": "weekly",
   "updated": "2026-10-11T16:58:03Z"
  },
  "rank_bottom": {
-  "title": "Bottom 50 ranked stocks",
+  "title": "US screen: bottom 50",
   "description": "Same ranking, lowest first.",
   "refresh": "weekly",
   "updated": "2026-10-11T16:58:03Z"
  },
  "demo_positions": {
   "title": "Demo: open positions",
-  "description": "Simulated positions opened at the Friday close.",
+  "description": "Simulated positions opened at the Friday close: the picked index ETF plus 3 long and 3 short stocks from that index.",
   "refresh": "weekly",
   "updated": "2026-10-11T16:58:03Z"
  },
@@ -202,5 +202,45 @@
   "description": "Calendar-year total returns by region in US dollars.",
   "refresh": "weekly",
   "updated": "2026-10-11T16:58:13Z"
+ },
+ "index_rank": {
+  "title": "This week's index ranking",
+  "description": "Six euro-listed index ETFs ranked by 52-week return in euros, with the main index pick (5-point buffer).",
+  "refresh": "weekly"
+ },
+ "pick_rank": {
+  "title": "Stocks of the picked index",
+  "description": "Every stock in the picked index's universe, ranked; top = buy candidates, bottom = avoid/short candidates.",
+  "refresh": "weekly"
+ },
+ "ip_backtest": {
+  "title": "Index pick backtest",
+  "description": "Lump-sum test 2012 to today on real ETF prices in euros: the pick vs holding each index.",
+  "refresh": "weekly"
+ },
+ "ip_buying": {
+  "title": "Weekly buying backtest",
+  "description": "Money-weighted return of buying weekly (EUR 40-200 rule) into the World ETF, the S&P 500 ETF or the weekly pick, 2012 to today.",
+  "refresh": "weekly"
+ },
+ "ip_growth": {
+  "title": "Index pick growth",
+  "description": "Value of 1 euro invested in January 2012: the pick vs World, S&P 500, Nasdaq-100, Europe and equal weight.",
+  "refresh": "weekly"
+ },
+ "ip_years": {
+  "title": "Index pick by year",
+  "description": "Calendar-year returns of the pick and each index ETF, in euros.",
+  "refresh": "weekly"
+ },
+ "ip_periods": {
+  "title": "Pick history",
+  "description": "Every stretch the pick held one index since 2012, with its return and the World ETF's over the same weeks.",
+  "refresh": "weekly"
+ },
+ "news_feed": {
+  "title": "Headlines",
+  "description": "Latest headlines from the Fed, ECB, Bank of Japan, CNBC, MarketWatch and Google News on the picked index and stocks (titles and links only).",
+  "refresh": "daily"
  }
 }

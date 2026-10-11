@@ -1,0 +1,2609 @@
+{
+"_about": "Stock universes used for the weekly stock picks. Sources: Wikipedia constituent tables of EURO STOXX 50, Nikkei 225 and Nasdaq-100 as of 11 Oct 2026; the extra Europe names and the emerging-market list are the largest companies of those markets, chosen by IndexPilot to approximate the MSCI Europe and MSCI Emerging Markets top holdings. The S&P 500 list is downloaded fresh each week. Review these lists once a year.",
+"europe": {
+"name": "Europe: EURO STOXX 50 + 30 largest UK, Swiss and Nordic companies",
+"members": [
+{
+"ticker": "ADS.DE",
+"company": "Adidas",
+"sector": "Consumer Discretionary",
+"country": "Germany"
+},
+{
+"ticker": "ADYEN.AS",
+"company": "Adyen",
+"sector": "Financials",
+"country": "Netherlands"
+},
+{
+"ticker": "AD.AS",
+"company": "Ahold Delhaize",
+"sector": "Consumer Staples",
+"country": "Netherlands"
+},
+{
+"ticker": "AI.PA",
+"company": "Air Liquide",
+"sector": "Materials",
+"country": "France"
+},
+{
+"ticker": "AIR.PA",
+"company": "Airbus",
+"sector": "Industrials",
+"country": "France"
+},
+{
+"ticker": "ALV.DE",
+"company": "Allianz",
+"sector": "Financials",
+"country": "Germany"
+},
+{
+"ticker": "ABI.BR",
+"company": "Anheuser-Busch InBev",
+"sector": "Consumer Staples",
+"country": "Belgium"
+},
+{
+"ticker": "ARGX.BR",
+"company": "Argenx",
+"sector": "Health Care",
+"country": "Belgium"
+},
+{
+"ticker": "ASML.AS",
+"company": "ASML Holding",
+"sector": "Information Technology",
+"country": "Netherlands"
+},
+{
+"ticker": "CS.PA",
+"company": "Axa",
+"sector": "Financials",
+"country": "France"
+},
+{
+"ticker": "BAS.DE",
+"company": "BASF",
+"sector": "Materials",
+"country": "Germany"
+},
+{
+"ticker": "BAYN.DE",
+"company": "Bayer",
+"sector": "Health Care",
+"country": "Germany"
+},
+{
+"ticker": "BBVA.MC",
+"company": "BBVA",
+"sector": "Financials",
+"country": "Spain"
+},
+{
+"ticker": "SAN.MC",
+"company": "Banco Santander",
+"sector": "Financials",
+"country": "Spain"
+},
+{
+"ticker": "BMW.DE",
+"company": "BMW",
+"sector": "Consumer Discretionary",
+"country": "Germany"
+},
+{
+"ticker": "BNP.PA",
+"company": "BNP Paribas",
+"sector": "Financials",
+"country": "France"
+},
+{
+"ticker": "BN.PA",
+"company": "Danone",
+"sector": "Consumer Staples",
+"country": "France"
+},
+{
+"ticker": "DBK.DE",
+"company": "Deutsche Bank",
+"sector": "Financials",
+"country": "Germany"
+},
+{
+"ticker": "DB1.DE",
+"company": "Deutsche Börse",
+"sector": "Financials",
+"country": "Germany"
+},
+{
+"ticker": "DHL.DE",
+"company": "DHL Group",
+"sector": "Industrials",
+"country": "Germany"
+},
+{
+"ticker": "DTE.DE",
+"company": "Deutsche Telekom",
+"sector": "Communication Services",
+"country": "Germany"
+},
+{
+"ticker": "ENEL.MI",
+"company": "Enel",
+"sector": "Utilities",
+"country": "Italy"
+},
+{
+"ticker": "ENI.MI",
+"company": "Eni",
+"sector": "Energy",
+"country": "Italy"
+},
+{
+"ticker": "EL.PA",
+"company": "EssilorLuxottica",
+"sector": "Health Care",
+"country": "France"
+},
+{
+"ticker": "RACE.MI",
+"company": "Ferrari",
+"sector": "Consumer Discretionary",
+"country": "Italy"
+},
+{
+"ticker": "RMS.PA",
+"company": "Hermès",
+"sector": "Consumer Discretionary",
+"country": "France"
+},
+{
+"ticker": "IBE.MC",
+"company": "Iberdrola",
+"sector": "Utilities",
+"country": "Spain"
+},
+{
+"ticker": "ITX.MC",
+"company": "Inditex",
+"sector": "Consumer Discretionary",
+"country": "Spain"
+},
+{
+"ticker": "IFX.DE",
+"company": "Infineon Technologies",
+"sector": "Information Technology",
+"country": "Germany"
+},
+{
+"ticker": "INGA.AS",
+"company": "ING Group",
+"sector": "Financials",
+"country": "Netherlands"
+},
+{
+"ticker": "ISP.MI",
+"company": "Intesa Sanpaolo",
+"sector": "Financials",
+"country": "Italy"
+},
+{
+"ticker": "OR.PA",
+"company": "L'Oréal",
+"sector": "Consumer Staples",
+"country": "France"
+},
+{
+"ticker": "MC.PA",
+"company": "LVMH",
+"sector": "Consumer Discretionary",
+"country": "France"
+},
+{
+"ticker": "MBG.DE",
+"company": "Mercedes-Benz Group",
+"sector": "Consumer Discretionary",
+"country": "Germany"
+},
+{
+"ticker": "MUV2.DE",
+"company": "Munich Re",
+"sector": "Financials",
+"country": "Germany"
+},
+{
+"ticker": "NDA-FI.HE",
+"company": "Nordea",
+"sector": "Financials",
+"country": "Finland"
+},
+{
+"ticker": "PRX.AS",
+"company": "Prosus",
+"sector": "Consumer Discretionary",
+"country": "Netherlands"
+},
+{
+"ticker": "RHM.DE",
+"company": "Rheinmetall",
+"sector": "Industrials",
+"country": "Germany"
+},
+{
+"ticker": "SAF.PA",
+"company": "Safran",
+"sector": "Industrials",
+"country": "France"
+},
+{
+"ticker": "SGO.PA",
+"company": "Saint-Gobain",
+"sector": "Industrials",
+"country": "France"
+},
+{
+"ticker": "SAN.PA",
+"company": "Sanofi",
+"sector": "Health Care",
+"country": "France"
+},
+{
+"ticker": "SAP.DE",
+"company": "SAP",
+"sector": "Information Technology",
+"country": "Germany"
+},
+{
+"ticker": "SU.PA",
+"company": "Schneider Electric",
+"sector": "Industrials",
+"country": "France"
+},
+{
+"ticker": "SIE.DE",
+"company": "Siemens",
+"sector": "Industrials",
+"country": "Germany"
+},
+{
+"ticker": "ENR.DE",
+"company": "Siemens Energy",
+"sector": "Industrials",
+"country": "Germany"
+},
+{
+"ticker": "TTE.PA",
+"company": "TotalEnergies",
+"sector": "Energy",
+"country": "France"
+},
+{
+"ticker": "DG.PA",
+"company": "Vinci",
+"sector": "Industrials",
+"country": "France"
+},
+{
+"ticker": "UCG.MI",
+"company": "UniCredit",
+"sector": "Financials",
+"country": "Italy"
+},
+{
+"ticker": "VOW3.DE",
+"company": "Volkswagen Group",
+"sector": "Consumer Discretionary",
+"country": "Germany"
+},
+{
+"ticker": "WKL.AS",
+"company": "Wolters Kluwer",
+"sector": "Industrials",
+"country": "Netherlands"
+},
+{
+"ticker": "AZN.L",
+"company": "AstraZeneca",
+"sector": "Health Care",
+"country": "UK"
+},
+{
+"ticker": "SHEL.L",
+"company": "Shell",
+"sector": "Energy",
+"country": "UK"
+},
+{
+"ticker": "HSBA.L",
+"company": "HSBC",
+"sector": "Financials",
+"country": "UK"
+},
+{
+"ticker": "ULVR.L",
+"company": "Unilever",
+"sector": "Consumer Staples",
+"country": "UK"
+},
+{
+"ticker": "BP.L",
+"company": "BP",
+"sector": "Energy",
+"country": "UK"
+},
+{
+"ticker": "GSK.L",
+"company": "GSK",
+"sector": "Health Care",
+"country": "UK"
+},
+{
+"ticker": "RIO.L",
+"company": "Rio Tinto",
+"sector": "Materials",
+"country": "UK"
+},
+{
+"ticker": "REL.L",
+"company": "RELX",
+"sector": "Industrials",
+"country": "UK"
+},
+{
+"ticker": "LSEG.L",
+"company": "London Stock Exchange Group",
+"sector": "Financials",
+"country": "UK"
+},
+{
+"ticker": "BATS.L",
+"company": "British American Tobacco",
+"sector": "Consumer Staples",
+"country": "UK"
+},
+{
+"ticker": "DGE.L",
+"company": "Diageo",
+"sector": "Consumer Staples",
+"country": "UK"
+},
+{
+"ticker": "RR.L",
+"company": "Rolls-Royce",
+"sector": "Industrials",
+"country": "UK"
+},
+{
+"ticker": "BARC.L",
+"company": "Barclays",
+"sector": "Financials",
+"country": "UK"
+},
+{
+"ticker": "LLOY.L",
+"company": "Lloyds Banking Group",
+"sector": "Financials",
+"country": "UK"
+},
+{
+"ticker": "NG.L",
+"company": "National Grid",
+"sector": "Utilities",
+"country": "UK"
+},
+{
+"ticker": "NESN.SW",
+"company": "Nestlé",
+"sector": "Consumer Staples",
+"country": "Switzerland"
+},
+{
+"ticker": "ROG.SW",
+"company": "Roche",
+"sector": "Health Care",
+"country": "Switzerland"
+},
+{
+"ticker": "NOVN.SW",
+"company": "Novartis",
+"sector": "Health Care",
+"country": "Switzerland"
+},
+{
+"ticker": "UBSG.SW",
+"company": "UBS",
+"sector": "Financials",
+"country": "Switzerland"
+},
+{
+"ticker": "ZURN.SW",
+"company": "Zurich Insurance",
+"sector": "Financials",
+"country": "Switzerland"
+},
+{
+"ticker": "ABBN.SW",
+"company": "ABB",
+"sector": "Industrials",
+"country": "Switzerland"
+},
+{
+"ticker": "CFR.SW",
+"company": "Richemont",
+"sector": "Consumer Discretionary",
+"country": "Switzerland"
+},
+{
+"ticker": "HOLN.SW",
+"company": "Holcim",
+"sector": "Materials",
+"country": "Switzerland"
+},
+{
+"ticker": "NOVO-B.CO",
+"company": "Novo Nordisk",
+"sector": "Health Care",
+"country": "Denmark"
+},
+{
+"ticker": "DSV.CO",
+"company": "DSV",
+"sector": "Industrials",
+"country": "Denmark"
+},
+{
+"ticker": "ATCO-A.ST",
+"company": "Atlas Copco",
+"sector": "Industrials",
+"country": "Sweden"
+},
+{
+"ticker": "INVE-B.ST",
+"company": "Investor AB",
+"sector": "Financials",
+"country": "Sweden"
+},
+{
+"ticker": "VOLV-B.ST",
+"company": "Volvo",
+"sector": "Industrials",
+"country": "Sweden"
+},
+{
+"ticker": "EQNR.OL",
+"company": "Equinor",
+"sector": "Energy",
+"country": "Norway"
+},
+{
+"ticker": "ERIC-B.ST",
+"company": "Ericsson",
+"sector": "Information Technology",
+"country": "Sweden"
+}
+]
+},
+"japan": {
+"name": "Japan: Nikkei 225",
+"members": [
+{
+"ticker": "9202.T",
+"company": "ANA Holdings",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "9201.T",
+"company": "Japan Airlines",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "543A.T",
+"company": "Archion",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7267.T",
+"company": "Honda Motor",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7202.T",
+"company": "Isuzu Motors",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7261.T",
+"company": "Mazda Motor",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7211.T",
+"company": "Mitsubishi Motors",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7201.T",
+"company": "Nissan Motor",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7270.T",
+"company": "Subaru",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7269.T",
+"company": "Suzuki Motor",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7203.T",
+"company": "Toyota Motor",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7272.T",
+"company": "Yamaha Motor",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8304.T",
+"company": "Aozora Bank",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8331.T",
+"company": "Chiba Bank",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8354.T",
+"company": "Fukuoka Financial Group",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8306.T",
+"company": "Mitsubishi UFJ Financial Group",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8411.T",
+"company": "Mizuho Financial Group",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8308.T",
+"company": "Resona Holdings",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "5831.T",
+"company": "Shizuoka Financial Group",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8316.T",
+"company": "Sumitomo Mitsui Financial Group",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8309.T",
+"company": "Sumitomo Mitsui Trust",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7186.T",
+"company": "Yokohama Financial Group",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "3407.T",
+"company": "Asahi Kasei",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4061.T",
+"company": "Denka",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4901.T",
+"company": "Fujifilm Holdings",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4452.T",
+"company": "Kao",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "3405.T",
+"company": "Kuraray",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4188.T",
+"company": "Mitsubishi Chemical",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4183.T",
+"company": "Mitsui Chemicals",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4021.T",
+"company": "Nissan Chemical",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6988.T",
+"company": "Nitto Denko",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4004.T",
+"company": "Resonac",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4063.T",
+"company": "Shin-Etsu Chemical",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4911.T",
+"company": "Shiseido",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4005.T",
+"company": "Sumitomo Chemical",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4043.T",
+"company": "Tokuyama",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4042.T",
+"company": "Tosoh",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4208.T",
+"company": "UBE",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "1721.T",
+"company": "Comsys Holdings",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "1925.T",
+"company": "Daiwa House Industry",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "1808.T",
+"company": "Haseko",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "1963.T",
+"company": "JGC",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "1812.T",
+"company": "Kajima",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "1802.T",
+"company": "Obayashi",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "1928.T",
+"company": "Sekisui House",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "1803.T",
+"company": "Shimizu",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "1801.T",
+"company": "Taisei",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6857.T",
+"company": "Advantest",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6770.T",
+"company": "Alps Alpine",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7751.T",
+"company": "Canon",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6902.T",
+"company": "Denso",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6954.T",
+"company": "FANUC",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6504.T",
+"company": "Fuji Electric",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6702.T",
+"company": "Fujitsu",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6501.T",
+"company": "Hitachi",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6861.T",
+"company": "Keyence",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "285A.T",
+"company": "Kioxia Holdings",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6971.T",
+"company": "Kyocera",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6920.T",
+"company": "Lasertec",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6479.T",
+"company": "MinebeaMitsumi",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6503.T",
+"company": "Mitsubishi Electric",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6981.T",
+"company": "Murata Manufacturing",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6701.T",
+"company": "NEC",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6594.T",
+"company": "Nidec",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6645.T",
+"company": "Omron",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6752.T",
+"company": "Panasonic",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6723.T",
+"company": "Renesas Electronics",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7752.T",
+"company": "Ricoh",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6963.T",
+"company": "Rohm",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7735.T",
+"company": "SCREEN Holdings",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6724.T",
+"company": "Seiko Epson",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6753.T",
+"company": "Sharp",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6758.T",
+"company": "Sony",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6526.T",
+"company": "Socionext",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6976.T",
+"company": "Taiyo Yuden",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6762.T",
+"company": "TDK",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8035.T",
+"company": "Tokyo Electron",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6506.T",
+"company": "Yaskawa Electric",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6841.T",
+"company": "Yokogawa Electric",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "9502.T",
+"company": "Chubu Electric Power",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "9503.T",
+"company": "Kansai Electric Power",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "9501.T",
+"company": "Tokyo Electric Power",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "2802.T",
+"company": "Ajinomoto",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "2502.T",
+"company": "Asahi Group",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "2914.T",
+"company": "Japan Tobacco",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "2801.T",
+"company": "Kikkoman",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "2503.T",
+"company": "Kirin Holdings",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "2269.T",
+"company": "Meiji Holdings",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "2282.T",
+"company": "NH Foods",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "2871.T",
+"company": "Nichirei",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "2002.T",
+"company": "Nisshin Seifun",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "2501.T",
+"company": "Sapporo Holdings",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "5201.T",
+"company": "AGC",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "5333.T",
+"company": "NGK Insulators",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "5214.T",
+"company": "Nippon Electric Glass",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "5233.T",
+"company": "Taiheiyo Cement",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "5301.T",
+"company": "Tokai Carbon",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "5332.T",
+"company": "Toto",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8750.T",
+"company": "Dai-ichi Life",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8725.T",
+"company": "MS&AD Insurance",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8630.T",
+"company": "Sompo Holdings",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8795.T",
+"company": "T&D Holdings",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8766.T",
+"company": "Tokio Marine",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "9147.T",
+"company": "Nippon Express",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "9064.T",
+"company": "Yamato Holdings",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6113.T",
+"company": "Amada",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6367.T",
+"company": "Daikin Industries",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6361.T",
+"company": "Ebara",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6305.T",
+"company": "Hitachi Construction Machinery",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7004.T",
+"company": "Kanadevia",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7013.T",
+"company": "IHI",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "5631.T",
+"company": "Japan Steel Works",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6473.T",
+"company": "JTEKT",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6301.T",
+"company": "Komatsu",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6326.T",
+"company": "Kubota",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7011.T",
+"company": "Mitsubishi Heavy Industries",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6471.T",
+"company": "NSK",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6472.T",
+"company": "NTN",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6103.T",
+"company": "Okuma",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6302.T",
+"company": "Sumitomo Heavy Industries",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6273.T",
+"company": "SMC",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "9107.T",
+"company": "Kawasaki Kisen",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "9104.T",
+"company": "Mitsui O.S.K. Lines",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "9101.T",
+"company": "Nippon Yusen",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "5714.T",
+"company": "Dowa Holdings",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "5803.T",
+"company": "Fujikura",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "5801.T",
+"company": "Furukawa Electric",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "5711.T",
+"company": "Mitsubishi Materials",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "5706.T",
+"company": "Mitsui Mining & Smelting",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "3436.T",
+"company": "SUMCO",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "5802.T",
+"company": "Sumitomo Electric",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "5713.T",
+"company": "Sumitomo Metal Mining",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8253.T",
+"company": "Credit Saison",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8697.T",
+"company": "Japan Exchange Group",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8591.T",
+"company": "ORIX",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7832.T",
+"company": "Bandai Namco",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7912.T",
+"company": "Dai Nippon Printing",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7911.T",
+"company": "Toppan",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7951.T",
+"company": "Yamaha",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "5020.T",
+"company": "ENEOS Holdings",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "5019.T",
+"company": "Idemitsu Kosan",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4503.T",
+"company": "Astellas Pharma",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4519.T",
+"company": "Chugai Pharmaceutical",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4568.T",
+"company": "Daiichi Sankyo",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4523.T",
+"company": "Eisai",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4151.T",
+"company": "Kyowa Kirin",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4578.T",
+"company": "Otsuka Holdings",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4506.T",
+"company": "Sumitomo Pharma",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4507.T",
+"company": "Shionogi",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4502.T",
+"company": "Takeda Pharmaceutical",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "9022.T",
+"company": "Central Japan Railway",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "9020.T",
+"company": "East Japan Railway",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "9008.T",
+"company": "Keio",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "9009.T",
+"company": "Keisei Electric Railway",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "9007.T",
+"company": "Odakyu Electric Railway",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "9001.T",
+"company": "Tobu Railway",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "9005.T",
+"company": "Tokyu",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "9021.T",
+"company": "West Japan Railway",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8802.T",
+"company": "Mitsubishi Estate",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8801.T",
+"company": "Mitsui Fudosan",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8830.T",
+"company": "Sumitomo Realty",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8804.T",
+"company": "Tokyo Tatemono",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "3289.T",
+"company": "Tokyu Fudosan",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8267.T",
+"company": "Aeon",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "9983.T",
+"company": "Fast Retailing",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "3099.T",
+"company": "Isetan Mitsukoshi",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "3086.T",
+"company": "J. Front Retailing",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8252.T",
+"company": "Marui Group",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7453.T",
+"company": "Ryohin Keikaku (Muji)",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "9843.T",
+"company": "Nitori Holdings",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7532.T",
+"company": "Pan Pacific International",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "3382.T",
+"company": "Seven & i Holdings",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8233.T",
+"company": "Takashimaya",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "3092.T",
+"company": "ZOZO",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "5108.T",
+"company": "Bridgestone",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "5101.T",
+"company": "Yokohama Rubber",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8601.T",
+"company": "Daiwa Securities",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "8604.T",
+"company": "Nomura Holdings",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6532.T",
+"company": "BayCurrent",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4751.T",
+"company": "CyberAgent",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "2432.T",
+"company": "DeNA",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4324.T",
+"company": "Dentsu",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6178.T",
+"company": "Japan Post Holdings",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "9766.T",
+"company": "Konami",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4689.T",
+"company": "LY Corporation",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4385.T",
+"company": "Mercari",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "2413.T",
+"company": "M3",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "3659.T",
+"company": "Nexon",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7974.T",
+"company": "Nintendo",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4307.T",
+"company": "Nomura Research Institute",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4661.T",
+"company": "Oriental Land",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4755.T",
+"company": "Rakuten",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "6098.T",
+"company": "Recruit Holdings",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "9735.T",
+"company": "Secom",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "3697.T",
+"company": "SHIFT",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "9602.T",
+"company": "Toho",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "4704.T",
+"company": "Trend Micro",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "7012.T",
+"company": "Kawasaki Heavy Industries",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "5411.T",
+"company": "JFE Holdings",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "5406.T",
+"company": "Kobe Steel",
+"sector": "",
+"country": "Japan"
+},
+{
+"ticker": "5401.T",
+"company": "Nippon Steel",
+"sector": "",
+"country": "Japan"
+}
+]
+},
+"nasdaq100": {
+"name": "Nasdaq-100",
+"members": [
+{
+"ticker": "ADBE",
+"company": "Adobe",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "AMD",
+"company": "Advanced Micro Devices",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "ABNB",
+"company": "Airbnb",
+"sector": "Consumer Discretionary",
+"country": "US"
+},
+{
+"ticker": "ALNY",
+"company": "Alnylam Pharmaceuticals",
+"sector": "Health Care",
+"country": "US"
+},
+{
+"ticker": "GOOGL",
+"company": "Alphabet (Class A)",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "AMZN",
+"company": "Amazon",
+"sector": "Consumer Discretionary",
+"country": "US"
+},
+{
+"ticker": "AEP",
+"company": "American Electric Power",
+"sector": "Utilities",
+"country": "US"
+},
+{
+"ticker": "AMGN",
+"company": "Amgen",
+"sector": "Health Care",
+"country": "US"
+},
+{
+"ticker": "ADI",
+"company": "Analog Devices",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "AAPL",
+"company": "Apple",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "AMAT",
+"company": "Applied Materials",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "APP",
+"company": "AppLovin",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "ARM",
+"company": "Arm Holdings",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "ASML",
+"company": "ASML Holding",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "ALAB",
+"company": "Astera Labs",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "ADSK",
+"company": "Autodesk",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "ADP",
+"company": "Automatic Data Processing",
+"sector": "Industrials",
+"country": "US"
+},
+{
+"ticker": "AXON",
+"company": "Axon Enterprise",
+"sector": "Industrials",
+"country": "US"
+},
+{
+"ticker": "BKR",
+"company": "Baker Hughes",
+"sector": "Energy",
+"country": "US"
+},
+{
+"ticker": "BKNG",
+"company": "Booking Holdings",
+"sector": "Consumer Discretionary",
+"country": "US"
+},
+{
+"ticker": "AVGO",
+"company": "Broadcom",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "CDNS",
+"company": "Cadence Design Systems",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "CTAS",
+"company": "Cintas",
+"sector": "Industrials",
+"country": "US"
+},
+{
+"ticker": "CSCO",
+"company": "Cisco",
+"sector": "Telecommunications",
+"country": "US"
+},
+{
+"ticker": "CCEP",
+"company": "Coca-Cola Europacific Partners",
+"sector": "Consumer Staples",
+"country": "US"
+},
+{
+"ticker": "CMCSA",
+"company": "Comcast",
+"sector": "Telecommunications",
+"country": "US"
+},
+{
+"ticker": "CEG",
+"company": "Constellation Energy",
+"sector": "Utilities",
+"country": "US"
+},
+{
+"ticker": "CPRT",
+"company": "Copart",
+"sector": "Consumer Discretionary",
+"country": "US"
+},
+{
+"ticker": "CRWV",
+"company": "CoreWeave",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "COST",
+"company": "Costco",
+"sector": "Consumer Discretionary",
+"country": "US"
+},
+{
+"ticker": "CRWD",
+"company": "CrowdStrike",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "CSX",
+"company": "CSX",
+"sector": "Industrials",
+"country": "US"
+},
+{
+"ticker": "DDOG",
+"company": "Datadog",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "DXCM",
+"company": "DexCom",
+"sector": "Health Care",
+"country": "US"
+},
+{
+"ticker": "FANG",
+"company": "Diamondback Energy",
+"sector": "Energy",
+"country": "US"
+},
+{
+"ticker": "DASH",
+"company": "DoorDash",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "EA",
+"company": "Electronic Arts",
+"sector": "Consumer Discretionary",
+"country": "US"
+},
+{
+"ticker": "EXC",
+"company": "Exelon",
+"sector": "Utilities",
+"country": "US"
+},
+{
+"ticker": "FAST",
+"company": "Fastenal",
+"sector": "Industrials",
+"country": "US"
+},
+{
+"ticker": "FER",
+"company": "Ferrovial",
+"sector": "Industrials",
+"country": "US"
+},
+{
+"ticker": "FTNT",
+"company": "Fortinet",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "GEHC",
+"company": "GE HealthCare",
+"sector": "Health Care",
+"country": "US"
+},
+{
+"ticker": "GILD",
+"company": "Gilead Sciences",
+"sector": "Health Care",
+"country": "US"
+},
+{
+"ticker": "HON",
+"company": "Honeywell",
+"sector": "Industrials",
+"country": "US"
+},
+{
+"ticker": "IDXX",
+"company": "Idexx Laboratories",
+"sector": "Health Care",
+"country": "US"
+},
+{
+"ticker": "INTC",
+"company": "Intel",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "INTU",
+"company": "Intuit",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "ISRG",
+"company": "Intuitive Surgical",
+"sector": "Health Care",
+"country": "US"
+},
+{
+"ticker": "KDP",
+"company": "Keurig Dr Pepper",
+"sector": "Consumer Staples",
+"country": "US"
+},
+{
+"ticker": "KLAC",
+"company": "KLA",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "KHC",
+"company": "Kraft Heinz",
+"sector": "Consumer Staples",
+"country": "US"
+},
+{
+"ticker": "LRCX",
+"company": "Lam Research",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "LIN",
+"company": "Linde",
+"sector": "Basic Materials",
+"country": "US"
+},
+{
+"ticker": "LITE",
+"company": "Lumentum",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "MAR",
+"company": "Marriott International",
+"sector": "Consumer Discretionary",
+"country": "US"
+},
+{
+"ticker": "MRVL",
+"company": "Marvell Technology",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "MELI",
+"company": "MercadoLibre",
+"sector": "Consumer Discretionary",
+"country": "US"
+},
+{
+"ticker": "META",
+"company": "Meta Platforms",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "MCHP",
+"company": "Microchip Technology",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "MU",
+"company": "Micron Technology",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "MSFT",
+"company": "Microsoft",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "MSTR",
+"company": "Strategy (MicroStrategy)",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "MDLZ",
+"company": "Mondelez International",
+"sector": "Consumer Staples",
+"country": "US"
+},
+{
+"ticker": "MPWR",
+"company": "Monolithic Power Systems",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "MNST",
+"company": "Monster Beverage",
+"sector": "Consumer Staples",
+"country": "US"
+},
+{
+"ticker": "NBIS",
+"company": "Nebius Group",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "NFLX",
+"company": "Netflix",
+"sector": "Consumer Discretionary",
+"country": "US"
+},
+{
+"ticker": "NVDA",
+"company": "Nvidia",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "NXPI",
+"company": "NXP Semiconductors",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "ORLY",
+"company": "O'Reilly Automotive",
+"sector": "Consumer Discretionary",
+"country": "US"
+},
+{
+"ticker": "ODFL",
+"company": "Old Dominion Freight Line",
+"sector": "Industrials",
+"country": "US"
+},
+{
+"ticker": "PCAR",
+"company": "Paccar",
+"sector": "Consumer Discretionary",
+"country": "US"
+},
+{
+"ticker": "PLTR",
+"company": "Palantir Technologies",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "PANW",
+"company": "Palo Alto Networks",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "PAYX",
+"company": "Paychex",
+"sector": "Industrials",
+"country": "US"
+},
+{
+"ticker": "PYPL",
+"company": "PayPal",
+"sector": "Industrials",
+"country": "US"
+},
+{
+"ticker": "PDD",
+"company": "PDD Holdings",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "PEP",
+"company": "PepsiCo",
+"sector": "Consumer Staples",
+"country": "US"
+},
+{
+"ticker": "QCOM",
+"company": "Qualcomm",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "REGN",
+"company": "Regeneron Pharmaceuticals",
+"sector": "Health Care",
+"country": "US"
+},
+{
+"ticker": "RKLB",
+"company": "Rocket Lab",
+"sector": "Industrials",
+"country": "US"
+},
+{
+"ticker": "ROP",
+"company": "Roper Technologies",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "ROST",
+"company": "Ross Stores",
+"sector": "Consumer Discretionary",
+"country": "US"
+},
+{
+"ticker": "SNDK",
+"company": "Sandisk",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "STX",
+"company": "Seagate Technology",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "SHOP",
+"company": "Shopify",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "SBUX",
+"company": "Starbucks",
+"sector": "Consumer Discretionary",
+"country": "US"
+},
+{
+"ticker": "SNPS",
+"company": "Synopsys",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "TMUS",
+"company": "T-Mobile US",
+"sector": "Telecommunications",
+"country": "US"
+},
+{
+"ticker": "TTWO",
+"company": "Take-Two Interactive",
+"sector": "Consumer Discretionary",
+"country": "US"
+},
+{
+"ticker": "TER",
+"company": "Teradyne",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "TSLA",
+"company": "Tesla",
+"sector": "Consumer Discretionary",
+"country": "US"
+},
+{
+"ticker": "TXN",
+"company": "Texas Instruments",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "TRI",
+"company": "Thomson Reuters",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "VRTX",
+"company": "Vertex Pharmaceuticals",
+"sector": "Health Care",
+"country": "US"
+},
+{
+"ticker": "WMT",
+"company": "Walmart",
+"sector": "Consumer Discretionary",
+"country": "US"
+},
+{
+"ticker": "WBD",
+"company": "Warner Bros. Discovery",
+"sector": "Consumer Discretionary",
+"country": "US"
+},
+{
+"ticker": "WDC",
+"company": "Western Digital",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "WDAY",
+"company": "Workday",
+"sector": "Technology",
+"country": "US"
+},
+{
+"ticker": "XEL",
+"company": "Xcel Energy",
+"sector": "Utilities",
+"country": "US"
+}
+]
+},
+"emerging": {
+"name": "Emerging markets: 50 largest companies",
+"members": [
+{
+"ticker": "2330.TW",
+"company": "TSMC",
+"country": "Taiwan",
+"sector": ""
+},
+{
+"ticker": "0700.HK",
+"company": "Tencent",
+"country": "China",
+"sector": ""
+},
+{
+"ticker": "005930.KS",
+"company": "Samsung Electronics",
+"country": "South Korea",
+"sector": ""
+},
+{
+"ticker": "9988.HK",
+"company": "Alibaba",
+"country": "China",
+"sector": ""
+},
+{
+"ticker": "000660.KS",
+"company": "SK Hynix",
+"country": "South Korea",
+"sector": ""
+},
+{
+"ticker": "HDFCBANK.NS",
+"company": "HDFC Bank",
+"country": "India",
+"sector": ""
+},
+{
+"ticker": "RELIANCE.NS",
+"company": "Reliance Industries",
+"country": "India",
+"sector": ""
+},
+{
+"ticker": "1810.HK",
+"company": "Xiaomi",
+"country": "China",
+"sector": ""
+},
+{
+"ticker": "3690.HK",
+"company": "Meituan",
+"country": "China",
+"sector": ""
+},
+{
+"ticker": "PDD",
+"company": "PDD Holdings",
+"country": "China",
+"sector": ""
+},
+{
+"ticker": "INFY.NS",
+"company": "Infosys",
+"country": "India",
+"sector": ""
+},
+{
+"ticker": "ICICIBANK.NS",
+"company": "ICICI Bank",
+"country": "India",
+"sector": ""
+},
+{
+"ticker": "0939.HK",
+"company": "China Construction Bank",
+"country": "China",
+"sector": ""
+},
+{
+"ticker": "2454.TW",
+"company": "MediaTek",
+"country": "Taiwan",
+"sector": ""
+},
+{
+"ticker": "2317.TW",
+"company": "Hon Hai (Foxconn)",
+"country": "Taiwan",
+"sector": ""
+},
+{
+"ticker": "1211.HK",
+"company": "BYD",
+"country": "China",
+"sector": ""
+},
+{
+"ticker": "9999.HK",
+"company": "NetEase",
+"country": "China",
+"sector": ""
+},
+{
+"ticker": "BHARTIARTL.NS",
+"company": "Bharti Airtel",
+"country": "India",
+"sector": ""
+},
+{
+"ticker": "VALE3.SA",
+"company": "Vale",
+"country": "Brazil",
+"sector": ""
+},
+{
+"ticker": "PETR4.SA",
+"company": "Petrobras",
+"country": "Brazil",
+"sector": ""
+},
+{
+"ticker": "ITUB4.SA",
+"company": "Itaú Unibanco",
+"country": "Brazil",
+"sector": ""
+},
+{
+"ticker": "1120.SR",
+"company": "Al Rajhi Bank",
+"country": "Saudi Arabia",
+"sector": ""
+},
+{
+"ticker": "2222.SR",
+"company": "Saudi Aramco",
+"country": "Saudi Arabia",
+"sector": ""
+},
+{
+"ticker": "NPN.JO",
+"company": "Naspers",
+"country": "South Africa",
+"sector": ""
+},
+{
+"ticker": "9618.HK",
+"company": "JD.com",
+"country": "China",
+"sector": ""
+},
+{
+"ticker": "9888.HK",
+"company": "Baidu",
+"country": "China",
+"sector": ""
+},
+{
+"ticker": "1398.HK",
+"company": "ICBC",
+"country": "China",
+"sector": ""
+},
+{
+"ticker": "3968.HK",
+"company": "China Merchants Bank",
+"country": "China",
+"sector": ""
+},
+{
+"ticker": "TCS.NS",
+"company": "Tata Consultancy Services",
+"country": "India",
+"sector": ""
+},
+{
+"ticker": "LT.NS",
+"company": "Larsen & Toubro",
+"country": "India",
+"sector": ""
+},
+{
+"ticker": "2318.HK",
+"company": "Ping An Insurance",
+"country": "China",
+"sector": ""
+},
+{
+"ticker": "0941.HK",
+"company": "China Mobile",
+"country": "China",
+"sector": ""
+},
+{
+"ticker": "2308.TW",
+"company": "Delta Electronics",
+"country": "Taiwan",
+"sector": ""
+},
+{
+"ticker": "035420.KS",
+"company": "Naver",
+"country": "South Korea",
+"sector": ""
+},
+{
+"ticker": "005380.KS",
+"company": "Hyundai Motor",
+"country": "South Korea",
+"sector": ""
+},
+{
+"ticker": "SBIN.NS",
+"company": "State Bank of India",
+"country": "India",
+"sector": ""
+},
+{
+"ticker": "ITC.NS",
+"company": "ITC",
+"country": "India",
+"sector": ""
+},
+{
+"ticker": "AXISBANK.NS",
+"company": "Axis Bank",
+"country": "India",
+"sector": ""
+},
+{
+"ticker": "KOTAKBANK.NS",
+"company": "Kotak Mahindra Bank",
+"country": "India",
+"sector": ""
+},
+{
+"ticker": "BBCA.JK",
+"company": "Bank Central Asia",
+"country": "Indonesia",
+"sector": ""
+},
+{
+"ticker": "WALMEX.MX",
+"company": "Walmart de México",
+"country": "Mexico",
+"sector": ""
+},
+{
+"ticker": "GFNORTEO.MX",
+"company": "Banorte",
+"country": "Mexico",
+"sector": ""
+},
+{
+"ticker": "NU",
+"company": "Nu Holdings",
+"country": "Brazil",
+"sector": ""
+},
+{
+"ticker": "2382.TW",
+"company": "Quanta Computer",
+"country": "Taiwan",
+"sector": ""
+},
+{
+"ticker": "3711.TW",
+"company": "ASE Technology",
+"country": "Taiwan",
+"sector": ""
+},
+{
+"ticker": "MARUTI.NS",
+"company": "Maruti Suzuki",
+"country": "India",
+"sector": ""
+},
+{
+"ticker": "SUNPHARMA.NS",
+"company": "Sun Pharma",
+"country": "India",
+"sector": ""
+},
+{
+"ticker": "2899.HK",
+"company": "Zijin Mining",
+"country": "China",
+"sector": ""
+},
+{
+"ticker": "0981.HK",
+"company": "SMIC",
+"country": "China",
+"sector": ""
+},
+{
+"ticker": "FSR.JO",
+"company": "FirstRand",
+"country": "South Africa",
+"sector": ""
+}
+]
+}
+}

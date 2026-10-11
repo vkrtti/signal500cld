@@ -1,4 +1,4 @@
-// Signal500 runtime: loads docs/data/*.json and gives the page the small data API it was written against
+// IndexPilot runtime: loads docs/data/*.json and gives the page the small data API it was written against
 // (dash.data, dash.calc, dash.onData, dash.colors, dash.setLink).
 (function () {
   try { const saved = localStorage.getItem('theme'); if (saved) document.documentElement.dataset.theme = saved; } catch (e) {}
@@ -6,7 +6,8 @@
     'stocks_top', 'stocks_fallen', 'sectors', 'news', 'weekly_now', 'weekly_history', 'weekly_tiers', 'weekly_test',
     'meter_now', 'meter_buckets', 'rank_top', 'rank_bottom', 'demo_positions', 'demo_ledger', 'demo_backtest',
     'plans_summary', 'plans_growth', 'plans_years', 'markets', 'regions', 'regions_years', 'hist_plans', 'hist_plans_growth',
-    'hist_weekly_rule', 'hist_factors', 'hist_factor_growth', 'hist_decades'];
+    'hist_weekly_rule', 'hist_factors', 'hist_factor_growth', 'hist_decades', 'index_rank', 'pick_rank', 'ip_backtest', 'ip_buying',
+    'ip_growth', 'ip_years', 'ip_periods', 'news_feed', 'hist_rotation', 'hist_rotation_decades'];
   const store = {}, calcs = {}, callbacks = [];
   const css = getComputedStyle(document.documentElement);
   const colors = () => [1, 2, 3, 4, 5, 6, 7, 8].map((i) => css.getPropertyValue('--series-' + i).trim() || '#5b6cf9');

@@ -1,9 +1,9 @@
-"""Signal500 data update. Run by GitHub Actions (see .github/workflows/update.yml).
+"""IndexPilot data update. Run by GitHub Actions (see .github/workflows/update.yml).
 
-Daily (every run): refreshes market indicators, the monthly signal, the S&P 500 weekly chart
-and the stock rankings from the Federal Reserve (FRED) and the public S&P 500 datasets.
-Weekly (--weekly, the Saturday run): also decides next week's buy amount, the signal meter,
-and rolls the demo account (via weekly_update.py).
+Daily (every run): refreshes market indicators, the monthly US signal, the markets table
+from the Federal Reserve (FRED) and the public S&P 500 datasets.
+Weekly (--weekly, the Saturday run): also picks the main index, sets next week's buy amount and the
+signal meter, ranks the picked index's stocks and rolls the demo account (via indexpilot.py).
 
 Usage: python scripts/update.py [--weekly] [--data docs/data] [--offline DIR]
 --offline DIR reads <SERIES>.csv / fin.csv / cons.csv from DIR instead of the internet (for testing).
@@ -16,10 +16,11 @@ ap = argparse.ArgumentParser()
 ap.add_argument('--weekly', action='store_true')
 ap.add_argument('--data', default='docs/data')
 ap.add_argument('--offline')
+ap.add_argument('--research', default='research_data')
 args = ap.parse_args()
 D = args.data
 NOW = dt.datetime.now(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
-UA = {'User-Agent': 'Mozilla/5.0 (Signal500 data updater; +https://github.com)'}
+UA = {'User-Agent': 'Mozilla/5.0 (IndexPilot data updater; +https://github.com)'}
 log = lambda *a: print('[update]', *a, flush=True)
 
 def load(name, default=None):
@@ -44,7 +45,7 @@ def get_text(url, offline_name):
             log(f'fetch failed ({attempt + 1}/4) {url}: {e}'); time.sleep(5 * (attempt + 1))
     raise RuntimeError('could not fetch ' + url)
 
-LONG = {'NASDAQCOM': '1971-01-01', 'NASDAQ100': '1986-01-01', 'NIKKEI225': '1960-01-01', 'DEXUSEU': '1999-01-01', 'CBBTCUSD': '2014-12-01', 'DCOILBRENTEU': '1987-01-01'}
+LONG = {'VIXCLS': '2010-01-01', 'NFCI': '2010-01-01', 'SAHMREALTIME': '2010-01-01', 'T10Y3M': '2010-01-01', 'NASDAQCOM': '1971-01-01', 'NASDAQ100': '1986-01-01', 'NIKKEI225': '1960-01-01', 'DEXUSEU': '1999-01-01', 'CBBTCUSD': '2014-12-01', 'DCOILBRENTEU': '1987-01-01'}
 
 def fred(series, start=None):
     start = start or LONG.get(series, '2015-01-01')
@@ -195,30 +196,23 @@ if args.weekly:
     if not fund_ok or any(k not in S for k in need):
         log('ERROR weekly roll skipped: missing', [k for k in need if k not in S], 'fundamentals' if not fund_ok else '')
         sys.exit(1)
-    sp = S['SP500']; wk_last = sp.groupby(sp.index.to_period('W')).tail(1)
-    close_date = wk_last.index[-1]           # last trading day of the latest week
-    asof = lambda s: float(s[s.index <= close_date].iloc[-1])
-    inputs = dict(date=close_date.strftime('%Y-%m-%d'), spx=float(wk_last.iloc[-1]), vix=asof(S['VIXCLS']), nfci=asof(S['NFCI']),
-                  sahm=asof(S['SAHMREALTIME']), t10y3m=asof(S['T10Y3M']))
-    json.dump(inputs, open('work/inputs.json', 'w'))
-    log('weekly inputs', inputs)
-    r = subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'weekly_update.py'), D, 'work/inputs.json',
-                        'work/fin.csv', 'work/cons.csv', 'work/out'], capture_output=True, text=True)
-    print(r.stdout, r.stderr)
-    if r.returncode: sys.exit(r.returncode)
-    for n in ['weekly_now', 'weekly_history', 'meter_now', 'rank_top', 'rank_bottom', 'demo_positions', 'demo_ledger']:
-        save(n, json.load(open(f'work/out/{n}.json')))
-    # archive this week's prices of all ranked stocks (builds our own price history for future testing of the picks)
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import indexpilot
+    out, summary = indexpilot.run(S, D, args.research, 'work/fin.csv', 'work/cons.csv', log, args.offline)
+    for n, obj in out.items(): save(n, obj)
+    # archive this week's prices of the ranked stocks (our own price history for testing the picks later)
     try:
-        fp = pd.read_csv('work/fin.csv').dropna(subset=['Price'])
-        yr_file = os.path.join(D, 'archive', f'prices_{inputs["date"][:4]}.json'); os.makedirs(os.path.dirname(yr_file), exist_ok=True)
+        yr_file = os.path.join(D, 'archive', f'prices_{summary["date"][:4]}.json'); os.makedirs(os.path.dirname(yr_file), exist_ok=True)
         arc = json.load(open(yr_file)) if os.path.exists(yr_file) else {}
-        arc[inputs['date']] = {t: round(float(p), 2) for t, p in zip(fp.Symbol, fp.Price)}
-        json.dump(arc, open(yr_file, 'w'), separators=(',', ':')); log('archived prices for', len(fp), 'stocks')
+        arc[summary['date']] = {r['ticker']: r['price'] for r in out['pick_rank'] if r.get('price') is not None}
+        arc[summary['date']].update({r['etf']: r['price'] for r in out['index_rank']})
+        json.dump(arc, open(yr_file, 'w'), separators=(',', ':')); log('archived prices for', len(arc[summary['date']]), 'tickers')
     except Exception as e: log('WARN price archive', e)
-    summary = json.loads(r.stdout.strip().splitlines()[-1])
+    b = summary['bt']
     open('work/summary.md', 'w').write(
-        f"### Week of {summary['week_of']}\n\n- **Buy €{summary['amount']}** ({summary['tier']})\n- Signal strength **{summary['meter']:+d}** ({summary['label']})\n"
+        f"### Week of {summary['week_of']}\n\n- **Main index: {summary['pick']}** ({summary['etf']}){' (switched this week)' if summary['switched'] else ''}\n"
+        f"- **Buy €{summary['amount']}** ({summary['tier']})\n- Signal strength **{summary['meter']:+d}** ({summary['label']})\n"
         f"- Demo: {summary['closed']} trades closed, week P/L €{summary['week_pnl']}, total €{summary['total_pnl']}\n"
-        f"- New positions: {', '.join(f'{t} {s} €{e}' for t, s, e in summary['positions'])}\n")
+        f"- New positions: {', '.join(f'{t} {s} €{e}' for t, s, e in summary['positions'])}\n"
+        f"- Backtest of the pick since 2012: {b['cagr']}%/yr, worst fall {b['max_dd']}%\n")
 log('done')

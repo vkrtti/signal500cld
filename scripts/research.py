@@ -17,7 +17,7 @@ A failed download keeps the previous files.
 import argparse, datetime as dt, io, json, os, sys, time, urllib.request, zipfile
 import numpy as np, pandas as pd
 
-ap = argparse.ArgumentParser(); ap.add_argument('--data', default='docs/data'); ap.add_argument('--offline')
+ap = argparse.ArgumentParser(); ap.add_argument('--data', default='docs/data'); ap.add_argument('--offline'); ap.add_argument('--research', default='research_data')
 args = ap.parse_args(); D = args.data
 NOW = dt.datetime.now(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
 BASE = 'https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/'
@@ -164,6 +164,42 @@ if f is not None:
     save('hist_decades', dec, 'Returns by decade', f'Yearly returns by decade {period}: US market, 20%/30% plans, value, momentum, their mix and cash.')
     log('US research done through', last_label)
 
+def rotation(df):
+    """The weekly index pick tested on 35 years of regional data (monthly, US dollars):
+    each month hold the region with the best 12-month return; with a 5-point buffer the pick only
+    changes when a challenger leads by more than 5 percentage points."""
+    regs = [k for k in ['US', 'Europe', 'Japan', 'AsiaPac', 'Emerging'] if k in df]
+    d = df[regs + (['Developed'] if 'Developed' in df else [])].dropna()
+    r12 = (1 + d[regs]).rolling(12).apply(np.prod, raw=True) - 1
+    res, picks = {}, {}
+    for name, buf in [('buffer', 0.05), ('nobuf', 0.0)]:
+        held, out, path = None, [], []
+        for i in range(12, len(d) - 1):
+            row = r12.iloc[i]; lead = row.idxmax()
+            if held is None or row[lead] - row[held] > buf: held = lead
+            path.append(held); out.append(d[held].iloc[i + 1])
+        res[name] = pd.Series(out, index=d.index[13:]); picks[name] = path
+    rows = []
+    labels = {'US': 'Hold North America', 'Europe': 'Hold Europe', 'Japan': 'Hold Japan', 'AsiaPac': 'Hold Asia Pacific ex-Japan', 'Emerging': 'Hold Emerging markets', 'Developed': 'Hold Developed world'}
+    def st(key, nm, r, path=None):
+        eq = (1 + r).cumprod(); n = len(r)
+        sw = None if path is None else round(sum(1 for a, b in zip(path, path[1:]) if a != b) / (n / 12), 1)
+        rows.append(dict(key=key, strategy=nm, cagr=round((eq.iloc[-1] ** (12 / n) - 1) * 100, 1), max_dd=round(float((eq / eq.cummax() - 1).min()) * 100, 1),
+                         vol=round(float(r.std() * np.sqrt(12) * 100), 1), switches_per_year=sw, start=r.index[0], end=r.index[-1]))
+    st('pick', 'Momentum pick, 5-point buffer', res['buffer'], picks['buffer'])
+    st('nobuf', 'Momentum pick, no buffer', res['nobuf'], picks['nobuf'])
+    for k in regs + (['Developed'] if 'Developed' in d else []):
+        st(k, labels[k], d[k].loc[res['buffer'].index])
+    save('hist_rotation', rows, 'Index pick on 35 years of regional data', 'Monthly test of the momentum index pick across North America, Europe, Japan, Asia Pacific ex-Japan and emerging markets (US dollars, Kenneth French data library).')
+    dec = []
+    ix = res['buffer'].index
+    for dd_, g in pd.Series(ix, index=ix).groupby(ix.str[:3]):
+        m = list(g.index); k = 12 / len(m)
+        cg = lambda r: round((float((1 + r.loc[m]).prod()) ** k - 1) * 100, 1)
+        dec.append(dict(decade=dd_ + '0s', pick=cg(res['buffer']), nobuf=cg(res['nobuf']), world=cg(d['Developed']) if 'Developed' in d else None, us=cg(d['US'])))
+    save('hist_rotation_decades', dec, 'Index pick by decade', 'Yearly return by decade of the momentum index pick vs holding the developed world or North America.')
+
+
 # ------------------------------------------------------------ regional markets
 if not args.offline:
     files = {'US': ('North_America_3_Factors_CSV.zip', 'North America'), 'Developed': ('Developed_3_Factors_CSV.zip', 'Developed world'),
@@ -190,4 +226,9 @@ if not args.offline:
                                    corr_us=round(float(r.corr(df['US'])), 2) if 'US' in df else None, through=r.index[-1]))
         save('regions', stats_rows, 'World stock markets since 1990', 'Total returns in US dollars by region, Jul 1990 to the latest month (Kenneth French data library).')
         save('regions_years', list(years.values()), 'World markets by year', 'Calendar-year total returns by region in US dollars.')
+        df.round(6).to_csv(os.path.join(args.research, 'regions_monthly.csv'))
+        rotation(df)
+else:
+    rp = os.path.join(args.research, 'regions_monthly.csv')
+    if os.path.exists(rp): rotation(pd.read_csv(rp, dtype={'month': str}).set_index('month'))
 log('done')
