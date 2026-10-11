@@ -10,6 +10,9 @@ jobs:
         run: |
           pip -q install pandas numpy
           python - <<'PY'
+          import traceback, sys
+          def eh(t,v,tb): print('::notice::ERR '+''.join(traceback.format_exception(t,v,tb))[-600:].replace(chr(10),' | '))
+          sys.excepthook=eh
           import io, zipfile, urllib.request, pandas as pd, numpy as np
           B='https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/'
           def z(f):
@@ -19,7 +22,7 @@ jobs:
               lines=txt.splitlines(); out=[]; hdr=None
               for l in lines:
                   p=[x.strip() for x in l.split(',')]
-                  if hdr is None and len(p)>5 and p[0]=='' : hdr=p; continue
+                  if hdr is None and len(p)>=4 and p[0]=='' : hdr=p; continue
                   if hdr is not None:
                       if len(p)==len(hdr) and len(p[0])==6 and p[0].isdigit(): out.append(p)
                       elif out: break
