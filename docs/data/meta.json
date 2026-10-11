@@ -3,37 +3,37 @@
   "title": "This week's pick and amount",
   "description": "The main index pick, the weekly EUR 40-200 buy amount and the signal meter, decided at the Friday close. Yahoo Finance ETF prices, Federal Reserve (FRED) stress gauges.",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:06:40Z"
+  "updated": "2026-10-11T20:06:59Z"
  },
  "weekly_history": {
   "title": "Weekly history",
   "description": "Every week since Jan 2012: the main index pick, the MSCI World ETF close, the rule amount, the meter and each index's 52-week return.",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:06:40Z"
+  "updated": "2026-10-11T20:06:59Z"
  },
  "meter_now": {
   "title": "Signal strength",
   "description": "The \u2212100\u2026+100 meter and its six components (MSCI World trend and discount, VIX, NFCI, Sahm, yield curve).",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:06:40Z"
+  "updated": "2026-10-11T20:06:59Z"
  },
  "demo_positions": {
   "title": "Demo: holdings",
   "description": "The demo account's current holdings: 70% main-index ETF, 30% in its 3 strongest stocks, valued in euros.",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:06:40Z"
+  "updated": "2026-10-11T20:06:59Z"
  },
  "demo_ledger": {
   "title": "Demo: trades",
   "description": "Every buy and sell of the EUR 1,000 demo account, with costs and profit/loss.",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:06:40Z"
+  "updated": "2026-10-11T20:06:59Z"
  },
  "indicators": {
   "title": "Market gauges",
   "description": "Nine US stress and rate readings from the Federal Reserve (VIX, yield curve, Sahm rule, credit spread, NFCI, Fed funds, 10Y yield, CPI, unemployment).",
   "refresh": "daily",
-  "updated": "2026-10-11T18:06:40Z"
+  "updated": "2026-10-11T20:06:59Z"
  },
  "weekly_tiers": {
   "title": "Weekly amount rule",
@@ -63,143 +63,144 @@
   "title": "Plans over 100 years",
   "description": "The 10/20/30% plans simulated 1927\u20132026 on Kenneth French US market total returns (monthly), with daily-reset drag, fees and cash at the T-bill rate.",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:07:17Z"
+  "updated": "2026-10-11T20:07:28Z"
  },
  "hist_plans_growth": {
   "title": "Plan growth since 1927",
   "description": "Value of 1 unit invested in Jan 1927, at each year end.",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:07:17Z"
+  "updated": "2026-10-11T20:07:28Z"
  },
  "hist_weekly_rule": {
   "title": "Weekly rule over 100 years",
   "description": "Money-weighted yearly return of the EUR 40-200 drawdown tiers vs a flat amount, US market total returns (French).",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:07:17Z"
+  "updated": "2026-10-11T20:07:28Z"
  },
  "hist_factors": {
   "title": "Value and momentum since 1927",
   "description": "Long/short factor returns 1927\u20132026 (Kenneth French data library), premium over cash, before costs.",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:07:17Z"
+  "updated": "2026-10-11T20:07:28Z"
  },
  "hist_factor_growth": {
   "title": "Factor growth since 1927",
   "description": "Value of 1 unit in each long/short factor, year-end.",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:07:17Z"
+  "updated": "2026-10-11T20:07:28Z"
  },
  "hist_decades": {
   "title": "Returns by decade",
   "description": "Yearly returns by decade 1927\u20132026: US market, 20%/30% plans, value, momentum, their mix and cash.",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:07:17Z"
+  "updated": "2026-10-11T20:07:28Z"
  },
  "markets": {
   "title": "Markets today",
   "description": "Major indexes, currencies and commodities from the Federal Reserve (FRED), updated every weekday.",
   "refresh": "daily",
-  "updated": "2026-10-11T18:06:40Z"
+  "updated": "2026-10-11T20:06:59Z"
  },
  "regions": {
   "title": "World stock markets since 1990",
   "description": "Total returns in US dollars by region, Jul 1990 to the latest month (Kenneth French data library).",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:07:17Z"
+  "updated": "2026-10-11T20:07:28Z"
  },
  "regions_years": {
   "title": "World markets by year",
   "description": "Calendar-year total returns by region in US dollars.",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:07:17Z"
+  "updated": "2026-10-11T20:07:28Z"
  },
  "index_rank": {
   "title": "This week's index ranking",
   "description": "Six euro-listed index ETFs ranked by 52-week return in euros, with the main index pick (5-point buffer).",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:06:40Z"
+  "updated": "2026-10-11T20:06:59Z"
  },
  "pick_rank": {
   "title": "Stocks of the picked index",
   "description": "Every stock in the picked index's universe, ranked; top = buy candidates, bottom = avoid/short candidates.",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:06:40Z"
+  "updated": "2026-10-11T20:06:59Z"
  },
  "ip_backtest": {
   "title": "Index pick backtest",
   "description": "Lump-sum test 2012 to today on real ETF prices in euros: the pick vs holding each index.",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:06:40Z"
+  "updated": "2026-10-11T20:06:59Z"
  },
  "ip_buying": {
   "title": "Weekly buying backtest",
   "description": "Money-weighted return of buying weekly (EUR 40-200 rule) into the World ETF, the S&P 500 ETF or the weekly pick, 2012 to today.",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:06:40Z"
+  "updated": "2026-10-11T20:06:59Z"
  },
  "ip_growth": {
   "title": "Index pick growth",
   "description": "Value of 1 euro invested in January 2012: the pick vs World, S&P 500, Nasdaq-100, Europe and equal weight.",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:06:40Z"
+  "updated": "2026-10-11T20:06:59Z"
  },
  "ip_years": {
   "title": "Index pick by year",
   "description": "Calendar-year returns of the pick and each index ETF, in euros.",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:06:40Z"
+  "updated": "2026-10-11T20:06:59Z"
  },
  "ip_periods": {
   "title": "Pick history",
   "description": "Every stretch the pick held one index since 2012, with its return and the World ETF's over the same weeks.",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:06:40Z"
+  "updated": "2026-10-11T20:06:59Z"
  },
  "news_feed": {
   "title": "Headlines",
   "description": "Latest headlines from the Fed, ECB, Bank of Japan, CNBC, MarketWatch and Google News on the picked index and stocks (titles and links only).",
   "refresh": "daily",
-  "updated": "2026-10-11T18:07:17Z"
+  "updated": "2026-10-11T20:07:28Z"
  },
  "hist_rotation": {
   "title": "Index pick on 35 years of regional data",
   "description": "Monthly test of the momentum index pick across North America, Europe, Japan, Asia Pacific ex-Japan and emerging markets (US dollars, Kenneth French data library).",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:07:17Z"
+  "updated": "2026-10-11T20:07:28Z"
  },
  "hist_rotation_decades": {
   "title": "Index pick by decade",
   "description": "Yearly return by decade of the momentum index pick vs holding the developed world or North America.",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:07:17Z"
+  "updated": "2026-10-11T20:07:28Z"
  },
  "extra_positions": {
   "title": "Extra profit: this week's picks",
   "description": "The weekly 3 longs and 3 shorts of the main index, EUR 83.33 each (paper record, separate from the demo account).",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:06:40Z"
+  "updated": "2026-10-11T20:06:59Z"
  },
  "extra_ledger": {
   "title": "Extra profit: closed picks",
   "description": "Every closed weekly pick with its return and profit/loss.",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:06:40Z"
+  "updated": "2026-10-11T20:06:59Z"
  },
  "demo_value": {
   "title": "Demo account value",
   "description": "The demo account's value each Friday close, the money deposited (EUR 1,000 a week) and the same deposits in the MSCI World ETF.",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:06:40Z"
+  "updated": "2026-10-11T20:06:59Z"
  },
  "hist_overlay": {
   "title": "Momentum stocks since 1927",
   "description": "Yearly return and worst fall of the US market, the demo account mix (70% market + 30% top-decile momentum stocks), all-momentum and a long/short version, by period (Kenneth French data library, before costs).",
   "refresh": "weekly",
-  "updated": "2026-10-11T18:07:17Z"
+  "updated": "2026-10-11T20:07:28Z"
  },
  "meter_test": {
   "title": "Meter vs the next year",
   "description": "Average MSCI World ETF return over the next 4 and 52 weeks for each meter reading, weekly 2012-today.",
-  "refresh": "weekly"
+  "refresh": "weekly",
+  "updated": "2026-10-11T20:06:59Z"
  }
 }
