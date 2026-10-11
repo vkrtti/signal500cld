@@ -71,6 +71,14 @@
 .sx .mini .rk{color:var(--muted);font-size:12px}
 .sx .mini .tk{font-weight:700} .sx .mini .co{color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sx .ic{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;flex:none;letter-spacing:-.03em}
+/* extra profit */
+.sx .ex{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:640px){.sx .ex{grid-template-columns:1fr}}
+.sx .ex-h{font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px}
+.sx .ex-h.l{color:var(--up)} .sx .ex-h.s{color:var(--down)}
+.sx .mini.ex-list li{grid-template-columns:26px 1fr auto auto}
+.sx .exrec{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.sx .exrec b{color:var(--color-fg)}
 /* chips & filters */
 .sx .chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:none}
 .sx .chip{font:inherit;font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--panel);color:var(--color-fg);border-radius:999px;padding:6px 12px;white-space:nowrap;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
@@ -133,6 +141,7 @@
   <div class="tabs" role="tablist">
     <button role="tab" data-tab="home" id="tab-home" aria-selected="true">Overview</button>
     <button role="tab" data-tab="week" id="tab-week" aria-selected="false">This week</button>
+    <button role="tab" data-tab="extra" id="tab-extra" aria-selected="false">Extra profit</button>
     <button role="tab" data-tab="plans" id="tab-plans" aria-selected="false">Return plans</button>
     <button role="tab" data-tab="signal" id="tab-signal" aria-selected="false">Market signal</button>
     <button role="tab" data-tab="backtest" id="tab-backtest" aria-selected="false">Backtest</button>
@@ -162,6 +171,20 @@
       </div>
       <div class="card"><h3><button data-go="stocks">Top ranked</button></h3><ul class="mini" id="hl-top" data-source="rank_top"></ul></div>
       <div class="card"><h3><button data-go="stocks">Bottom ranked</button></h3><ul class="mini" id="hl-bottom" data-source="rank_bottom"></ul></div>
+    </div>
+
+    <div class="card" id="extra-card" style="margin-bottom:12px">
+      <h3 style="display:flex;justify-content:space-between;align-items:center"><span><button data-go="extra" style="font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;font-weight:700">Extra profit: this week's picks ›</button></span><span class="note" style="margin:0">Week of <span data-source="weekly_now" data-field="week_of" data-row="0">—</span></span></h3>
+      <div class="ex">
+        <div><div class="ex-h l">▲ Long: buy</div><ul class="mini ex-list" id="ex-long-home" data-source="extra_picks"></ul></div>
+        <div><div class="ex-h s">▼ Short: sell</div><ul class="mini ex-list" id="ex-short-home" data-source="extra_picks"></ul></div>
+      </div>
+      <div class="exrec">
+        <span>Track record: <b data-source="extra_summary" data-field="value" data-where="metric=Weeks">—</b> weeks</span>
+        <span>Profit/loss: <b data-source="extra_summary" data-field="value" data-where="metric=Total P/L (€)">—</b> €</span>
+        <span>Win rate: <b data-source="extra_summary" data-field="value" data-where="metric=Win rate (%25)">—</b>%</span>
+        <span>Stake: €83 per stock, €500 a week in total</span>
+      </div>
     </div>
 
     <div class="chips" id="chips">
@@ -247,6 +270,47 @@
       </table>
     </div>
     <div class="warnbox">Budget check: the rule averaged about €80–110 a week, but in a 2008-style crash it asks for €200 every week for over a year (around €13,000). Only follow it if you could keep that up. Not financial advice.</div>
+  </section>
+
+  <!-- ================= EXTRA PROFIT ================= -->
+  <section id="extra" data-page hidden>
+    <h1 class="ttl">Extra profit: 3 longs and 3 shorts a week</h1>
+    <p class="lede">On top of your S&amp;P 500 buying: each Friday close, the 3 highest-ranked S&amp;P 500 stocks are bought and the 3 lowest-ranked are sold short, €83 each, held for one week. The long and short sides balance, so the result depends on the picks rather than on whether the market goes up or down.</p>
+    <div class="ex">
+      <div class="card"><div class="ex-h l">▲ Long: buy this week</div>
+        <table id="ex-long-table" data-source="extra_picks" data-row-key="ticker">
+          <thead><tr><th data-field="ticker">Stock</th><th data-field="entry_price" class="n">Price ($)</th><th data-field="rank" class="n">Rank</th><th data-field="score" class="n">Score</th><th data-field="off_52w_high" class="n">From 52w high (%)</th><th data-field="euros" class="n">Stake (€)</th></tr></thead><tbody></tbody></table></div>
+      <div class="card"><div class="ex-h s">▼ Short: sell this week</div>
+        <table id="ex-short-table" data-source="extra_picks" data-row-key="ticker">
+          <thead><tr><th data-field="ticker">Stock</th><th data-field="entry_price" class="n">Price ($)</th><th data-field="rank" class="n">Rank</th><th data-field="score" class="n">Score</th><th data-field="off_52w_high" class="n">From 52w high (%)</th><th data-field="euros" class="n">Stake (€)</th></tr></thead><tbody></tbody></table></div>
+    </div>
+
+    <h2 id="ex-record-h">Track record</h2>
+    <div class="kpis">
+      <div class="card kpi"><div class="lab">Total profit/loss (€)</div><div class="num" data-source="extra_summary" data-field="value" data-where="metric=Total P/L (€)">—</div></div>
+      <div class="card kpi"><div class="lab">Longs (€)</div><div class="num" data-source="extra_summary" data-field="value" data-where="metric=Longs P/L (€)">—</div></div>
+      <div class="card kpi"><div class="lab">Shorts (€)</div><div class="num" data-source="extra_summary" data-field="value" data-where="metric=Shorts P/L (€)">—</div></div>
+      <div class="card kpi"><div class="lab">Weeks · win rate</div><div class="num"><span data-source="extra_summary" data-field="value" data-where="metric=Weeks">—</span> · <span data-source="extra_summary" data-field="value" data-where="metric=Win rate (%25)">—</span>%</div></div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <p class="note" id="ex-empty">The record starts with this week's picks. The first result is booked after the Friday 16 Oct close.</p>
+      <div class="chart" id="ex-chart" data-source="extra_weeks" style="min-height:200px"></div>
+      <div class="tbl"><table id="ex-weeks" data-source="extra_weeks" data-row-key="week">
+        <thead><tr><th data-field="week">Week closed</th><th data-field="longs" class="n">Longs (€)</th><th data-field="shorts" class="n">Shorts (€)</th><th data-field="pnl" class="n">Week (€)</th><th data-field="cumulative" class="n">Running total (€)</th></tr></thead><tbody></tbody></table></div>
+    </div>
+
+    <h2 id="ex-how-h">How to trade it, and the risks</h2>
+    <div class="grid">
+      <div class="card"><h3>Long side</h3><ul class="m">
+        <li>Buy the 3 stocks after the Friday close (or Monday), about €83 each. Sell them the next Friday.</li>
+        <li>Many brokers sell fractional shares, so €83 works even for expensive stocks.</li></ul></div>
+      <div class="card"><h3>Short side</h3><ul class="m">
+        <li>Shorting means profiting when a price falls. For private investors in Europe this is usually done with CFDs, which use leverage and borrowing fees.</li>
+        <li><b>A short can lose more than its stake</b>: if a shorted stock jumps 50% on a takeover bid, an €83 short loses €42. Consider a stop-loss, and skip the short side if your broker or comfort doesn't allow it.</li></ul></div>
+      <div class="card"><h3>Keep it in proportion</h3><ul class="m">
+        <li>Rankings are value + momentum factors. Their edge shows up over months and many stocks; over one week, 6 stocks are mostly luck.</li>
+        <li>Untested historically (no free price history for all 500 stocks), so judge it by the live record above after a few months. Costs, spreads and tax are not included. Not financial advice.</li></ul></div>
+    </div>
   </section>
 
   <!-- ================= RETURN PLANS ================= -->
@@ -626,6 +690,43 @@ dash.calc('spx_change', {
   },
 });
 
+dash.calc('extra_picks', {
+  inputs: ['demo_positions', 'rank_top', 'rank_bottom'],
+  title: 'Extra profit picks',
+  description: 'This week’s 3 long and 3 short stocks (the demo account’s stock leg) with their ranking details.',
+  fn: (demo_positions, rank_top, rank_bottom) => {
+    const info = {}; rank_top.concat(rank_bottom).forEach((r) => { info[r.ticker] = r; });
+    return demo_positions.filter((p) => p.leg === 'Stocks').map((p) => { const r = info[p.ticker] || {};
+      return { ticker: p.ticker, company: p.company, side: p.side, euros: p.euros, entry_price: p.entry_price, rank: r.rank ?? null, score: r.score ?? null, sector: r.sector ?? '', off_52w_high: r.off_52w_high ?? null, week_of: p.week_of }; });
+  },
+});
+dash.calc('extra_weeks', {
+  inputs: ['demo_ledger'],
+  title: 'Extra profit by week',
+  description: 'Profit/loss of the weekly stock picks (longs, shorts, total) and the running total.',
+  fn: (demo_ledger) => {
+    const by = {};
+    demo_ledger.filter((r) => r.leg === 'Stocks').forEach((r) => { const w = (by[r.closed_on] = by[r.closed_on] || { longs: 0, shorts: 0 }); w[r.side === 'Long' ? 'longs' : 'shorts'] += Number(r.pnl_eur); });
+    let c = 0; const r2 = (x) => Math.round(x * 100) / 100;
+    return Object.keys(by).sort().map((week) => { const p = by[week].longs + by[week].shorts; c += p; return { week, longs: r2(by[week].longs), shorts: r2(by[week].shorts), pnl: r2(p), cumulative: r2(c) }; });
+  },
+});
+dash.calc('extra_summary', {
+  inputs: ['demo_ledger'],
+  title: 'Extra profit totals',
+  description: 'Totals of the weekly stock picks: profit/loss overall, longs, shorts, weeks and share of winning trades.',
+  fn: (demo_ledger) => {
+    const t = demo_ledger.filter((r) => r.leg === 'Stocks'); const sum = (rows) => Math.round(rows.reduce((a, r) => a + Number(r.pnl_eur), 0) * 100) / 100;
+    return [
+      { metric: 'Total P/L (€)', value: sum(t) },
+      { metric: 'Longs P/L (€)', value: sum(t.filter((r) => r.side === 'Long')) },
+      { metric: 'Shorts P/L (€)', value: sum(t.filter((r) => r.side === 'Short')) },
+      { metric: 'Weeks', value: new Set(t.map((r) => r.closed_on)).size },
+      { metric: 'Win rate (%)', value: t.length ? Math.round((t.filter((r) => Number(r.pnl_eur) > 0).length / t.length) * 1000) / 10 : 0 },
+    ];
+  },
+});
+
 // ---- signal-strength gauge ----
 SX.gauge = (box, v, label) => {
   box.querySelector('svg')?.remove();
@@ -768,6 +869,31 @@ SX.line = (box, series, o) => {
 
     const mrows = SX.rows('meter_now'); const mt = mrows && mrows.find((r) => r.component === 'Total');
     ['gauge-home', 'gauge-week', 'gauge-signal'].forEach((id) => { const b = document.getElementById(id); if (b.offsetParent && !SX.fail(b, 'meter_now') && mt) SX.gauge(b, +mt.contribution, mt.reading); });
+    SX.exList = (ulId, side) => {
+      const ul = document.getElementById(ulId); const rows = SX.rows('extra_picks'); if (!ul || !rows) return;
+      const sel = rows.filter((r) => r.side === side);
+      if (!sel.length) { const li = document.createElement('li'); li.className = 'note'; li.textContent = 'No picks this week'; ul.replaceChildren(li); return; }
+      ul.replaceChildren(...sel.map((r) => {
+        const li = document.createElement('li');
+        const nm = document.createElement('span'); nm.style.minWidth = '0'; const tk = document.createElement('div'); tk.className = 'tk'; tk.textContent = r.ticker; const co = document.createElement('div'); co.className = 'co'; co.textContent = r.company + (r.sector ? ' · ' + r.sector : ''); nm.append(tk, co);
+        const p = document.createElement('span'); p.textContent = '$' + d3.format(',.2f')(r.entry_price);
+        const sc = document.createElement('span'); sc.className = 'pill ' + (side === 'Long' ? 'p-good' : 'p-bad'); sc.textContent = '#' + r.rank;
+        li.append(SX.icon(r.ticker), nm, p, sc); return li; }));
+    };
+    if (SX.active === 'home') { SX.exList('ex-long-home', 'Long'); SX.exList('ex-short-home', 'Short'); }
+    if (SX.active === 'extra') {
+      const fm = { ticker: (td, v, r) => { const d = document.createElement('div'); d.className = 'nm'; const c = document.createElement('span'); c.className = 'co'; c.textContent = v; const t = document.createElement('span'); t.className = 'tk'; t.textContent = r.company; d.append(SX.icon(v), c, t); td.appendChild(d); },
+        entry_price: (td, v) => { td.textContent = d3.format(',.2f')(v); }, off_52w_high: (td, v) => { td.textContent = v == null ? '—' : v; td.style.color = v < 0 ? 'var(--down)' : ''; } };
+      const lt = document.getElementById('ex-long-table'), st = document.getElementById('ex-short-table');
+      lt._f = (r) => r.side === 'Long'; st._f = (r) => r.side === 'Short';
+      SX.table('ex-long-table', 'extra_picks', fm); SX.table('ex-short-table', 'extra_picks', fm);
+      const col = (td, v) => { td.textContent = v; td.style.color = v > 0 ? 'var(--up)' : v < 0 ? 'var(--down)' : ''; };
+      SX.table('ex-weeks', 'extra_weeks', { longs: col, shorts: col, pnl: col, cumulative: col });
+      const ew = SX.rows('extra_weeks'); const eb = document.getElementById('ex-chart'); eb.querySelector('svg')?.remove();
+      document.getElementById('ex-empty').hidden = !!(ew && ew.length);
+      eb.style.minHeight = ew && ew.length ? '200px' : '0';
+      if (ew && ew.length) SX.line(eb, [{ name: 'Running total', color: dash.colors[0], pts: [{ x: new Date(pm(ew[0].week) - 7 * 864e5), y: 0 }].concat(ew.map((r) => ({ x: pm(r.week), y: +r.cumulative }))) }], { h: 200, yfmt: (v) => '€' + d3.format(',.0f')(v), tipfmt: (v) => '€' + d3.format(',.2f')(v), refs: [{ y: 0, label: '€0' }] });
+    }
     if (SX.active === 'home') {
       const wn = SX.rows('weekly_now'); const w = wn && wn[0];
       if (w) {
@@ -972,7 +1098,7 @@ SX.line = (box, series, o) => {
   qi.addEventListener('input', () => { document.getElementById('top-table')._q = qi.value; SX.draw(); });
 
   const named = location.hash.slice(1);
-  if (['home', 'week', 'plans', 'signal', 'backtest', 'stocks', 'demo', 'news'].includes(named)) SX.active = named;
+  if (['home', 'week', 'extra', 'plans', 'signal', 'backtest', 'stocks', 'demo', 'news'].includes(named)) SX.active = named;
   let first = true;
   dash.onData(() => {
     if (first) { first = false; SX.show(SX.active); return; }
