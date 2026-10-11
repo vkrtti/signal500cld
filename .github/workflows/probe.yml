@@ -8,19 +8,25 @@ jobs:
         run: |
           UA='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36'
           p() { : > /tmp/o; code=$(curl -s -A "$UA" -o /tmp/o -w '%{http_code}' --max-time 30 "$1" || echo ERR); echo "::notice::$code $(wc -c </tmp/o) $1 :: $(head -c 120 /tmp/o | tr -d '\n\r%' )"; }
-          p 'https://query1.finance.yahoo.com/v8/finance/chart/EUNL.DE?period1=1293840000&period2=1760000000&interval=1d'
-          p 'https://query2.finance.yahoo.com/v8/finance/chart/SAP.DE?range=2y&interval=1d'
-          p 'https://query1.finance.yahoo.com/v8/finance/chart/7203.T?range=2y&interval=1d'
-          p 'https://query1.finance.yahoo.com/v8/finance/chart/IEMA.AS?range=2y&interval=1d'
-          p 'https://stooq.com/q/d/l/?s=eunl.de&i=d'
-          p 'https://www.federalreserve.gov/feeds/press_all.xml'
-          p 'https://www.ecb.europa.eu/rss/press.html'
-          p 'https://www.boj.or.jp/en/rss/whatsnew.xml'
-          p 'https://www.cnbc.com/id/100003114/device/rss/rss.html'
-          p 'https://www.cnbc.com/id/20910258/device/rss/rss.html'
           p 'https://feeds.content.dowjones.io/public/rss/mw_topstories'
           p 'https://feeds.finance.yahoo.com/rss/2.0/headline?s=SAP.DE&region=US&lang=en-US'
-          p 'https://finance.yahoo.com/news/rssindex'
           p 'https://news.google.com/rss/search?q=stock+market&hl=en-US&gl=US&ceid=US:en'
-          p 'https://www.investing.com/rss/news_25.rss'
           p 'https://fred.stlouisfed.org/graph/fredgraph.csv?id=SP500&cosd=2026-09-01'
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - shell: bash
+        run: |
+          pip -q install yfinance
+          python - <<'PY'
+          import yfinance as yf
+          for t in ['EUNL.DE','SXRV.DE','IEMA.AS','SAP.DE','7203.T','NDA-FI.HE']:
+              try:
+                  h = yf.Ticker(t).history(period='max', interval='1d', auto_adjust=False)
+                  print(f"::notice::yf {t} rows={len(h)} first={h.index[0].date() if len(h) else None} last={h.index[-1].date() if len(h) else None} close={h.Close.iloc[-1] if len(h) else None}")
+              except Exception as e:
+                  print(f"::notice::yf {t} ERROR {str(e)[:150]}")
+          try:
+              d = yf.download(['ASML.AS','MC.PA','6758.T','8035.T'], period='2y', interval='1d', auto_adjust=True, progress=False, threads=True)
+              print(f"::notice::yf batch shape={d.shape} last={d.index[-1].date()}")
+          except Exception as e: print(f"::notice::yf batch ERROR {str(e)[:150]}")
+          PY
