@@ -1335,7 +1335,7 @@ SX.line = (box, series, o) => {
     const side = (sd) => ep.filter((p) => p.side === sd).map((p) => `${p.company} ${p.weight ?? '—'}%`).join(' · ');
     const items = [
       li([document.createTextNode('Buy '), b('€' + w.amount), document.createTextNode(' of '), b(w.pick_index)], [document.createTextNode(`${w.pick_fund} · ${w.pick_etf} · ISIN ${w.pick_isin} `), copy], ['week', 'Why this amount']),
-      li([document.createTextNode(w.switched ? `New main index: put new money into ${w.pick_index}` : 'Keep everything you already hold')], [document.createTextNode(w.switched ? `Replaces ${w.prev_pick}. No need to sell what you own.` : 'Same main index as last week. Nothing to sell.')], ['indexes', 'Index ranking']),
+      li([document.createTextNode(w.switched ? `New main index: put new money into ${w.pick_index}` : w.rule_change_from ? `New rule: new money goes to ${w.pick_index}` : 'Keep everything you already hold')], [document.createTextNode(w.switched ? `Replaces ${w.prev_pick}. No need to sell what you own.` : w.rule_change_from ? `The improved rule (return per unit of risk) picks ${w.pick_index} instead of ${w.rule_change_from}, shown earlier for this week. Keep what you hold; nothing to sell.` : 'Same main index as last week. Nothing to sell.')], ['indexes', w.rule_change_from ? 'Why the rule changed' : 'Index ranking']),
     ];
     if (ep.length) items.push(li([document.createTextNode('Optional: Extra profit picks')], [document.createTextNode(`Long ${side('Long')}`), document.createElement('br'), document.createTextNode(`Short ${side('Short')}`)], ['extra', 'Weights & risks']));
     ol.replaceChildren(...items);
@@ -1350,7 +1350,7 @@ SX.line = (box, series, o) => {
       const age = (Date.now() - new Date(w.decided_on + 'T21:00:00Z')) / 864e5; const st = document.getElementById('stale');
       if (st) { st.hidden = !(age > 9); if (age > 9) st.textContent = `The data is from the close of ${w.decided_on} (${Math.floor(age)} days ago): the weekly update hasn't run since. Treat this week's numbers as out of date.`; }
       document.querySelectorAll('.sx .badge').forEach((b) => b.classList.toggle('old', age > 9));
-      tk.textContent = `Buy €${w.amount} of the ${w.pick_index} ETF (${w.pick_etf}) this week. ${w.switched ? 'The pick changed from ' + w.prev_pick + '. ' : 'Same pick as last week. '}Market meter ${w.meter > 0 ? '+' : ''}${w.meter} (${String(w.meter_label).toLowerCase()}); the world market is ${Math.abs(w.from_ath_pct).toFixed(1)}% below its record.`;
+      tk.textContent = `Buy €${w.amount} of the ${w.pick_index} ETF (${w.pick_etf}) this week. ${w.switched ? 'The pick changed from ' + w.prev_pick + '. ' : w.rule_change_from ? 'New rule: replaces ' + w.rule_change_from + ' for this week. ' : 'Same pick as last week. '}Market meter ${w.meter > 0 ? '+' : ''}${w.meter} (${String(w.meter_label).toLowerCase()}); the world market is ${Math.abs(w.from_ath_pct).toFixed(1)}% below its record.`;
     } else tk.innerHTML = '<span class="dash-skeleton">—</span>';
     // ---------- signal card + kpis ----------
     document.querySelectorAll('.sx [data-source]').forEach((el) => {

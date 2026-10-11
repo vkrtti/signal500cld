@@ -32,6 +32,9 @@ E = {e[0]: dict(key=e[0], index=e[1], etf=e[2], fund=e[3], isin=e[4], universe=e
 BUFFER = 0.25          # a challenger's score (52-week return / 52-week volatility) must beat the current pick's by more than 0.25
 OLD_BUFFER = 0.05      # previous rule: 52-week return, 5 percentage points
 LIVE_START = '2026-10-09'   # first live weekly decision; earlier weeks are backtest
+# The old rule (52-week return, 5-point buffer) had published MSCI Emerging Markets for this same week before the
+# risk-adjusted rule replaced it; the site tells the user once, in that week only.
+RULE_CHANGE = {'week': '2026-10-09', 'from': 'em'}
 START = '2011-01-03'   # ETF prices before 2011 contain data errors (checked against the indexes)
 CCY = {'.DE': 'EUR', '.AS': 'EUR', '.PA': 'EUR', '.BR': 'EUR', '.MC': 'EUR', '.MI': 'EUR', '.HE': 'EUR', '.L': 'GBp', '.SW': 'CHF',
        '.CO': 'DKK', '.ST': 'SEK', '.OL': 'NOK', '.T': 'JPY', '.TW': 'TWD', '.HK': 'HKD', '.KS': 'KRW', '.NS': 'INR', '.SA': 'BRL',
@@ -603,6 +606,7 @@ def run(S, D, research, fin, cons, log, offline=None):
     if switched: reason = f"Switch: {E[prev_pick]['index']} → {e['index']}. " + reason
     out['weekly_now'] = [dict(week_of=week_of, decided_on=dstr, pick=pick, pick_index=e['index'], pick_etf=e['etf'], pick_fund=e['fund'], pick_isin=e['isin'],
                               pick_r52=round(float(row[pick]) * 100, 1), pick_score=round(float(srow[pick]), 2), pick_vol=round(float(vrow[pick]) * 100, 1), switched=switched, prev_pick=E[prev_pick]['index'] if prev_pick else None,
+                              rule_change_from=E[RULE_CHANGE['from']]['index'] if dstr == RULE_CHANGE['week'] and pick != RULE_CHANGE['from'] else None,
                               leader=E[leader]['index'], pick_reason=reason, universe=uname, rank_method=method,
                               amount=amount, tier=tier,
                               reason=f"MSCI World {dd * 100:.1f}% from its record; {'above' if wv >= tr else 'below'} its 40-week line; VIX {v:.1f}; NFCI {nf:.2f}; Sahm {sa:.2f}.",
