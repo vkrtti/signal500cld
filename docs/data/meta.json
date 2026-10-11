@@ -1,0 +1,152 @@
+{
+ "weekly_now": {
+  "title": "This week's amount",
+  "description": "Weekly \u20ac40\u2013\u20ac200 buy amount and signal meter, decided at the Friday US close. Federal Reserve (FRED) data.",
+  "refresh": "weekly",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "weekly_history": {
+  "title": "Weekly history",
+  "description": "Weekly S&P 500 closes, rule amounts and meter since Jul 2017. FRED SP500.",
+  "refresh": "weekly",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "meter_now": {
+  "title": "Signal strength",
+  "description": "The \u2212100\u2026+100 meter and its six components. FRED.",
+  "refresh": "weekly",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "rank_top": {
+  "title": "Top 50 ranked stocks",
+  "description": "Value + momentum ranking of S&P 500 members, decided each Friday close. Public S&P 500 fundamentals dataset (GitHub datasets).",
+  "refresh": "weekly",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "rank_bottom": {
+  "title": "Bottom 50 ranked stocks",
+  "description": "Same ranking, lowest first.",
+  "refresh": "weekly",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "demo_positions": {
+  "title": "Demo: open positions",
+  "description": "Simulated positions opened at the Friday close.",
+  "refresh": "weekly",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "demo_ledger": {
+  "title": "Demo: closed trades",
+  "description": "Simulated closed trades and profit/loss.",
+  "refresh": "weekly",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "indicators": {
+  "title": "Market indicators",
+  "description": "Trend, fear, recession, credit, rates and valuation readings. FRED (daily); FactSet, multpl.com, AAII and LPL Research (as of 9 Oct 2026, not auto-updated).",
+  "refresh": "daily",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "signal_now": {
+  "title": "Monthly signal",
+  "description": "Rule-based monthly signal from FRED data.",
+  "refresh": "daily",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "spx_weekly": {
+  "title": "S&P 500 weekly closes",
+  "description": "Last two years. FRED SP500.",
+  "refresh": "daily",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "history": {
+  "title": "Monthly history 1990\u20132026",
+  "description": "Shiller S&P 500 data, VIX and FRED macro series with backtest values. Static research data.",
+  "refresh": "static",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "backtest": {
+  "title": "Backtest results",
+  "description": "\u20ac500/month strategies, 1990\u20132026. Static research data.",
+  "refresh": "static",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "fwd_by_signal": {
+  "title": "Returns after signals",
+  "description": "Static research data, 1990\u20132025.",
+  "refresh": "static",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "cape_buckets": {
+  "title": "CAPE vs 10-year returns",
+  "description": "Shiller data 1881\u20132013. Static.",
+  "refresh": "static",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "stocks_top": {
+  "title": "Value + momentum leaders (screen)",
+  "description": "Snapshot 11 Oct 2026.",
+  "refresh": "static",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "stocks_fallen": {
+  "title": "Fallen but cheap (screen)",
+  "description": "Snapshot 11 Oct 2026.",
+  "refresh": "static",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "sectors": {
+  "title": "Sector medians",
+  "description": "Snapshot 11 Oct 2026.",
+  "refresh": "static",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "news": {
+  "title": "Market news",
+  "description": "Hand-picked, as of 9 Oct 2026; not auto-updated.",
+  "refresh": "static",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "weekly_tiers": {
+  "title": "Weekly amount rule",
+  "description": "The five tiers.",
+  "refresh": "static",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "weekly_test": {
+  "title": "Weekly rule vs flat",
+  "description": "Backtest. Static.",
+  "refresh": "static",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "meter_buckets": {
+  "title": "Meter vs next returns",
+  "description": "Backtest 1990\u20132026. Static.",
+  "refresh": "static",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "demo_backtest": {
+  "title": "Demo index leg backtest",
+  "description": "Static.",
+  "refresh": "static",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "plans_summary": {
+  "title": "Return plans",
+  "description": "10/20/30% plan backtests. Static.",
+  "refresh": "static",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "plans_growth": {
+  "title": "Plan growth since 1990",
+  "description": "Static.",
+  "refresh": "static",
+  "updated": "2026-10-11T15:55:00Z"
+ },
+ "plans_years": {
+  "title": "Plan returns by year",
+  "description": "Static.",
+  "refresh": "static",
+  "updated": "2026-10-11T15:55:00Z"
+ }
+}

@@ -1,0 +1,174 @@
+"""Signal500 data update. Run by GitHub Actions (see .github/workflows/update.yml).
+
+Daily (every run): refreshes market indicators, the monthly signal, the S&P 500 weekly chart
+and the stock rankings from the Federal Reserve (FRED) and the public S&P 500 datasets.
+Weekly (--weekly, the Saturday run): also decides next week's buy amount, the signal meter,
+and rolls the demo account (via weekly_update.py).
+
+Usage: python scripts/update.py [--weekly] [--data docs/data] [--offline DIR]
+--offline DIR reads <SERIES>.csv / fin.csv / cons.csv from DIR instead of the internet (for testing).
+A source that fails keeps its previous data; the run never deletes data.
+"""
+import argparse, datetime as dt, io, json, os, subprocess, sys, time, urllib.request
+import numpy as np, pandas as pd
+
+ap = argparse.ArgumentParser()
+ap.add_argument('--weekly', action='store_true')
+ap.add_argument('--data', default='docs/data')
+ap.add_argument('--offline')
+args = ap.parse_args()
+D = args.data
+NOW = dt.datetime.now(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+UA = {'User-Agent': 'Mozilla/5.0 (Signal500 data updater; +https://github.com)'}
+log = lambda *a: print('[update]', *a, flush=True)
+
+def load(name, default=None):
+    p = os.path.join(D, name + '.json')
+    return json.load(open(p)) if os.path.exists(p) else default
+
+def save(name, obj):
+    json.dump(obj, open(os.path.join(D, name + '.json'), 'w'), separators=(',', ':'))
+    meta = load('meta', {})
+    if name in meta: meta[name]['updated'] = NOW
+    json.dump(meta, open(os.path.join(D, 'meta.json'), 'w'), indent=1)
+    log('saved', name)
+
+def get_text(url, offline_name):
+    if args.offline:
+        return open(os.path.join(args.offline, offline_name)).read()
+    for attempt in range(4):
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=60) as r:
+                return r.read().decode('utf-8')
+        except Exception as e:
+            log(f'fetch failed ({attempt + 1}/4) {url}: {e}'); time.sleep(5 * (attempt + 1))
+    raise RuntimeError('could not fetch ' + url)
+
+def fred(series, start='2015-01-01'):
+    txt = get_text(f'https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}&cosd={start}', series + '.csv')
+    df = pd.read_csv(io.StringIO(txt))
+    df.columns = ['date', 'v']
+    df['v'] = pd.to_numeric(df.v, errors='coerce')
+    df = df.dropna()
+    df['date'] = pd.to_datetime(df.date)
+    if df.empty: raise RuntimeError('no rows for ' + series)
+    return df.set_index('date').v
+
+# ---------------------------------------------------------------- fetch
+S = {}
+for sid in ['SP500', 'VIXCLS', 'NFCI', 'SAHMREALTIME', 'T10Y3M', 'BAMLH0A0HYM2', 'DFF', 'DGS10', 'UNRATE', 'CPIAUCSL']:
+    try: S[sid] = fred(sid); log(sid, 'ok', S[sid].index[-1].date(), S[sid].iloc[-1])
+    except Exception as e: log('WARN', sid, e)
+GH = 'https://raw.githubusercontent.com/datasets/'
+os.makedirs('work', exist_ok=True)
+fund_ok = True
+try:
+    open('work/fin.csv', 'w').write(get_text(GH + 's-and-p-500-companies-financials/main/data/constituents-financials.csv', 'fin.csv'))
+    open('work/cons.csv', 'w').write(get_text(GH + 's-and-p-500-companies/main/data/constituents.csv', 'cons.csv'))
+except Exception as e:
+    fund_ok = False; log('WARN fundamentals', e)
+
+last = lambda s: (float(s.iloc[-1]), s.index[-1].strftime('%Y-%m-%d'))
+
+# ---------------------------------------------------------------- daily: S&P weekly chart, indicators, monthly signal
+if 'SP500' in S:
+    sp = S['SP500']
+    spx, spx_date = last(sp)
+    ma200 = float(sp.iloc[-200:].mean()); ma50 = float(sp.iloc[-50:].mean())
+    ath = max(float(sp.max()), float((load('weekly_now') or [{}])[0].get('ath', 0)))
+    yr = sp[sp.index >= sp.index[-1] - pd.Timedelta(days=365)]
+    wk = sp.groupby(sp.index.to_period('W')).tail(1)
+    wk = wk[wk.index >= sp.index[-1] - pd.Timedelta(days=730)]
+    save('spx_weekly', [dict(date=d.strftime('%Y-%m-%d'), close=int(round(v))) for d, v in wk.items()])
+
+    ind = load('indicators', [])
+    byk = {r['key']: r for r in ind}
+    def setk(key, value, display, status=None, asof=None, meaning=None):
+        if key not in byk: return
+        r = byk[key]; r['value'] = value; r['display'] = display
+        if status: r['status'] = status
+        if asof: r['asof'] = asof
+        if meaning: r['meaning'] = meaning
+    above = spx / ma200 - 1; dd = spx / ath - 1
+    setk('spx', round(spx, 2), f'{spx:,.0f}', asof=spx_date)
+    setk('above200', round(above * 100, 2), f'{above * 100:+.1f}%', 'good' if above > 0 else 'bad', spx_date)
+    setk('drawdown', round(dd * 100, 2), f'{dd * 100:.1f}%', 'good' if dd <= -0.15 else 'neutral', spx_date,
+         'No discount on offer: the index is at or near its record.' if dd > -0.05 else f'The index is {abs(dd) * 100:.0f}% below its record.')
+    if 'VIXCLS' in S:
+        v, d = last(S['VIXCLS']); setk('vix', v, f'{v:.1f}', 'good' if v >= 30 else 'warn' if v >= 20 else 'neutral', d,
+                                      'Panic: historically a good entry.' if v >= 30 else 'Nervous.' if v >= 20 else 'Calm. No panic discount.')
+    if 'T10Y3M' in S:
+        v, d = last(S['T10Y3M']); setk('curve', v, f'{v:+.2f} pp', 'good' if v >= 0 else 'bad', d)
+    if 'SAHMREALTIME' in S:
+        v, d = last(S['SAHMREALTIME']); setk('sahm', v, f'{v:.2f}', 'bad' if v >= 0.5 else 'warn' if v >= 0.3 else 'good', d)
+    if 'UNRATE' in S:
+        v, d = last(S['UNRATE']); setk('unrate', v, f'{v:.1f}%', 'neutral', d)
+    if 'BAMLH0A0HYM2' in S:
+        v, d = last(S['BAMLH0A0HYM2']); setk('hy', v, f'{v:.2f} pp', 'bad' if v >= 5 else 'warn' if v >= 4 else 'good', d)
+    if 'NFCI' in S:
+        v, d = last(S['NFCI']); setk('nfci', v, f'{v:.2f}', 'bad' if v > 0 else 'good', d)
+    if 'DFF' in S:
+        v, d = last(S['DFF']); setk('fed', v, f'{v:.2f}%', None, d)
+    if 'DGS10' in S:
+        v, d = last(S['DGS10']); setk('ten', v, f'{v:.2f}%', 'bad' if v >= 5 else 'warn' if v >= 4.5 else 'neutral', d)
+        fpe = byk.get('fpe', {}).get('value')
+        if fpe:
+            erp = 100 / float(fpe) - v
+            setk('erp', round(erp, 2), f'{erp:+.2f} pp', 'bad' if erp < 1 else 'warn' if erp < 2.5 else 'good', d)
+    if 'CPIAUCSL' in S:
+        c = S['CPIAUCSL']; yoy = c.iloc[-1] / c[c.index <= c.index[-1] - pd.DateOffset(months=12)].iloc[-1] - 1
+        setk('cpi', round(yoy * 100, 2), f'{yoy * 100:.1f}%', 'warn' if yoy > 0.025 else 'good', c.index[-1].strftime('%Y-%m-%d'))
+    if fund_ok:
+        f = pd.read_csv('work/fin.csv').dropna(subset=['Price', '52 Week High'])
+        off = f.Price / f['52 Week High'] - 1
+        n, n20 = len(f), int((off <= -0.20).sum())
+        setk('breadth', round(n20 / n * 100, 1), f'{n20} of {n} ({n20 / n * 100:.0f}%)', 'warn' if n20 / n > 0.25 else 'neutral', NOW[:10])
+    save('indicators', ind)
+
+    # monthly rule-based signal (month-end data)
+    m = sp.resample('ME').mean(); ma10 = m.rolling(10).mean()
+    pm = m.index[-2] if m.index[-1].month == sp.index[-1].month else m.index[-1]   # last completed month
+    mv = S.get('VIXCLS', pd.Series(dtype=float)).resample('ME').mean()
+    nf = S.get('NFCI', pd.Series(dtype=float)).resample('ME').last()
+    sa = S.get('SAHMREALTIME', pd.Series(dtype=float)).resample('ME').last().ffill()
+    g = lambda s: float(s.get(pm, np.nan)) if len(s) else np.nan
+    peak = float(sp[sp.index <= pm].max()); mdd = float(m[pm]) / peak - 1
+    fear = (g(mv) >= 30) or (mdd <= -0.15)
+    nf3 = float(nf.get(pm, np.nan) - nf.shift(3).get(pm, np.nan)) if len(nf) else np.nan
+    stress = (g(sa) >= 0.5) or (g(nf) > 0)
+    if float(m[pm]) < float(ma10[pm]) and stress and not (fear and nf3 < 0): sig = 'HOLD'
+    elif fear: sig = 'BUY EXTRA'
+    else: sig = 'BUY'
+    reason = {'BUY': 'Trend is up and no recession or credit-stress warning is on. Keep buying your normal monthly amount.',
+              'BUY EXTRA': 'Market is in a deep drop or panic without worsening credit stress. Deploy saved cash.',
+              'HOLD': 'Downtrend plus a recession or credit-stress warning. Historically weak 12 months ahead.'}[sig]
+    save('signal_now', [dict(signal=sig, reason=reason, month_used=pm.strftime('%Y-%m'), sp500_month_avg=round(float(m[pm]), 2),
+                             ma10=round(float(ma10[pm]), 2), sahm=g(sa), nfci=g(nf), vix_month_avg=round(g(mv), 2), drawdown_pct=round(mdd * 100, 2),
+                             spx_close=spx, ma50=round(ma50, 2), ma200=round(ma200, 2), ath=ath, ath_date=sp.idxmax().strftime('%Y-%m-%d'),
+                             low52=float(yr.min()), high52=float(yr.max()))])
+
+# ---------------------------------------------------------------- weekly roll (Saturday run)
+if args.weekly:
+    need = ['SP500', 'VIXCLS', 'NFCI', 'SAHMREALTIME', 'T10Y3M']
+    if not fund_ok or any(k not in S for k in need):
+        log('ERROR weekly roll skipped: missing', [k for k in need if k not in S], 'fundamentals' if not fund_ok else '')
+        sys.exit(1)
+    sp = S['SP500']; wk_last = sp.groupby(sp.index.to_period('W')).tail(1)
+    close_date = wk_last.index[-1]           # last trading day of the latest week
+    asof = lambda s: float(s[s.index <= close_date].iloc[-1])
+    inputs = dict(date=close_date.strftime('%Y-%m-%d'), spx=float(wk_last.iloc[-1]), vix=asof(S['VIXCLS']), nfci=asof(S['NFCI']),
+                  sahm=asof(S['SAHMREALTIME']), t10y3m=asof(S['T10Y3M']))
+    json.dump(inputs, open('work/inputs.json', 'w'))
+    log('weekly inputs', inputs)
+    r = subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'weekly_update.py'), D, 'work/inputs.json',
+                        'work/fin.csv', 'work/cons.csv', 'work/out'], capture_output=True, text=True)
+    print(r.stdout, r.stderr)
+    if r.returncode: sys.exit(r.returncode)
+    for n in ['weekly_now', 'weekly_history', 'meter_now', 'rank_top', 'rank_bottom', 'demo_positions', 'demo_ledger']:
+        save(n, json.load(open(f'work/out/{n}.json')))
+    summary = json.loads(r.stdout.strip().splitlines()[-1])
+    open('work/summary.md', 'w').write(
+        f"### Week of {summary['week_of']}\n\n- **Buy €{summary['amount']}** ({summary['tier']})\n- Signal strength **{summary['meter']:+d}** ({summary['label']})\n"
+        f"- Demo: {summary['closed']} trades closed, week P/L €{summary['week_pnl']}, total €{summary['total_pnl']}\n"
+        f"- New positions: {', '.join(f'{t} {s} €{e}' for t, s, e in summary['positions'])}\n")
+log('done')

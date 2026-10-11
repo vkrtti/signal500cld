@@ -1,0 +1,1003 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Signal500 – S&amp;P 500 buy signals</title>
+<meta name="description" content="Weekly S&amp;P 500 buy amount, signal strength, return plans, stock rankings and a demo account. Updated automatically.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Crect width='26' height='26' rx='8' fill='%235b6cf9'/%3E%3Cpath d='M6 18l4.5-5 3.5 3 6-8' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/theme.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="assets/runtime.js"></script>
+</head>
+<body>
+<div id="dash-root">
+<style>
+#dash-root{--dash-gutter:0}
+#dash-root .sx{font-family:var(--font-anthropic-sans);color:var(--color-fg);font-variant-numeric:tabular-nums;--up:var(--color-ok);--down:var(--color-bad);--accent:#5b6cf9;--muted:var(--color-fg-muted);--line:var(--color-border-line);--panel:var(--color-panel);--r:14px;font-size:14px}
+.sx .wrap{max-width:1400px;margin-inline:auto;padding:0 16px}
+.sx h1,.sx .ttl{font-family:var(--font-anthropic-sans);font-weight:700;font-size:24px;line-height:1.25;margin:20px 0 4px;letter-spacing:-.01em}
+.sx h2{font-size:18px;font-weight:700;margin:28px 0 10px}
+.sx h3{font-size:14px;font-weight:700;margin:0 0 8px}
+.sx .lede{color:var(--muted);margin:0 0 16px;max-width:70rem}
+.sx .note{color:var(--muted);font-size:12px;margin:0 0 8px}
+/* top brand bar */
+.sx .topbar{display:flex;align-items:center;gap:20px;padding:12px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.sx .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:18px;letter-spacing:-.02em;white-space:nowrap}
+.sx .brand svg{flex:none}
+.sx .topbar .sp{flex:1}
+.sx .search{font:inherit;font-size:13px;padding:8px 12px 8px 32px;border:0;border-radius:10px;background:var(--panel);color:var(--color-fg);width:min(100%,16rem);background-image:none}
+.sx .searchbox{position:relative} .sx .searchbox::before{content:"⌕";position:absolute;left:11px;top:50%;transform:translateY(-52%);color:var(--muted);font-size:15px}
+.sx .badge{font-size:12px;color:var(--muted);background:var(--panel);border-radius:8px;padding:6px 10px;white-space:nowrap}
+.sx .badge b{color:var(--color-fg)}
+/* big text tabs */
+.sx .tabs{display:flex;gap:4px 22px;overflow-x:auto;padding:12px 16px 0;margin:0;border:0;scrollbar-width:none}
+.sx .tabs button{font:inherit;font-size:17px;font-weight:600;background:none;border:0;padding:6px 0 10px;color:var(--muted);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent}
+.sx .tabs button[aria-selected=true]{color:var(--color-fg);font-weight:800;border-bottom-color:var(--accent)}
+.sx #plan-tabs{padding-left:0}
+.sx #plan-tabs button{font-size:15px}
+/* cards & grids */
+.sx .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px;min-width:0}
+.sx .grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,20rem),1fr))}
+.sx .kpis{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,10rem),1fr))}
+.sx .kpi .lab{color:var(--muted);font-size:12px;font-weight:600}
+.sx .kpi .num{font-size:22px;font-weight:700;line-height:1.25;margin-top:4px}
+.sx .hero{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr));align-items:stretch}
+.sx .sig{font-size:34px;font-weight:800;line-height:1.1;margin:6px 0;letter-spacing:-.02em}
+.sx .sig.BUY{color:var(--up)} .sx .sig.HOLD{color:var(--down)} .sx .sig[class*=EXTRA]{color:var(--up)}
+.sx .gauge{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px}
+.sx .gauge span{display:inline-flex;align-items:center;gap:6px}
+.sx .dot{width:.55rem;height:.55rem;border-radius:50%;display:inline-block;flex:none}
+.sx .d-good{background:var(--up)} .sx .d-neutral{background:var(--cds-chart-muted)} .sx .d-warn{background:var(--color-warn)} .sx .d-bad{background:var(--down)}
+.sx .pill{font-size:12px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--color-bg);white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
+.sx .p-good{color:var(--up)} .sx .p-warn{color:var(--color-warn)} .sx .p-bad{color:var(--down)} .sx .p-neutral{color:var(--muted)}
+/* highlights row */
+.sx .hl{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,19rem),1fr));margin:12px 0}
+.sx .hl .card{padding:14px}
+.sx .hl h3{display:flex;align-items:center;gap:4px;font-size:14px}
+.sx .hl h3 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;font-weight:700}
+.sx .hl h3 button::after{content:" ›";color:var(--muted)}
+.sx .ms{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sx .mt{background:var(--color-bg);border-radius:10px;padding:10px;min-width:0}
+.sx .mt .l{font-size:12px;color:var(--muted);font-weight:600}
+.sx .mt .v{font-size:18px;font-weight:700;margin-top:2px}
+.sx .mt .c{font-size:12px;font-weight:700}
+.sx .up{color:var(--up)} .sx .down{color:var(--down)}
+.sx .up::before{content:"▲ ";font-size:.8em} .sx .down::before{content:"▼ ";font-size:.8em}
+.sx .track{position:relative;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--cds-chart-muted),var(--color-ok));margin:10px 0 2px}
+.sx .track i{position:absolute;top:50%;width:12px;height:12px;border-radius:50%;background:var(--color-fg);border:2px solid var(--color-bg);transform:translate(-50%,-50%)}
+.sx .mini{list-style:none;margin:0;padding:0}
+.sx .mini li{display:grid;grid-template-columns:18px 26px 1fr auto auto;align-items:center;gap:8px;padding:6px 0;font-size:13px}
+.sx .mini .rk{color:var(--muted);font-size:12px}
+.sx .mini .tk{font-weight:700} .sx .mini .co{color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sx .ic{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;flex:none;letter-spacing:-.03em}
+/* chips & filters */
+.sx .chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:none}
+.sx .chip{font:inherit;font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--panel);color:var(--color-fg);border-radius:999px;padding:6px 12px;white-space:nowrap;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.sx .chip .tag{font-size:10px;font-weight:800;background:var(--accent);color:#fff;border-radius:6px;padding:1px 6px}
+.sx .filters{display:flex;gap:6px;overflow-x:auto;padding:0 0 10px;scrollbar-width:none;align-items:center}
+.sx .flt{font:inherit;font-size:13px;font-weight:600;background:none;border:0;border-radius:8px;padding:6px 10px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.sx .flt[aria-pressed=true]{background:var(--panel);color:var(--accent)}
+.sx .sep{width:1px;height:20px;background:var(--line);flex:none;margin:0 6px}
+/* tables */
+.sx .tbl{overflow:auto;max-height:36rem}
+.sx .tbl.tall{max-height:none}
+.sx table{border-collapse:collapse;width:100%;font-size:14px}
+.sx th,.sx td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:middle;white-space:nowrap}
+.sx td{font-weight:600}
+.sx th{position:sticky;top:0;z-index:1;background:var(--panel);font-size:12px;font-weight:700;color:var(--color-fg);border-top:1px solid var(--line)}
+.sx th button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+.sx th[aria-sort=descending] button::after{content:" ▾"} .sx th[aria-sort=ascending] button::after{content:" ▴"}
+.sx td.n,.sx th.n{text-align:right}
+.sx tbody tr:hover{background:var(--color-bg)}
+.sx td.wrapc{white-space:normal;min-width:14rem;font-weight:400}
+.sx .nm{display:flex;align-items:center;gap:10px}
+.sx .nm .co{font-weight:700} .sx .nm .tk{color:var(--muted);font-weight:600;font-size:13px}
+.sx .rbar{display:inline-block;width:90px;height:6px;border-radius:3px;background:var(--color-bg);position:relative;vertical-align:middle}
+.sx .rbar i{position:absolute;left:0;top:0;bottom:0;border-radius:3px}
+.sx .lst{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px}
+.sx .lst.top{color:var(--up);background:color-mix(in srgb,var(--up) 14%,transparent)} .sx .lst.bot{color:var(--down);background:color-mix(in srgb,var(--down) 14%,transparent)}
+.sx tr.grp td{color:var(--muted);font-weight:700;background:var(--color-bg)}
+/* charts */
+.sx .chart{position:relative;min-height:260px}
+.sx .chart.sm{min-height:170px}
+.sx .tip{position:absolute;pointer-events:none;background:var(--cds-surface-popover);border:1px solid var(--cds-border);border-radius:10px;box-shadow:var(--cds-shadow-popover);padding:8px 10px;font-size:12px;white-space:nowrap;display:none;z-index:3}
+.sx .tip .d{color:var(--cds-text-secondary)}
+.sx .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--muted);margin-bottom:6px}
+.sx .legend i{display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.sx .warnbox{border:1px solid var(--line);padding:10px 14px;background:var(--panel);border-radius:12px;font-size:13px;color:var(--muted);margin:12px 0}
+.sx .warnbox::before{content:"i";display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:800;margin-right:8px;font-style:italic}
+.sx input.q{font:inherit;font-size:13px;padding:8px 12px;border:0;border-radius:10px;background:var(--color-bg);color:var(--color-fg);margin-bottom:8px;width:min(100%,18rem)}
+.sx ul.m{margin:0;padding-left:1.2rem} .sx ul.m li{margin:4px 0}
+.sx a{color:var(--accent);text-decoration:none}
+[data-dash-source-state=refreshing]{opacity:.5;transition:opacity var(--cds-dur-slow)}
+.sx .gauge-box{position:relative;min-height:200px;display:flex;justify-content:center}
+.sx .gauge-box.mini{min-height:96px}
+.sx .fail{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-size:12px;min-height:inherit}
+.sx .fail::before{content:"";width:.375rem;height:.375rem;border-radius:50%;background:var(--down)}
+/* bottom status bar */
+.sx .statusbar{position:sticky;bottom:0;z-index:4;display:flex;gap:18px;overflow-x:auto;padding:8px 16px;font-size:12px;color:var(--muted);background:var(--color-bg);border-top:1px solid var(--line);margin-top:24px;scrollbar-width:none;white-space:nowrap}
+.sx .statusbar b{color:var(--color-fg);font-weight:700}
+.sx section[data-page]{padding:0 16px 8px}
+</style>
+
+<div class="sx">
+  <div class="topbar">
+    <div class="brand" id="top"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="8" fill="#5b6cf9"/><path d="M6 18l4.5-5 3.5 3 6-8" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="8" r="1.8" fill="#fff"/></svg><span>Signal500</span></div>
+    <span class="sp"></span>
+    <div class="searchbox"><input class="search" id="q-home" placeholder="Search S&amp;P 500 stocks" aria-label="Search stocks"></div>
+    <span class="badge">Data to <b data-source="weekly_now" data-field="decided_on" data-row="0">—</b></span>
+    <button class="themebtn" onclick="toggleTheme()" aria-label="Switch light/dark theme" title="Light / dark">◐</button>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" data-tab="home" id="tab-home" aria-selected="true">Overview</button>
+    <button role="tab" data-tab="week" id="tab-week" aria-selected="false">This week</button>
+    <button role="tab" data-tab="plans" id="tab-plans" aria-selected="false">Return plans</button>
+    <button role="tab" data-tab="signal" id="tab-signal" aria-selected="false">Market signal</button>
+    <button role="tab" data-tab="backtest" id="tab-backtest" aria-selected="false">Backtest</button>
+    <button role="tab" data-tab="stocks" id="tab-stocks" aria-selected="false">Stock screen</button>
+    <button role="tab" data-tab="demo" id="tab-demo" aria-selected="false">Demo account</button>
+    <button role="tab" data-tab="news" id="tab-news" aria-selected="false">News &amp; method</button>
+  </div>
+
+  <!-- ================= OVERVIEW ================= -->
+  <section id="home" data-page>
+    <h1 class="ttl">Today's S&amp;P 500 signals</h1>
+    <p class="lede" id="takeaway"><span class="dash-skeleton">—</span></p>
+
+    <div class="hl">
+      <div class="card" id="hl-status">
+        <h3><button data-go="signal">Market status</button></h3>
+        <div class="ms">
+          <div class="mt"><div class="l">Signal strength</div><div class="gauge-box mini" id="gauge-home" data-source="meter_now"></div></div>
+          <div class="mt"><div class="l">S&amp;P 500</div><div class="v" data-source="weekly_now" data-field="spx_close" data-row="0" id="hl-spx">—</div>
+            <div class="c" id="hl-spx-chg" data-source="spx_change" data-field="pct" data-where="period=1 week">—</div>
+            <div class="l" style="margin-top:8px">VIX</div><div class="v" style="font-size:15px" data-source="weekly_now" data-field="vix" data-row="0">—</div></div>
+          <div class="mt"><div class="l">Buy this week</div><div class="v">€<span data-source="weekly_now" data-field="amount" data-row="0">—</span></div>
+            <div class="track" id="hl-track"><i></i></div><div class="l" style="display:flex;justify-content:space-between"><span>€40</span><span data-source="weekly_now" data-field="tier" data-row="0">—</span><span>€200</span></div></div>
+          <div class="mt"><div class="l">From record high</div><div class="v" data-source="weekly_now" data-field="from_ath_pct" data-row="0" id="hl-ath">—</div>
+            <div class="l" style="margin-top:8px">Trend</div><div class="c" id="hl-trend">—</div></div>
+        </div>
+      </div>
+      <div class="card"><h3><button data-go="stocks">Top ranked</button></h3><ul class="mini" id="hl-top" data-source="rank_top"></ul></div>
+      <div class="card"><h3><button data-go="stocks">Bottom ranked</button></h3><ul class="mini" id="hl-bottom" data-source="rank_bottom"></ul></div>
+    </div>
+
+    <div class="chips" id="chips">
+      <button class="chip" data-go="week"><span class="tag">WEEK</span>Buy €<span data-source="weekly_now" data-field="amount" data-row="0">—</span></button>
+      <button class="chip" data-go="signal"><span class="tag">SIGNAL</span><span data-source="weekly_now" data-field="meter" data-row="0">—</span> · <span data-source="weekly_now" data-field="meter_label" data-row="0">—</span></button>
+      <button class="chip" data-go="plans"><span class="tag">PLANS</span><span data-source="plans_now" data-field="action" data-where="plan=20%25">—</span> (20%)</button>
+      <button class="chip" data-go="demo"><span class="tag">DEMO</span>P/L €<span data-source="demo_summary" data-field="value" data-where="metric=Total P/L (€)">—</span></button>
+      <button class="chip" data-go="backtest"><span class="tag">TEST</span>Does it work?</button>
+    </div>
+
+    <div class="filters" id="home-filters">
+      <button class="flt" data-list="all" aria-pressed="true">All ranked</button>
+      <button class="flt" data-list="Top 50" aria-pressed="false">Top 50</button>
+      <button class="flt" data-list="Bottom 50" aria-pressed="false">Bottom 50</button>
+      <span class="sep"></span>
+      <span id="sector-flt"></span>
+    </div>
+    <div class="tbl tall">
+      <table id="home-table" data-source="rank_all" data-row-key="ticker">
+        <thead><tr><th data-field="rank" class="n">#</th><th data-field="company">Name</th><th data-field="price" class="n">Price ($)</th><th data-field="score" class="n">Score</th><th data-field="value" class="n">Value</th><th data-field="momentum" class="n">Momentum</th><th data-field="off_52w_high" class="n">From 52w high</th><th data-field="pe" class="n">P/E</th><th data-field="sector">Sector</th><th data-field="list">Ranking</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:8px">Value + momentum ranking of the 486 S&amp;P 500 members with complete data; the top and bottom 50 are listed. Factor rankings, not recommendations.</p>
+  </section>
+
+  <!-- ================= THIS WEEK ================= -->
+  <section id="week" data-page hidden>
+    <div class="hero">
+      <div class="card" id="week-card">
+        <div class="note">Buy this week (week of <span data-source="weekly_now" data-field="week_of" data-row="0">—</span>)</div>
+        <div class="sig BUY" style="font-size:calc(var(--cds-font-size-title)*2.2)">€<span data-source="weekly_now" data-field="amount" data-row="0">—</span></div>
+        <p style="margin:0"><b data-source="weekly_now" data-field="tier" data-row="0">—</b> tier. <span data-source="weekly_now" data-field="reason" data-row="0">—</span></p>
+        <p class="note" style="margin-top:var(--cds-gap-sm)">Decided from the close of <span data-source="weekly_now" data-field="decided_on" data-row="0">—</span>. Your range: €40–€200 a week, into an S&amp;P 500 index fund or ETF.</p>
+      </div>
+      <div class="card" id="meter-card">
+        <h3 id="meter-h">Signal strength</h3>
+        <p class="note">−100 strong sell … +100 strong buy. Drives the demo account's index position.</p>
+        <div class="gauge-box" id="gauge-week" data-source="meter_now"></div>
+      </div>
+    </div>
+    <div class="grid" style="margin-top:var(--cds-gap-md)">
+      <div class="card">
+        <h3 id="meter-parts-h">What's in the meter</h3>
+        <p class="note">Each reading scores −1 to +1, times its weight. Valuation is left out: it predicts the next 10 years, not the next week.</p>
+        <table id="meter-table" data-source="meter_now" data-row-key="component">
+          <thead><tr><th data-field="component">Component</th><th data-field="reading">Reading</th><th data-field="weight" class="n">Weight (%)</th><th data-field="contribution" class="n">Points</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h3 id="tiers-h">The weekly rule</h3>
+        <p class="note">Checked every Friday after the US close. Highlighted row = this week.</p>
+        <table id="tier-table" data-source="weekly_tiers" data-row-key="tier">
+          <thead><tr><th data-field="tier">Tier</th><th data-field="amount" class="n">Buy (€)</th><th data-field="condition">When</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <h2 id="wk-hist-h">What the rule would have bought each week since 2017</h2>
+    <div class="card">
+      <p class="note">Bars: weekly amount (€, right scale). Line: S&amp;P 500. The rule spends more when prices are down from their peak.</p>
+      <div class="chart" id="wk-chart" data-source="weekly_history" style="min-height:300px"></div>
+    </div>
+
+    <h2 id="meter-hist-h">Signal strength since 2017</h2>
+    <div class="card">
+      <p class="note">Weekly meter reading. Shaded bands: sell zone below −10, strong-buy zone above +40.</p>
+      <div class="chart" id="meter-chart" data-source="weekly_history" style="min-height:220px"></div>
+      <table id="mb-table" data-source="meter_buckets" data-row-key="bucket" style="margin-top:var(--cds-gap-md)">
+        <thead><tr><th data-field="bucket">Meter reading (monthly, 1990–2026)</th><th data-field="months" class="n">Months</th><th data-field="next_month_avg_pct" class="n">S&amp;P next month, avg (%)</th><th data-field="next_12m_avg_pct" class="n">Next 12 months, avg (%)</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <h2 id="wk-test-h">Does varying the amount beat a flat weekly amount?</h2>
+    <p class="note">Money-weighted yearly return (price only), counting when each euro went in. A small but consistent edge; the main benefit is buying more in crashes, when most people stop.</p>
+    <div class="card tbl">
+      <table id="wk-test" data-source="weekly_test" data-row-key="period">
+        <thead><tr><th data-field="period">Period</th><th data-field="rule_irr" class="n">Variable rule (%/yr)</th><th data-field="flat_irr" class="n">Flat amount (%/yr)</th><th data-field="diff" class="n">Difference (pp)</th><th data-field="avg_weekly" class="n">Avg weekly (€)</th><th data-field="data">Data</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="warnbox">Budget check: the rule averaged about €80–110 a week, but in a 2008-style crash it asks for €200 every week for over a year (around €13,000). Only follow it if you could keep that up. Not financial advice.</div>
+  </section>
+
+  <!-- ================= RETURN PLANS ================= -->
+  <section id="plans" data-page hidden>
+    <div class="warnbox">You can't order a return, only choose a risk level. The S&amp;P 500 has returned about 10–11% a year; reaching for 20–30% means leverage (2x or 3x daily-leveraged funds), which multiplies crashes too. Each plan below uses the same risk control: leveraged money is only held while the S&amp;P 500 is above its 200-day average, checked every Friday. Results are backtests, before tax, and in dollars (euro/dollar moves not included).</div>
+    <div class="tabs" role="tablist" id="plan-tabs" style="margin-top:0">
+      <button role="tab" data-plan="10%" aria-selected="false">10% plan · Steady</button>
+      <button role="tab" data-plan="20%" aria-selected="true">20% plan · Growth</button>
+      <button role="tab" data-plan="30%" aria-selected="false">30% plan · Aggressive</button>
+    </div>
+    <div class="hero">
+      <div class="card" id="plan-now-card">
+        <div class="note">This week in the <span data-source="plans_summary" data-field="name" data-where="plan=20%25" data-plan-mark>—</span> plan</div>
+        <div class="sig BUY" style="font-size:var(--cds-font-size-title)" id="plan-action" data-source="plans_now" data-field="action" data-where="plan=20%25" data-plan-mark>—</div>
+        <p style="margin:0" data-source="plans_now" data-field="status" data-where="plan=20%25" data-plan-mark>—</p>
+        <p class="note" style="margin-top:var(--cds-gap-sm)">What to hold: <span data-source="plans_summary" data-field="vehicle" data-where="plan=20%25" data-plan-mark>—</span></p>
+      </div>
+      <div class="kpis">
+        <div class="card kpi"><div class="lab">Yearly return, 1990–2026 (%)</div><div class="num" data-source="plans_summary" data-field="cagr_1990" data-where="plan=20%25" data-plan-mark>—</div></div>
+        <div class="card kpi"><div class="lab">Typical 10-year return (%/yr)</div><div class="num" data-source="plans_summary" data-field="median_10y" data-where="plan=20%25" data-plan-mark>—</div><div class="note">Range <span data-source="plans_summary" data-field="worst_10y" data-where="plan=20%25" data-plan-mark>—</span> to <span data-source="plans_summary" data-field="best_10y" data-where="plan=20%25" data-plan-mark>—</span></div></div>
+        <div class="card kpi"><div class="lab">10-year spans that hit the target (%)</div><div class="num" data-source="plans_summary" data-field="hit_target_10y_pct" data-where="plan=20%25" data-plan-mark>—</div></div>
+        <div class="card kpi"><div class="lab">Worst fall from a peak (%)</div><div class="num" style="color:var(--color-bad)" data-source="plans_summary" data-field="max_dd_1990" data-where="plan=20%25" data-plan-mark>—</div><div class="note">Worst calendar year <span data-source="plans_summary" data-field="worst_year" data-where="plan=20%25" data-plan-mark>—</span>% (<span data-source="plans_summary" data-field="worst_year_when" data-where="plan=20%25" data-plan-mark>—</span>)</div></div>
+      </div>
+    </div>
+    <div class="grid" style="margin-top:var(--cds-gap-md)">
+      <div class="card"><h3 id="plan-rule-h">The rule</h3><p style="margin:0" data-source="plans_summary" data-field="rule" data-where="plan=20%25" data-plan-mark>—</p></div>
+      <div class="card"><h3 id="plan-worst-h">Realistic worst case</h3><p style="margin:0" data-source="plans_summary" data-field="worst_case" data-where="plan=20%25" data-plan-mark>—</p>
+        <p class="note" style="margin-top:var(--cds-gap-sm)">Exact daily check, Jul 2017–Oct 2026: <b data-source="plans_summary" data-field="cagr_2017_daily" data-where="plan=20%25" data-plan-mark>—</b>%/yr, worst fall <b data-source="plans_summary" data-field="max_dd_2017_daily" data-where="plan=20%25" data-plan-mark>—</b>%, about <b data-source="plans_summary" data-field="switches_per_year" data-where="plan=20%25" data-plan-mark>—</b> sell/buy-back switches a year.</p></div>
+    </div>
+
+    <h2 id="plan-growth-h">€1,000 invested in January 1990</h2>
+    <div class="card">
+      <div class="legend" id="plan-legend"></div>
+      <div class="chart" id="plan-growth" data-source="plans_growth" style="min-height:300px"></div>
+      <p class="note">Log scale, monthly data. Dashed: the same 2x and 3x funds held without the 200-day rule. 3x without it lost 99% by 2009.</p>
+    </div>
+
+    <h2 id="plan-years-h">Year by year</h2>
+    <div class="card">
+      <p class="note">Calendar-year return of the selected plan. Dashed line: its target.</p>
+      <div class="chart" id="plan-years" data-source="plans_years plans_summary" style="min-height:240px"></div>
+    </div>
+
+    <h2 id="plan-compare-h">All three side by side</h2>
+    <div class="card tbl">
+      <table id="plan-table" data-source="plans_summary" data-row-key="plan">
+        <thead><tr><th data-field="plan">Plan</th><th data-field="name">Name</th><th data-field="cagr_1990" class="n">1990–2026 (%/yr)</th><th data-field="median_10y" class="n">Typical 10y (%/yr)</th><th data-field="hit_target_10y_pct" class="n">10y spans on target (%)</th><th data-field="max_dd_1990" class="n">Worst fall (%)</th><th data-field="worst_year" class="n">Worst year (%)</th><th data-field="cagr_2017_daily" class="n">2017–26 daily (%/yr)</th><th data-field="max_dd_2017_daily" class="n">2017–26 worst fall (%)</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <h2 id="plan-risk-h">How the risk is managed</h2>
+    <div class="grid">
+      <div class="card"><h3>Built into the plans</h3><ul class="m">
+        <li><b>Trend exit:</b> leverage only while the S&amp;P 500 is above its 200-day average. Over 1990–2026 this cut the 3x fund's worst fall from −99% to −58%.</li>
+        <li><b>Weekly check:</b> fewer false switches than daily (about 3 a year), but a crash inside one week is not avoided.</li>
+        <li><b>Cash when out:</b> money waits in cash or a money-market fund, earning the short-term rate.</li></ul></div>
+      <div class="card"><h3>Limits to set yourself</h3><ul class="m">
+        <li><b>Size:</b> professionals cap leveraged positions at a slice of the portfolio. Only put in a 2x/3x plan money you could watch fall by half (20%) or by two-thirds (30%).</li>
+        <li><b>Stick to the rule:</b> the results assume every exit and re-entry is followed, including buying back right after a scary drop.</li>
+        <li><b>Product risk:</b> leveraged funds reset daily, lose value in choppy sideways markets, and carry the highest risk ratings (check the fund's KID).</li></ul></div>
+      <div class="card"><h3>Not in the numbers</h3><ul class="m">
+        <li><b>Tax:</b> every exit sells at a gain or loss; capital-gains tax on the gains lowers compounding in a normal account.</li>
+        <li><b>Currency:</b> results are in dollars; euro/dollar swings of 10% a year are common.</li>
+        <li><b>Spreads and data:</b> monthly averages smooth the 1990–2026 test, so real falls were somewhat deeper. The daily 2017–2026 check is closer to reality.</li></ul></div>
+    </div>
+  </section>
+
+  <!-- ================= SIGNAL ================= -->
+  <section id="signal" data-page hidden>
+    <div class="hero">
+      <div class="card" id="signal-card">
+        <div class="note">This month's rule-based signal</div>
+        <div class="sig" id="sig" data-source="signal_now" data-field="signal" data-row="0">—</div>
+        <p id="sig-reason" data-source="signal_now" data-field="reason" data-row="0" style="margin:0">—</p>
+        <p class="note" style="margin-top:var(--cds-gap-sm)">Uses month-end data for <span data-source="signal_now" data-field="month_used" data-row="0">—</span>. Rules on the “News &amp; method” tab.</p>
+        <div class="gauge" id="gauge">
+          <span><i class="dot d-good"></i>Supportive <b data-source="risk_counts" data-field="count" data-where="status=good">—</b></span>
+          <span><i class="dot d-neutral"></i>Neutral <b data-source="risk_counts" data-field="count" data-where="status=neutral">—</b></span>
+          <span><i class="dot d-warn"></i>Caution <b data-source="risk_counts" data-field="count" data-where="status=warn">—</b></span>
+          <span><i class="dot d-bad"></i>Warning <b data-source="risk_counts" data-field="count" data-where="status=bad">—</b></span>
+        </div>
+        <div class="gauge-box" id="gauge-signal" data-source="meter_now" style="margin-top:var(--cds-gap-md)"></div>
+      </div>
+      <div class="kpis">
+        <div class="card kpi"><div class="lab">S&amp;P 500 close</div><div class="num" data-source="indicators" data-field="display" data-where="key=spx">—</div><div class="note" data-source="indicators" data-field="asof" data-where="key=spx">—</div></div>
+        <div class="card kpi"><div class="lab">vs 200-day average</div><div class="num" data-source="indicators" data-field="display" data-where="key=above200">—</div><div class="note">Above = uptrend</div></div>
+        <div class="card kpi"><div class="lab">From all-time high</div><div class="num" data-source="indicators" data-field="display" data-where="key=drawdown">—</div><div class="note">−15% or worse = buy-extra zone</div></div>
+        <div class="card kpi"><div class="lab">Shiller CAPE</div><div class="num" data-source="indicators" data-field="display" data-where="key=cape">—</div><div class="note">Long-run mean 17.4×</div></div>
+      </div>
+    </div>
+
+    <h2 id="price-h">Price, last two years</h2>
+    <div class="card">
+      <p class="note">Weekly closes. Dashed lines: today's 200-day average and the all-time high.</p>
+      <div class="chart" id="price-chart" data-source="spx_weekly signal_now"></div>
+    </div>
+
+    <h2 id="ind-h">What professionals watch, and where it stands</h2>
+    <p class="note">Each indicator is colored by its usual professional reading. Short-term conditions are supportive; long-term valuation and interest rates are the red flags.</p>
+    <div class="card tbl">
+      <table id="ind-table" data-source="indicators" data-row-key="key">
+        <thead><tr><th data-field="group">Area</th><th data-field="name">Indicator</th><th data-field="display" class="n">Now</th><th data-field="status">Reading</th><th data-field="rule">Rule of thumb</th><th data-field="meaning">What it means</th><th data-field="asof">As of</th><th data-field="source">Source</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= BACKTEST ================= -->
+  <section id="backtest" data-page hidden>
+    <p class="lede" style="margin-top:var(--cds-gap-md)">€500 a month from January 1990 to September 2026 (€220,500 in total). Dividends reinvested; uninvested cash earns the Fed funds rate. The signal for each month uses only data available at the end of the month before.</p>
+    <div class="card tbl">
+      <table id="bt-table" data-source="backtest" data-row-key="strategy">
+        <thead><tr><th data-field="strategy">Strategy</th><th data-field="final" class="n">Final value (€)</th><th data-field="vs_dca" class="n">vs plain buying (%)</th><th data-field="max_dd" class="n">Worst drop (%)</th><th data-field="invested" class="n">Invested (€)</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="warnbox">None of the timing rules beat simply buying every month. The signal is useful as a risk gauge, but waiting in cash cost more than the crashes it avoided.</div>
+
+    <h2 id="curve-h">Portfolio value over time</h2>
+    <div class="card">
+      <div class="legend" id="curve-legend"></div>
+      <div class="chart" id="curve-chart" data-source="history"></div>
+      <p class="note">Log scale. The strip under the chart shows each month's signal: <span class="pill p-good">BUY</span> <span class="pill p-good" style="font-weight:600">BUY EXTRA</span> <span class="pill p-bad">HOLD</span></p>
+    </div>
+
+    <div class="grid" style="margin-top:var(--cds-gap-md)">
+      <div class="card">
+        <h3 id="fwd-h">What happened in the next 12 months</h3>
+        <p class="note">S&amp;P 500 price change 12 months after each signal, 1990–2025.</p>
+        <table id="fwd-table" data-source="fwd_by_signal" data-row-key="signal">
+          <thead><tr><th data-field="signal">Signal</th><th data-field="months" class="n">Months</th><th data-field="avg_12m" class="n">Average (%)</th><th data-field="median_12m" class="n">Median (%)</th><th data-field="pct_positive" class="n">Up (% of time)</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h3 id="cape-h">Valuation vs the next 10 years</h3>
+        <p class="note">Average yearly return after inflation over the following 10 years, by starting CAPE, 1881–2013. Today's CAPE: <b data-source="indicators" data-field="display" data-where="key=cape">—</b></p>
+        <div class="chart sm" id="cape-chart" data-source="cape_buckets"></div>
+        <p class="note">Caution: the “Over 35” group is almost entirely 1999–2000.</p>
+      </div>
+    </div>
+
+    <h2 id="macro-h">The recession and stress gauges since 1990</h2>
+    <div class="grid">
+      <div class="card"><h3>Yield curve, 10Y − 3M</h3><p class="note">Below 0 = inverted (recession warning)</p><div class="chart sm" id="m-curve" data-source="history"></div></div>
+      <div class="card"><h3>Chicago Fed financial conditions</h3><p class="note">Above 0 = tighter than average</p><div class="chart sm" id="m-nfci" data-source="history"></div></div>
+      <div class="card"><h3>Sahm rule</h3><p class="note">0.5 or more = recession likely under way</p><div class="chart sm" id="m-sahm" data-source="history"></div></div>
+      <div class="card"><h3>Baa corporate spread over 10Y</h3><p class="note">Rising = credit stress</p><div class="chart sm" id="m-baa" data-source="history"></div></div>
+    </div>
+  </section>
+
+  <!-- ================= STOCKS ================= -->
+  <section id="stocks" data-page hidden>
+    <div class="warnbox">These are factor rankings, not personal recommendations. All S&amp;P 500 members are ranked each week on value (cheap vs its sector on earnings, sales, book) plus momentum (position in the 52-week range). Top = strongest buy-side score, bottom = weakest. Over one week, single-stock moves are mostly noise; factor edges show up over months and across many stocks.</div>
+    <div class="grid">
+      <div class="card">
+        <h3 id="rank-top-h">Top 50: buy-side ranking</h3>
+        <input class="q" id="q-rt" placeholder="Search" aria-label="Search top 50">
+        <div class="tbl">
+        <table id="rt-table" data-source="rank_top" data-row-key="ticker">
+          <thead><tr><th data-field="rank" class="n">#</th><th data-field="ticker">Ticker</th><th data-field="company">Company</th><th data-field="sector">Sector</th><th data-field="score" class="n">Score</th><th data-field="pe" class="n">P/E</th><th data-field="off_52w_high" class="n">Off high (%)</th><th data-field="note">Note</th></tr></thead>
+          <tbody></tbody>
+        </table></div>
+      </div>
+      <div class="card">
+        <h3 id="rank-bottom-h">Bottom 50: sell-side ranking</h3>
+        <input class="q" id="q-rb" placeholder="Search" aria-label="Search bottom 50">
+        <div class="tbl">
+        <table id="rb-table" data-source="rank_bottom" data-row-key="ticker">
+          <thead><tr><th data-field="rank" class="n">#</th><th data-field="ticker">Ticker</th><th data-field="company">Company</th><th data-field="sector">Sector</th><th data-field="score" class="n">Score</th><th data-field="pe" class="n">P/E</th><th data-field="off_52w_high" class="n">Off high (%)</th><th data-field="note">Note</th></tr></thead>
+          <tbody></tbody>
+        </table></div>
+      </div>
+    </div>
+    <div class="warnbox">A screen, not a recommendation. Scores rank S&amp;P 500 companies (market cap over $10bn, profitable) on factual data as of 11 Oct 2026. Do your own research before buying any single stock; individual stocks are far riskier than the index.</div>
+    <h2 id="top-h">Value + momentum leaders</h2>
+    <p class="note">Score 0–100 = half value (cheap on earnings, sales and book vs its own sector) and half momentum (where the price sits in its 52-week range, 100 = at the high). This is the combination with the strongest academic record (Fama-French, AQR).</p>
+    <input class="q" id="q-top" placeholder="Search ticker, company or sector" aria-label="Search leaders">
+    <div class="card tbl">
+      <table id="top-table" data-source="stocks_top" data-row-key="ticker">
+        <thead><tr><th data-field="ticker">Ticker</th><th data-field="company">Company</th><th data-field="sector">Sector</th><th data-field="score" class="n">Score</th><th data-field="value" class="n">Value</th><th data-field="momentum" class="n">Momentum</th><th data-field="pe" class="n">P/E</th><th data-field="sector_pe" class="n">Sector P/E</th><th data-field="off_52w_high" class="n">Off 52w high (%)</th><th data-field="div_yield" class="n">Div yield (%)</th><th data-field="price" class="n">Price ($)</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <h2 id="fallen-h">Fallen but cheap (higher risk)</h2>
+    <p class="note">30%+ below their 52-week high and cheaper than their sector on P/E. Cheap stocks often stay cheap; this list is where to start research, not where to stop it.</p>
+    <div class="card tbl">
+      <table id="fallen-table" data-source="stocks_fallen" data-row-key="ticker">
+        <thead><tr><th data-field="ticker">Ticker</th><th data-field="company">Company</th><th data-field="sector">Sector</th><th data-field="off_52w_high" class="n">Off 52w high (%)</th><th data-field="pe" class="n">P/E</th><th data-field="sector_pe" class="n">Sector P/E</th><th data-field="div_yield" class="n">Div yield (%)</th><th data-field="price" class="n">Price ($)</th><th data-field="check">Data check</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <h2 id="sector-h">Sectors at a glance</h2>
+    <p class="note">Medians across each sector's companies. “Range position” 100 = at the 52-week high, 0 = at the low.</p>
+    <div class="card tbl">
+      <table id="sector-table" data-source="sectors" data-row-key="sector">
+        <thead><tr><th data-field="sector">Sector</th><th data-field="stocks" class="n">Stocks</th><th data-field="median_pe" class="n">Median P/E</th><th data-field="median_off_high" class="n">Median off high (%)</th><th data-field="median_range_pos" class="n">Range position</th><th data-field="median_div_yield" class="n">Div yield (%)</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= DEMO ================= -->
+  <section id="demo" data-page hidden>
+    <div class="warnbox">Simulated paper account: no broker, no real money. Each Friday close it books last week's positions at real public prices (S&amp;P 500 from the Federal Reserve, stocks from the public S&amp;P 500 dataset) and opens new ones. Up to €1,000 a week: the index leg is €0–500 long or short by the meter; the stock leg is €500 split over the 3 top-ranked longs and 3 bottom-ranked shorts. No fees, slippage or borrow costs.</div>
+    <div class="kpis">
+      <div class="card kpi"><div class="lab">Total profit/loss (€)</div><div class="num" data-source="demo_summary" data-field="value" data-where="metric=Total P/L (€)">—</div></div>
+      <div class="card kpi"><div class="lab">Index leg (€)</div><div class="num" data-source="demo_summary" data-field="value" data-where="metric=Index leg P/L (€)">—</div></div>
+      <div class="card kpi"><div class="lab">Stock leg (€)</div><div class="num" data-source="demo_summary" data-field="value" data-where="metric=Stock leg P/L (€)">—</div></div>
+      <div class="card kpi"><div class="lab">Closed trades</div><div class="num" data-source="demo_summary" data-field="value" data-where="metric=Closed trades">—</div><div class="note">Win rate <span data-source="demo_summary" data-field="value" data-where="metric=Win rate (%25)">—</span>%</div></div>
+    </div>
+
+    <h2 id="demo-open-h">Open this week</h2>
+    <div class="card tbl">
+      <table id="pos-table" data-source="demo_positions" data-row-key="id">
+        <thead><tr><th data-field="ticker">Ticker</th><th data-field="company">Name</th><th data-field="side">Side</th><th data-field="euros" class="n">Stake (€)</th><th data-field="entry_price" class="n">Entry price</th><th data-field="entry_date">Opened at close of</th><th data-field="reason">Why</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <h2 id="demo-pl-h">Profit/loss over time</h2>
+    <div class="card">
+      <p class="note" id="demo-empty">No closed weeks yet. The first positions close at Friday's close and are booked on Saturday morning.</p>
+      <div class="chart" id="demo-chart" data-source="demo_weekly" style="min-height:220px"></div>
+    </div>
+
+    <h2 id="demo-ledger-h">Closed trades</h2>
+    <div class="card tbl">
+      <table id="ledger-table" data-source="demo_ledger" data-row-key="id">
+        <thead><tr><th data-field="closed_on">Closed</th><th data-field="ticker">Ticker</th><th data-field="side">Side</th><th data-field="euros" class="n">Stake (€)</th><th data-field="entry_price" class="n">Entry</th><th data-field="exit_price" class="n">Exit</th><th data-field="return_pct" class="n">Return (%)</th><th data-field="pnl_eur" class="n">P/L (€)</th><th data-field="note">Note</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <h2 id="demo-bt-h">How the index leg would have done</h2>
+    <p class="note">Same sizing rule on history. “Profit per €1 staked” = total profit divided by the average stake, so strategies of different sizes compare fairly. The stock leg can't be backtested: there is no free price history for all 500 stocks.</p>
+    <div class="card tbl">
+      <table id="dbt-table" data-source="demo_backtest" data-row-key="id">
+        <thead><tr><th data-field="period">Period</th><th data-field="strategy">Strategy</th><th data-field="pnl_eur" class="n">Profit (€)</th><th data-field="avg_stake_eur" class="n">Avg stake (€)</th><th data-field="pnl_per_eur" class="n">Profit per €1 staked</th><th data-field="short_periods" class="n">Short periods</th><th data-field="max_drawdown_eur" class="n">Worst drawdown (€)</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= NEWS & METHOD ================= -->
+  <section id="news" data-page hidden>
+    <h2 id="news-h">What's moving the market</h2>
+    <div class="card tbl">
+      <table id="news-table" data-source="news" data-row-key="id">
+        <thead><tr><th data-field="date">Date</th><th data-field="topic">Topic</th><th data-field="item">What happened</th><th data-field="source">Source</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <h2 id="method-h">How the signal works</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>The rules (checked monthly)</h3>
+        <ul class="m">
+          <li><b>HOLD</b>: price below its 10-month average <i>and</i> a recession or stress warning is on (Sahm rule ≥ 0.5 or Chicago Fed conditions index above 0), unless a panic is already easing.</li>
+          <li><b>BUY EXTRA</b>: index 15%+ below its peak or VIX ≥ 30, without worsening credit stress. Deploy saved cash.</li>
+          <li><b>BUY</b>: everything else. Invest the normal monthly amount.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Data sources</h3>
+        <ul class="m">
+          <li>Federal Reserve (FRED): S&amp;P 500, yield curve, credit spreads, financial conditions, Sahm rule, Fed funds, 10Y yield, CPI, VIX.</li>
+          <li>Robert Shiller's long-run S&amp;P 500 dataset (1871 on): prices, dividends, CAPE.</li>
+          <li>FactSet Earnings Insight: forward P/E, earnings growth.</li>
+          <li>AAII sentiment survey; S&amp;P 500 company fundamentals (updated 11 Oct 2026).</li>
+        </ul>
+        <p class="note">Bloomberg, FactSet and Refinitiv terminals are paid; these are the free sources their analysts also cite. Market data refreshes automatically every weekday after the US close; the weekly amount, meter and demo account roll every Saturday. FactSet, CAPE, sentiment and news figures are as of 9 Oct 2026.</p>
+      </div>
+      <div class="card">
+        <h3>Limits to know</h3>
+        <ul class="m">
+          <li>No rule here beat plain monthly buying since 1990. Treat the signal as a risk gauge.</li>
+          <li>CAPE predicts 10-year returns, not next month's.</li>
+          <li>For EU investors, track the index with a UCITS ETF (e.g. CSPX / SXR8); US-listed SPY is usually not available.</li>
+          <li>Not financial advice. Past results don't predict future returns.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <div class="statusbar" id="statusbar">
+    <span>S&amp;P 500: <b data-source="weekly_now" data-field="spx_close" data-row="0">—</b> <span data-source="spx_change" data-field="pct" data-where="period=1 week" class="sb-chg">—</span></span>
+    <span>From record: <b data-source="weekly_now" data-field="from_ath_pct" data-row="0">—</b></span>
+    <span>VIX: <b data-source="weekly_now" data-field="vix" data-row="0">—</b></span>
+    <span>Trend line: <b data-source="weekly_now" data-field="ma200" data-row="0">—</b></span>
+    <span>Signal: <b data-source="weekly_now" data-field="meter" data-row="0">—</b></span>
+    <span>NFCI: <b data-source="weekly_now" data-field="nfci" data-row="0">—</b></span>
+    <span>Sahm: <b data-source="weekly_now" data-field="sahm" data-row="0">—</b></span>
+    <span>CAPE: <b data-source="indicators" data-field="display" data-where="key=cape">—</b></span>
+    <span>10Y: <b data-source="indicators" data-field="display" data-where="key=ten">—</b></span>
+  </div>
+</div>
+
+<script>
+window.SX = window.SX || {};
+const SX = window.SX;
+SX.rows = (id) => { const d = dash.data(id); return d.status === 'ok' ? (Array.isArray(d.data) ? d.data : []) : null; };
+SX.fail = (el, id) => { const s = dash.data(id).status; if (s === 'error' || s === 'connect' || s === 'declined' || s === 'missing') { el.innerHTML = ''; const f = document.createElement('div'); f.className = 'fail'; f.textContent = 'Failed to load'; el.appendChild(f); return true; } return false; };
+SX.fmt = d3.format(',');
+SX.icon = (t) => { const i = document.createElement('span'); i.className = 'ic'; let h = 0; for (const ch of String(t)) h = (h * 31 + ch.charCodeAt(0)) >>> 0; i.style.background = dash.colors[h % dash.colors.length]; i.textContent = String(t).slice(0, 3); return i; };
+SX.fmtField = { spx_close: d3.format(',.2f'), ma200: d3.format(',.0f'), from_ath_pct: (v) => (v > 0 ? '+' : '') + Number(v).toFixed(2) + '%', meter: (v) => (v > 0 ? '+' : '') + v };
+SX.cur = (v) => '€' + (v >= 1e6 ? (v / 1e6).toFixed(2) + 'M' : d3.format(',.0f')(v));
+
+dash.calc('risk_counts', {
+  inputs: ['indicators'],
+  title: 'Indicator readings count',
+  description: 'How many indicators are supportive, neutral, caution or warning right now.',
+  fn: (indicators) => ['good', 'neutral', 'warn', 'bad'].map((status) => ({ status, count: indicators.filter((r) => r.status === status).length })),
+});
+
+dash.calc('demo_summary', {
+  inputs: ['demo_ledger'],
+  title: 'Demo account totals',
+  description: 'Sums profit/loss from closed demo trades, overall and by leg, and the share of trades that made money.',
+  fn: (demo_ledger) => {
+    const trades = demo_ledger.filter((r) => r.leg !== 'Account');
+    const sum = (rows) => Math.round(rows.reduce((a, r) => a + Number(r.pnl_eur), 0) * 100) / 100;
+    const n = trades.length;
+    return [
+      { metric: 'Total P/L (€)', value: sum(trades) },
+      { metric: 'Index leg P/L (€)', value: sum(trades.filter((r) => r.leg === 'Index')) },
+      { metric: 'Stock leg P/L (€)', value: sum(trades.filter((r) => r.leg === 'Stocks')) },
+      { metric: 'Closed trades', value: n },
+      { metric: 'Win rate (%)', value: n ? Math.round((trades.filter((r) => Number(r.pnl_eur) > 0).length / n) * 1000) / 10 : 0 },
+    ];
+  },
+});
+dash.calc('demo_weekly', {
+  inputs: ['demo_ledger'],
+  title: 'Demo profit/loss by week',
+  description: 'Profit/loss of all trades closed each week, and the running total.',
+  fn: (demo_ledger) => {
+    const by = {};
+    demo_ledger.forEach((r) => { by[r.closed_on] = (by[r.closed_on] || 0) + Number(r.pnl_eur); });
+    let c = 0;
+    return Object.keys(by).sort().map((week) => { c += by[week]; return { week, pnl: Math.round(by[week] * 100) / 100, cumulative: Math.round(c * 100) / 100 }; });
+  },
+});
+
+dash.calc('plans_now', {
+  inputs: ['weekly_now', 'plans_summary'],
+  title: 'Plan actions this week',
+  description: 'Applies each plan’s rule to this week’s data: is the S&P 500 above its trend line, and how much new money goes in.',
+  fn: (weekly_now, plans_summary) => {
+    const w = weekly_now[0]; const above = Number(w.spx_close) > Number(w.ma200);
+    return plans_summary.map((p) => {
+      const L = Number(p.leverage);
+      if (L === 1) return { plan: p.plan, action: `Buy €${w.amount} of the 1x ETF`, status: `${w.tier} tier this week. The 10% plan never sells on signals.` };
+      return above
+        ? { plan: p.plan, action: `Hold ${L}x · add €${w.amount}`, status: `S&P 500 ${Number(w.spx_close).toFixed(0)} is above its trend line ${Number(w.ma200).toFixed(0)}: stay in the ${L}x fund and add this week's €${w.amount}.` }
+        : { plan: p.plan, action: `Sell ${L}x · hold cash`, status: `S&P 500 ${Number(w.spx_close).toFixed(0)} is below its trend line ${Number(w.ma200).toFixed(0)}: sell the ${L}x fund, keep everything (and this week's €${w.amount}) in cash until a Friday close above the line.` };
+    });
+  },
+});
+
+dash.calc('rank_all', {
+  inputs: ['rank_top', 'rank_bottom'],
+  title: 'Top and bottom 50 combined',
+  description: 'The top 50 and bottom 50 ranked S&P 500 stocks in one list, labelled by list.',
+  fn: (rank_top, rank_bottom) => rank_top.map((r) => ({ ...r, list: 'Top 50' })).concat(rank_bottom.map((r) => ({ ...r, list: 'Bottom 50' }))).sort((a, b) => a.rank - b.rank),
+});
+dash.calc('spx_change', {
+  inputs: ['weekly_history'],
+  title: 'S&P 500 change',
+  description: 'Change in the S&P 500 weekly close over the last 1, 4 and 52 weeks.',
+  fn: (weekly_history) => {
+    const c = weekly_history.map((r) => Number(r.close)); const n = c.length;
+    return [['1 week', 1], ['4 weeks', 4], ['52 weeks', 52]].filter(([, k]) => n > k).map(([period, k]) => ({ period, pct: Math.round((c[n - 1] / c[n - 1 - k] - 1) * 10000) / 100 }));
+  },
+});
+
+// ---- signal-strength gauge ----
+SX.gauge = (box, v, label) => {
+  box.querySelector('svg')?.remove();
+  const W = Math.min(box.clientWidth || 300, 340); if (!W) return; const H = Math.round(W * 0.62);
+  const cx = W / 2, cy = H - Math.max(18, W / 11), r = W / 2 - 14;
+  const svg = d3.select(box).insert('svg', ':first-child').attr('width', W).attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
+  const a = (x) => (Math.max(-100, Math.min(100, x)) / 100) * (Math.PI / 2);
+  const zones = [[-100, -25, 'var(--color-bad)', 1], [-25, -10, 'var(--color-warn)', 1], [-10, 15, 'var(--cds-chart-muted)', 1], [15, 40, 'var(--color-ok)', 0.55], [40, 100, 'var(--color-ok)', 1]];
+  const arc = d3.arc().innerRadius(r * 0.72).outerRadius(r);
+  zones.forEach(([lo, hi, c, op]) => svg.append('path').attr('transform', `translate(${cx},${cy})`).attr('d', arc({ startAngle: a(lo), endAngle: a(hi) })).attr('fill', c).attr('opacity', op));
+  [-100, 0, 100].forEach((t) => { const ang = a(t) - Math.PI / 2; svg.append('text').attr('x', cx + Math.cos(ang) * (r + 2)).attr('y', cy + Math.sin(ang) * (r + 2) + (t === 0 ? -4 : 14)).attr('text-anchor', t < 0 ? 'start' : t > 0 ? 'end' : 'middle').attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text(t > 0 ? '+' + t : t); });
+  const ang = a(v) - Math.PI / 2;
+  svg.append('line').attr('x1', cx).attr('y1', cy).attr('x2', cx + Math.cos(ang) * r * 0.9).attr('y2', cy + Math.sin(ang) * r * 0.9).attr('stroke', 'var(--color-fg)').attr('stroke-width', 3).attr('stroke-linecap', 'round');
+  svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 6).attr('fill', 'var(--color-fg)');
+  svg.append('text').attr('x', cx).attr('y', cy + Math.max(16, W / 13)).attr('text-anchor', 'middle').attr('font-weight', 800).attr('font-size', Math.max(13, Math.min(22, W / 11))).attr('fill', 'var(--color-fg)').text((v > 0 ? '+' : '') + v + '  ' + label);
+};
+
+// ---- tabs ----
+SX.show = (name) => {
+  document.querySelectorAll('.sx [data-page]').forEach((s) => { s.hidden = s.id !== name; });
+  document.querySelectorAll('.sx .tabs button[data-tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === name)));
+  SX.active = name; dash.setLink(name); SX.draw && SX.draw();
+};
+document.querySelectorAll('.sx .tabs button[data-tab]').forEach((b) => b.addEventListener('click', () => SX.show(b.dataset.tab)));
+SX.active = 'home'; SX.hList = 'all'; SX.hSector = null;
+
+// ---- generic table filler with sorting ----
+SX.table = (tableId, dataId, fmt) => {
+  const t = document.getElementById(tableId); const tb = t.querySelector('tbody');
+  let rows = SX.rows(dataId);
+  if (!rows) { tb.replaceChildren(); return; }
+  const st = t._sort; if (st) rows = rows.slice().sort((a, b) => { const x = a[st.f], y = b[st.f]; const r = (typeof x === 'number' && typeof y === 'number') ? x - y : String(x ?? '').localeCompare(String(y ?? '')); return st.dir * r; });
+  if (t._f) rows = rows.filter(t._f);
+  const q = t._q ? t._q.toLowerCase() : '';
+  const keyCol = t.dataset.rowKey; const fields = [...t.querySelectorAll('thead th')].map((th) => th.dataset.field);
+  tb.replaceChildren(...rows.filter((r) => !q || fields.some((f) => String(r[f] ?? '').toLowerCase().includes(q))).map((r) => {
+    const tr = document.createElement('tr'); tr.dataset.key = r[keyCol];
+    fields.forEach((f, i) => {
+      const td = document.createElement('td'); const th = t.querySelectorAll('thead th')[i]; if (th.classList.contains('n')) td.className = 'n';
+      if (fmt && fmt[f]) fmt[f](td, r[f], r); else td.textContent = r[f] ?? '';
+      tr.appendChild(td);
+    });
+    return tr;
+  }));
+  if (!t._wired) {
+    t._wired = true;
+    t.querySelectorAll('thead th').forEach((th) => {
+      const label = th.textContent; const b = document.createElement('button'); b.textContent = label; th.replaceChildren(b);
+      b.addEventListener('click', () => { const f = th.dataset.field; t._sort = { f, dir: t._sort && t._sort.f === f ? -t._sort.dir : (th.classList.contains('n') ? -1 : 1) }; t.querySelectorAll('thead th').forEach((h) => h.removeAttribute('aria-sort')); th.setAttribute('aria-sort', t._sort.dir > 0 ? 'ascending' : 'descending'); SX.draw(); });
+    });
+  }
+};
+
+// ---- tooltip ----
+SX.tip = (box) => { let t = box.querySelector('.tip'); if (!t) { t = document.createElement('div'); t.className = 'tip'; box.appendChild(t); } return t; };
+SX.place = (tip, box, x, y) => { tip.style.display = 'block'; const w = tip.offsetWidth, W = box.clientWidth; let left = x + 12; if (left + w > W) left = x - w - 12; tip.style.left = Math.max(0, left) + 'px'; tip.style.top = Math.max(0, y - 10) + 'px'; };
+
+// ---- generic line chart ----
+SX.line = (box, series, o) => {
+  box.querySelector('svg')?.remove();
+  const W = box.clientWidth; if (!W) return; const H = o.h || 260;
+  const all = series.flatMap((s) => s.pts.filter((p) => p.y != null && !isNaN(p.y)));
+  if (!all.length) return;
+  const x = d3.scaleUtc(d3.extent(all, (p) => p.x), [0, 1]);
+  let yd = d3.extent(all.map((p) => p.y).concat((o.refs || []).map((r) => r.y)));
+  if (o.yMin != null) yd[0] = Math.min(yd[0], o.yMin);
+  const y = (o.log ? d3.scaleLog() : d3.scaleLinear()).domain(yd).nice();
+  const svg = d3.select(box).insert('svg', ':first-child').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
+  const yfmt = o.yfmt || d3.format(',');
+  const yt = y.ticks(o.log ? 4 : 5).filter((v, i, a) => !o.log || a.length < 6 || [1, 2, 5].includes(+String(v)[0]));
+  const tmp = svg.append('text').attr('font-size', 12).text(yt.map(yfmt).reduce((a, b) => (b.length > a.length ? b : a), ''));
+  const ml = tmp.node().getComputedTextLength() + 10; tmp.remove();
+  let mr = 8; (o.endLabels || o.refs || []).forEach(() => {});
+  if (o.refs) { const t2 = svg.append('text').attr('font-size', 12).text(o.refs.map((r) => r.label).reduce((a, b) => (b.length > a.length ? b : a), '')); mr = Math.max(mr, Math.min(160, t2.node().getComputedTextLength() + 8)); t2.remove(); }
+  const m = { t: 10, r: mr, b: 24 + (o.strip ? 14 : 0), l: ml };
+  x.range([m.l, W - m.r]); y.range([H - m.b, m.t]);
+  const g = svg.append('g');
+  g.selectAll('line.gr').data(yt).join('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y).attr('y2', y).attr('stroke', 'var(--cds-chart-grid)');
+  g.selectAll('text.yt').data(yt).join('text').attr('x', m.l - 6).attr('y', (d) => y(d)).attr('dy', '0.32em').attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(yfmt);
+  const xa = d3.axisBottom(x).ticks(Math.max(2, Math.floor(W / 110))).tickSizeOuter(0);
+  if (o.xfmt) xa.tickFormat(o.xfmt);
+  svg.append('g').attr('transform', `translate(0,${H - m.b + (o.strip ? 14 : 0)})`).call(xa).attr('font-size', null).attr('font-family', null)
+    .call((s) => { s.select('.domain').attr('stroke', 'var(--cds-chart-axis)'); s.selectAll('line').attr('stroke', 'var(--cds-chart-axis)'); s.selectAll('text').attr('fill', 'var(--color-fg-muted)').attr('font-size', 12); });
+  (o.refs || []).forEach((r) => {
+    svg.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y(r.y)).attr('y2', y(r.y)).attr('stroke', r.color || 'var(--cds-chart-reference)').attr('stroke-dasharray', '4 4');
+    if (r.label) svg.append('text').attr('x', W - m.r + 4).attr('y', y(r.y)).attr('dy', r.dy || '0.32em').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(r.label);
+  });
+  if (o.strip) {
+    const sy = H - m.b + 4; const pts = o.strip; const bw = Math.max(1, (W - m.l - m.r) / pts.length);
+    svg.append('g').selectAll('rect').data(pts).join('rect').attr('x', (p) => x(p.x)).attr('y', sy).attr('width', bw + 0.5).attr('height', 8)
+      .attr('fill', (p) => (p.s === 'HOLD' ? 'var(--cds-chart-status-critical)' : p.s === 'BUY_EXTRA' ? dash.colors[2] : 'var(--cds-chart-muted)')).attr('opacity', (p) => (p.s === 'BUY' ? 0.35 : 0.9));
+  }
+  series.forEach((s, i) => {
+    const ln = d3.line().defined((p) => p.y != null && !isNaN(p.y) && (!o.log || p.y > 0)).x((p) => x(p.x)).y((p) => y(p.y));
+    svg.append('path').attr('d', ln(s.pts)).attr('fill', 'none').attr('stroke', s.color).attr('stroke-width', s.w || 2).attr('stroke-linecap', 'round').attr('stroke-linejoin', 'round').attr('opacity', s.op || 1).attr('stroke-dasharray', s.dash || null);
+  });
+  // hover
+  const tip = SX.tip(box); const dots = series.map((s) => svg.append('circle').attr('r', 3.5).attr('fill', s.color).style('display', 'none'));
+  const rule = svg.append('line').attr('y1', m.t).attr('y2', H - m.b).attr('stroke', 'var(--cds-chart-axis)').style('display', 'none');
+  const base = series[0].pts; const bis = d3.bisector((p) => p.x).center;
+  svg.append('rect').attr('x', m.l).attr('y', m.t).attr('width', W - m.l - m.r).attr('height', H - m.t - m.b).attr('fill', 'transparent')
+    .on('mousemove', (ev) => {
+      const [mx, my] = d3.pointer(ev); const i = bis(base, x.invert(mx)); const p = base[i]; if (!p) return;
+      rule.style('display', null).attr('x1', x(p.x)).attr('x2', x(p.x));
+      tip.replaceChildren(); const d = document.createElement('div'); d.className = 'd'; d.textContent = (o.tipDate || d3.utcFormat('%b %-d, %Y'))(p.x); tip.appendChild(d);
+      series.forEach((s, k) => { const q = s.pts[i]; if (!q || q.y == null || isNaN(q.y)) { dots[k].style('display', 'none'); return; } dots[k].style('display', null).attr('cx', x(q.x)).attr('cy', y(q.y)); const r = document.createElement('div'); if (series.length > 1) { const sw = document.createElement('span'); sw.className = 'dot'; sw.style.background = s.color; sw.style.marginRight = '6px'; r.appendChild(sw); } r.appendChild(document.createTextNode((series.length > 1 ? s.name + ': ' : '') + (o.tipfmt || yfmt)(q.y))); tip.appendChild(r); });
+      if (o.tipExtra) { const e = o.tipExtra(i); if (e) { const r = document.createElement('div'); r.textContent = e; tip.appendChild(r); } }
+      SX.place(tip, box, x(p.x), my);
+    })
+    .on('mouseleave', () => { tip.style.display = 'none'; rule.style('display', 'none'); dots.forEach((d) => d.style('display', 'none')); });
+};
+</script>
+
+<script>
+(() => {
+  const SX = window.SX;
+  const statusWord = { good: 'Supportive', neutral: 'Neutral', warn: 'Caution', bad: 'Warning' };
+  const pm = (d) => new Date(d + (d.length === 7 ? '-01' : '') + 'T00:00:00Z');
+
+  SX.draw = () => {
+    // ---------- header ----------
+    const sn = SX.rows('signal_now'); const rc = SX.rows('risk_counts');
+    const tk = document.getElementById('takeaway');
+    if (sn && sn[0] && rc) {
+      const c = Object.fromEntries(rc.map((r) => [r.status, r.count]));
+      const wn = SX.rows('weekly_now'); const amt = wn && wn[0] ? `This week: buy €${wn[0].amount} (${wn[0].tier} tier). ` : '';
+      tk.textContent = `${amt}Market signal: ${sn[0].signal}. Short-term conditions are supportive (${c.good} indicators), but ${c.bad} warnings sit in valuation and interest rates.`;
+    } else tk.innerHTML = '<span class="dash-skeleton">—</span>';
+    // ---------- signal card + kpis ----------
+    document.querySelectorAll('.sx [data-source]').forEach((el) => {
+      if (el.tagName === 'TABLE' || el.tagName === 'UL' || el.classList.contains('chart') || el.classList.contains('gauge-box')) return;
+      const id = el.dataset.source; const rows = SX.rows(id); if (!rows) return;
+      let r = null;
+      if (el.dataset.where) { const [k, v] = el.dataset.where.split('='); let dv = v; try { dv = decodeURIComponent(v); } catch (e) { dv = v; } r = rows.find((x) => String(x[k]) === dv); }
+      else if (el.dataset.row) r = rows[+el.dataset.row];
+      if (r) { const f = el.dataset.field, v = r[f]; const fm = SX.fmtField[f]; el.textContent = v == null ? '—' : fm && typeof v === 'number' ? fm(v) : v;
+        if (f === 'pct') { el.className = (el.className.replace(/\b(up|down)\b/g, '') + (v >= 0 ? ' up' : ' down')).trim(); el.textContent = (v > 0 ? '+' : '') + v + '%'; } }
+    });
+    const sig = document.getElementById('sig'); if (sn && sn[0]) sig.className = 'sig ' + sn[0].signal.replace(' ', '_');
+
+    const mrows = SX.rows('meter_now'); const mt = mrows && mrows.find((r) => r.component === 'Total');
+    ['gauge-home', 'gauge-week', 'gauge-signal'].forEach((id) => { const b = document.getElementById(id); if (b.offsetParent && !SX.fail(b, 'meter_now') && mt) SX.gauge(b, +mt.contribution, mt.reading); });
+    if (SX.active === 'home') {
+      const wn = SX.rows('weekly_now'); const w = wn && wn[0];
+      if (w) {
+        document.querySelector('#hl-track i').style.left = Math.max(0, Math.min(100, ((w.amount - 40) / 160) * 100)) + '%';
+        const tr = document.getElementById('hl-trend'); const above = Number(w.spx_close) >= Number(w.ma200);
+        tr.textContent = above ? 'Above trend line' : 'Below trend line'; tr.className = 'c ' + (above ? 'up' : 'down');
+        const ath = document.getElementById('hl-ath'); ath.style.color = w.from_ath_pct <= -10 ? 'var(--down)' : '';
+      }
+      const mini = (ulId, id, n, good) => {
+        const ul = document.getElementById(ulId); const rows = SX.rows(id); if (!rows) return;
+        ul.replaceChildren(...rows.slice(0, n).map((r) => {
+          const li = document.createElement('li'); const rk = document.createElement('span'); rk.className = 'rk'; rk.textContent = r.rank;
+          const nm = document.createElement('span'); nm.style.minWidth = '0'; const tk = document.createElement('div'); tk.className = 'tk'; tk.textContent = r.ticker; const co = document.createElement('div'); co.className = 'co'; co.textContent = r.company; nm.append(tk, co);
+          const p = document.createElement('span'); p.textContent = '$' + d3.format(',.2f')(r.price);
+          const sc = document.createElement('span'); sc.className = 'pill ' + (good ? 'p-good' : 'p-bad'); sc.textContent = r.score;
+          li.append(rk, SX.icon(r.ticker), nm, p, sc); return li; }));
+      };
+      mini('hl-top', 'rank_top', 5, true); mini('hl-bottom', 'rank_bottom', 5, false);
+      const all = SX.rows('rank_all'); const sf = document.getElementById('sector-flt');
+      if (all && !sf.childElementCount) {
+        [...new Set(all.map((r) => r.sector))].sort().forEach((sec) => { const b = document.createElement('button'); b.className = 'flt'; b.dataset.sector = sec; b.setAttribute('aria-pressed', 'false'); b.textContent = sec; sf.appendChild(b); });
+      }
+      const ht = document.getElementById('home-table');
+      ht._f = (r) => (SX.hList === 'all' || r.list === SX.hList) && (!SX.hSector || r.sector === SX.hSector);
+      SX.table('home-table', 'rank_all', {
+        rank: (td, v) => { td.textContent = v; td.style.color = 'var(--muted)'; },
+        company: (td, v, r) => { const d = document.createElement('div'); d.className = 'nm'; const c = document.createElement('span'); c.className = 'co'; c.textContent = v; const t = document.createElement('span'); t.className = 'tk'; t.textContent = r.ticker; d.append(SX.icon(r.ticker), c, t); td.appendChild(d); },
+        price: (td, v) => { td.textContent = '$' + d3.format(',.2f')(v); },
+        score: (td, v, r) => { const b = document.createElement('span'); b.className = 'rbar'; b.style.marginRight = '8px'; const i = document.createElement('i'); i.style.width = v + '%'; i.style.background = r.list === 'Top 50' ? 'var(--up)' : 'var(--down)'; b.appendChild(i); td.append(b, document.createTextNode(v)); },
+        off_52w_high: (td, v) => { td.textContent = v + '%'; td.style.color = v < 0 ? 'var(--down)' : 'var(--up)'; },
+        pe: (td, v) => { td.textContent = v == null ? '—' : v; },
+        sector: (td, v) => { td.textContent = v; td.style.color = 'var(--muted)'; td.style.fontWeight = '500'; },
+        list: (td, v) => { const p = document.createElement('span'); p.className = 'lst ' + (v === 'Top 50' ? 'top' : 'bot'); p.textContent = v; td.appendChild(p); },
+      });
+    }
+
+    if (SX.active === 'week') {
+      SX.table('meter-table', 'meter_now', { component: (td, v) => { td.textContent = v; if (v === 'Total') td.style.fontWeight = '600'; }, contribution: (td, v) => { td.textContent = v; td.style.color = v > 0 ? 'var(--color-ok)' : v < 0 ? 'var(--color-bad)' : ''; } });
+      SX.table('mb-table', 'meter_buckets');
+      const mh = SX.rows('weekly_history'); const mbox = document.getElementById('meter-chart');
+      if (!SX.fail(mbox, 'weekly_history') && mh && mbox.clientWidth) {
+        SX.line(mbox, [{ name: 'Meter', color: dash.colors[0], w: 1.5, pts: mh.filter((r) => r.meter != null).map((r) => ({ x: pm(r.week), y: +r.meter })) }],
+          { h: 220, yMin: -30, yfmt: d3.format('+d'), tipDate: d3.utcFormat('Week of %b %-d, %Y'), refs: [{ y: -10, label: 'Sell below', color: 'var(--color-bad)' }, { y: 40, label: 'Strong buy', color: 'var(--color-ok)' }] });
+      }
+      const wn = SX.rows('weekly_now'); const cur = wn && wn[0] ? wn[0].tier : null;
+      SX.table('tier-table', 'weekly_tiers', { tier: (td, v) => { td.textContent = v; td.style.fontWeight = '600'; } });
+      document.querySelectorAll('#tier-table tbody tr').forEach((tr) => { const on = tr.dataset.key === cur; tr.style.background = on ? 'var(--color-bg)' : ''; tr.style.outline = on ? '2px solid var(--color-ok)' : ''; });
+      SX.table('wk-test', 'weekly_test', { period: (td, v) => { td.textContent = v; td.style.fontWeight = '500'; } });
+      const box = document.getElementById('wk-chart'); const wh = SX.rows('weekly_history');
+      box.querySelector('svg')?.remove();
+      if (!SX.fail(box, 'weekly_history') && wh && box.clientWidth) {
+        const W = box.clientWidth, H = 300, m = { t: 10, r: 44, b: 24, l: 52 };
+        const xs = wh.map((r) => pm(r.week)); const x = d3.scaleUtc(d3.extent(xs), [m.l, W - m.r]);
+        const yp = d3.scaleLinear(d3.extent(wh, (r) => +r.close), [H - m.b - 70, m.t]).nice();
+        const ya = d3.scaleLinear([0, 200], [H - m.b, H - m.b - 60]);
+        const svg = d3.select(box).insert('svg', ':first-child').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
+        const tk = yp.ticks(4);
+        svg.selectAll('line.g').data(tk).join('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', yp).attr('y2', yp).attr('stroke', 'var(--cds-chart-grid)');
+        svg.selectAll('text.g').data(tk).join('text').attr('x', m.l - 6).attr('y', yp).attr('dy', '0.32em').attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(d3.format(','));
+        [60, 200].forEach((v) => svg.append('text').attr('x', W - m.r + 6).attr('y', ya(v)).attr('dy', '0.32em').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text('€' + v));
+        const bw = Math.max(1, (W - m.l - m.r) / wh.length);
+        const col = (a) => (a >= 200 ? 'var(--cds-chart-status-critical)' : a >= 150 ? dash.colors[2] : a >= 100 ? dash.colors[1] : a <= 40 ? 'var(--color-warn)' : 'var(--cds-chart-muted)');
+        svg.append('g').selectAll('rect').data(wh).join('rect').attr('x', (r) => x(pm(r.week))).attr('width', bw + 0.3).attr('y', (r) => ya(+r.amount)).attr('height', (r) => ya(0) - ya(+r.amount)).attr('fill', (r) => col(+r.amount));
+        svg.append('path').attr('d', d3.line().x((r) => x(pm(r.week))).y((r) => yp(+r.close))(wh)).attr('fill', 'none').attr('stroke', dash.colors[0]).attr('stroke-width', 2).attr('stroke-linejoin', 'round');
+        svg.append('g').attr('transform', `translate(0,${H - m.b})`).call(d3.axisBottom(x).ticks(Math.max(2, Math.floor(W / 110))).tickSizeOuter(0)).attr('font-size', null).attr('font-family', null)
+          .call((s) => { s.select('.domain').attr('stroke', 'var(--cds-chart-axis)'); s.selectAll('line').attr('stroke', 'var(--cds-chart-axis)'); s.selectAll('text').attr('fill', 'var(--color-fg-muted)').attr('font-size', 12); });
+        const tip = SX.tip(box); const bis = d3.bisector((r) => pm(r.week)).center;
+        const rule = svg.append('line').attr('y1', m.t).attr('y2', H - m.b).attr('stroke', 'var(--cds-chart-axis)').style('display', 'none');
+        svg.append('rect').attr('x', m.l).attr('y', m.t).attr('width', W - m.l - m.r).attr('height', H - m.t - m.b).attr('fill', 'transparent')
+          .on('mousemove', (ev) => { const [mx, my] = d3.pointer(ev); const r = wh[bis(wh, x.invert(mx))]; if (!r) return; rule.style('display', null).attr('x1', x(pm(r.week))).attr('x2', x(pm(r.week)));
+            tip.replaceChildren(); const d = document.createElement('div'); d.className = 'd'; d.textContent = 'Week of ' + d3.utcFormat('%b %-d, %Y')(pm(r.week)); const a = document.createElement('div'); a.textContent = 'Buy €' + r.amount; const b = document.createElement('div'); b.textContent = 'S&P 500 ' + d3.format(',')(r.close); tip.append(d, a, b); SX.place(tip, box, x(pm(r.week)), my); })
+          .on('mouseleave', () => { tip.style.display = 'none'; rule.style('display', 'none'); });
+      }
+    }
+
+    if (SX.active === 'plans') {
+      const P = SX.plan || '20%'; const ps = SX.rows('plans_summary'); const cur = ps && ps.find((r) => r.plan === P);
+      SX.table('plan-table', 'plans_summary', { plan: (td, v) => { td.textContent = v; td.style.fontWeight = '600'; }, max_dd_1990: (td, v) => { td.textContent = v; td.style.color = 'var(--color-bad)'; } });
+      document.querySelectorAll('#plan-table tbody tr').forEach((tr) => { tr.style.outline = tr.dataset.key === P ? '2px solid var(--color-ok)' : ''; });
+      const g = SX.rows('plans_growth'); const gb = document.getElementById('plan-growth');
+      if (!SX.fail(gb, 'plans_growth') && g) {
+        const sel = { '10%': 'p10', '20%': 'p20', '30%': 'p30' }[P];
+        const ser = [['p10', '10% plan (1x)', dash.colors[0]], ['p20', '20% plan (2x + rule)', dash.colors[1]], ['p30', '30% plan (3x + rule)', dash.colors[2]], ['x2hold', '2x, no rule', 'var(--cds-chart-muted)'], ['x3hold', '3x, no rule', 'var(--cds-chart-muted)']];
+        document.getElementById('plan-legend').replaceChildren(...ser.slice(0, 4).map((k) => { const sp = document.createElement('span'); const i = document.createElement('i'); i.style.background = k[2]; sp.append(i, k[0] === 'x2hold' ? 'No rule (dashed)' : k[1]); return sp; }));
+        SX.line(gb, ser.map((k) => ({ name: k[1], color: k[2], w: k[0] === sel ? 3 : 1.5, op: k[0] === sel || k[0].startsWith('x') ? 1 : 0.45, dash: k[0].startsWith('x') ? '4 4' : null, pts: g.map((r) => ({ x: pm(r.month), y: 1000 * +r[k[0]] })) })),
+          { h: 300, log: true, yfmt: (v) => '€' + d3.format(',.0f')(v), tipfmt: (v) => '€' + d3.format(',.0f')(v), tipDate: d3.utcFormat('%b %Y') });
+      }
+      const y = SX.rows('plans_years'); const yb = document.getElementById('plan-years'); yb.querySelector('svg')?.remove();
+      if (!SX.fail(yb, 'plans_years') && y && cur && yb.clientWidth) {
+        const key = { '10%': 'p10', '20%': 'p20', '30%': 'p30' }[P]; const tgt = Number(cur.target);
+        const W = yb.clientWidth, H = 240, m = { t: 10, r: 10, b: 28, l: 40 };
+        const x = d3.scaleBand(y.map((r) => r.year), [m.l, W - m.r]).padding(0.2);
+        const ext = d3.extent(y.map((r) => +r[key]).concat([tgt, 0]));
+        const ys = d3.scaleLinear(ext, [H - m.b, m.t]).nice();
+        const svg = d3.select(yb).insert('svg', ':first-child').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
+        ys.ticks(5).forEach((t) => { svg.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', ys(t)).attr('y2', ys(t)).attr('stroke', t === 0 ? 'var(--cds-chart-axis)' : 'var(--cds-chart-grid)'); svg.append('text').attr('x', m.l - 6).attr('y', ys(t)).attr('dy', '0.32em').attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(t + '%'); });
+        const tip = SX.tip(yb);
+        svg.append('g').selectAll('rect').data(y).join('rect').attr('x', (r) => x(r.year)).attr('width', x.bandwidth()).attr('rx', 2)
+          .attr('y', (r) => ys(Math.max(0, +r[key]))).attr('height', (r) => Math.abs(ys(+r[key]) - ys(0)))
+          .attr('fill', (r) => (+r[key] >= tgt ? 'var(--color-ok)' : +r[key] < 0 ? 'var(--color-bad)' : 'var(--cds-chart-muted)'))
+          .on('mousemove', (ev, r) => { tip.replaceChildren(); const d = document.createElement('div'); d.className = 'd'; d.textContent = r.year; const a = document.createElement('div'); a.textContent = `${P} plan: ${r[key]}%  ·  1x: ${r.p10}%`; tip.append(d, a); const [mx, my] = d3.pointer(ev, yb); SX.place(tip, yb, mx, my); })
+          .on('mouseleave', () => (tip.style.display = 'none'));
+        svg.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', ys(tgt)).attr('y2', ys(tgt)).attr('stroke', 'var(--cds-chart-reference)').attr('stroke-dasharray', '4 4');
+        const step = Math.ceil(y.length / Math.max(2, Math.floor(W / 60)));
+        y.forEach((r, i) => { if (i % step === 0) svg.append('text').attr('x', x(r.year) + x.bandwidth() / 2).attr('y', H - 8).attr('text-anchor', 'middle').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(String(r.year).slice(0, 4)); });
+      }
+    }
+
+    if (SX.active === 'signal') {
+      // ---------- price chart ----------
+      const box = document.getElementById('price-chart'); const wk = SX.rows('spx_weekly');
+      if (!SX.fail(box, 'spx_weekly') && wk && sn) {
+        const s = sn[0];
+        SX.line(box, [{ name: 'S&P 500', color: dash.colors[0], pts: wk.map((r) => ({ x: pm(r.date), y: +r.close })) }],
+          { h: 280, refs: [{ y: +s.ath, label: 'High ' + d3.format(',.0f')(s.ath), dy: '-0.4em' }, { y: +s.ma200, label: '200-day ' + d3.format(',.0f')(s.ma200), dy: '1em' }] });
+      }
+      // ---------- indicator table, grouped ----------
+      SX.table('ind-table', 'indicators', {
+        status: (td, v) => { const p = document.createElement('span'); p.className = 'pill p-' + v; const d = document.createElement('i'); d.className = 'dot d-' + v; d.style.marginRight = '6px'; p.append(d, v); td.appendChild(p); },
+        name: (td, v) => { td.textContent = v; td.style.fontWeight = '500'; },
+        group: (td, v) => { td.textContent = v; td.style.color = 'var(--color-fg-muted)'; },
+      });
+    }
+
+    if (SX.active === 'backtest') {
+      SX.table('bt-table', 'backtest', { final: (td, v) => (td.textContent = SX.fmt(v)), invested: (td, v) => (td.textContent = SX.fmt(v)), strategy: (td, v) => { td.textContent = v; if (v === 'Plain monthly buying') td.style.fontWeight = '600'; } });
+      SX.table('fwd-table', 'fwd_by_signal');
+      const h = SX.rows('history'); const cb = document.getElementById('curve-chart');
+      if (!SX.fail(cb, 'history') && h) {
+        const keys = [['v_dca', 'Plain monthly buying', dash.colors[0], 2.5, 1], ['v_trend', 'Trend rule only', dash.colors[1], 1.5, 0.8], ['v_signal', 'Combined signal', dash.colors[2], 1.5, 0.8], ['v_dip', 'Buy the dip', 'var(--cds-chart-muted)', 1.5, 1]];
+        const lg = document.getElementById('curve-legend'); lg.replaceChildren(...keys.map((k) => { const s = document.createElement('span'); const i = document.createElement('i'); i.style.background = k[2]; s.append(i, k[1]); return s; }));
+        SX.line(cb, keys.map((k) => ({ name: k[1], color: k[2], w: k[3], op: k[4], pts: h.map((r) => ({ x: pm(r.month), y: r[k[0]] == null ? null : +r[k[0]] })) })),
+          { h: 300, log: true, yfmt: (v) => SX.cur(v), tipDate: d3.utcFormat('%b %Y'), strip: h.map((r) => ({ x: pm(r.month), s: r.sig })), tipExtra: (i) => 'Signal: ' + String(h[i].sig).replace('_', ' ') });
+        const small = [['m-curve', 'T10Y3M', 0, 'pp'], ['m-nfci', 'NFCI', 0, ''], ['m-sahm', 'SAHMREALTIME', 0.5, ''], ['m-baa', 'BAA10Y', null, 'pp']];
+        small.forEach(([id, f, ref, u]) => SX.line(document.getElementById(id), [{ name: f, color: dash.colors[0], w: 1.5, pts: h.map((r) => ({ x: pm(r.month), y: r[f] == null ? null : +r[f] })) }],
+          { h: 170, yfmt: d3.format('.1f'), tipDate: d3.utcFormat('%b %Y'), refs: ref == null ? [] : [{ y: ref, label: String(ref), color: 'var(--cds-chart-status-critical)' }] }));
+      }
+      // CAPE bars
+      const cbx = document.getElementById('cape-chart'); const cr = SX.rows('cape_buckets');
+      cbx.querySelector('svg')?.remove();
+      if (!SX.fail(cbx, 'cape_buckets') && cr && cbx.clientWidth) {
+        const W = cbx.clientWidth, bh = 20, gap = 6, H = cr.length * (bh + gap) + 24;
+        const svg = d3.select(cbx).insert('svg', ':first-child').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
+        const t = svg.append('text').attr('font-size', 12).text('Under 10'); const ml = t.node().getComputedTextLength() + 10; t.remove();
+        const x = d3.scaleLinear([-6, 20], [ml, W - 40]);
+        svg.append('line').attr('x1', x(0)).attr('x2', x(0)).attr('y1', 0).attr('y2', H - 20).attr('stroke', 'var(--cds-chart-axis)');
+        const tip = SX.tip(cbx);
+        cr.forEach((r, i) => {
+          const y0 = i * (bh + gap); const v = +r.avg_10y_real; const last = i === cr.length - 1;
+          svg.append('line').attr('x1', x(+r.worst)).attr('x2', x(+r.best)).attr('y1', y0 + bh / 2).attr('y2', y0 + bh / 2).attr('stroke', 'var(--cds-chart-grid)').attr('stroke-width', 2);
+          svg.append('rect').attr('x', Math.min(x(0), x(v))).attr('y', y0 + 3).attr('width', Math.abs(x(v) - x(0))).attr('height', bh - 6).attr('rx', 4).attr('fill', last ? 'var(--cds-chart-status-critical)' : dash.colors[0])
+            .on('mousemove', (ev) => { tip.replaceChildren(); const d = document.createElement('div'); d.className = 'd'; d.textContent = 'CAPE ' + r.cape; const a = document.createElement('div'); a.textContent = `Avg ${v}%/yr · range ${r.worst}% to ${r.best}% · ${r.months} months`; tip.append(d, a); const [mx, my] = d3.pointer(ev, cbx); SX.place(tip, cbx, mx, my); })
+            .on('mouseleave', () => (tip.style.display = 'none'));
+          svg.append('text').attr('x', ml - 6).attr('y', y0 + bh / 2).attr('dy', '0.32em').attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(r.cape);
+          svg.append('text').attr('x', v >= 0 ? x(v) + 4 : x(v) - 4).attr('y', y0 + bh / 2).attr('dy', '0.32em').attr('text-anchor', v >= 0 ? 'start' : 'end').attr('font-size', 12).attr('fill', 'var(--color-fg)').text((v > 0 ? '+' : '') + v + '%');
+        });
+      }
+    }
+
+    if (SX.active === 'stocks') {
+      const tick = (td, v, r) => { td.textContent = v; td.style.fontWeight = '600'; };
+      const nt = (td, v) => { td.textContent = v ?? ''; if (v) td.className = 'p-warn'; };
+      SX.table('rt-table', 'rank_top', { ticker: tick, note: nt });
+      SX.table('rb-table', 'rank_bottom', { ticker: tick, note: nt });
+      SX.table('top-table', 'stocks_top', { ticker: tick });
+      SX.table('fallen-table', 'stocks_fallen', { ticker: tick, check: (td, v) => { td.textContent = v; if (v) td.className = 'p-warn'; } });
+      SX.table('sector-table', 'sectors');
+    }
+    if (SX.active === 'demo') {
+      const side = (td, v) => { td.textContent = v; td.className = v === 'Long' ? 'p-good' : 'p-bad'; };
+      SX.table('pos-table', 'demo_positions', { side, ticker: (td, v) => { td.textContent = v; td.style.fontWeight = '600'; } });
+      SX.table('ledger-table', 'demo_ledger', { side, pnl_eur: (td, v) => { td.textContent = v; td.style.color = v > 0 ? 'var(--color-ok)' : v < 0 ? 'var(--color-bad)' : ''; } });
+      SX.table('dbt-table', 'demo_backtest', { strategy: (td, v) => { td.textContent = v; td.style.fontWeight = '500'; } });
+      const dw = SX.rows('demo_weekly'); const db = document.getElementById('demo-chart');
+      document.getElementById('demo-empty').hidden = !!(dw && dw.length > 1);
+      db.querySelector('svg')?.remove();
+      if (dw && dw.length > 1) SX.line(db, [{ name: 'Running total', color: dash.colors[0], pts: dw.map((r) => ({ x: pm(r.week), y: +r.cumulative })) }], { h: 220, yfmt: (v) => '€' + d3.format(',.0f')(v), tipfmt: (v) => '€' + d3.format(',.2f')(v), refs: [{ y: 0, label: '€0' }] });
+    }
+    if (SX.active === 'news') {
+      SX.table('news-table', 'news', { source: (td, v, r) => { const a = document.createElement('a'); if (/^https:\/\//.test(r.link)) a.href = r.link; a.target = '_blank'; a.rel = 'noopener'; a.textContent = v; td.appendChild(a); } });
+    }
+  };
+
+  [['q-rt', 'rt-table'], ['q-rb', 'rb-table']].forEach(([q, t]) => { const el = document.getElementById(q); el.addEventListener('input', () => { document.getElementById(t)._q = el.value; SX.draw(); }); });
+  document.querySelectorAll('.sx [data-go]').forEach((b) => b.addEventListener('click', () => { SX.show(b.dataset.go); document.getElementById('top').scrollIntoView({ block: 'start' }); }));
+  document.getElementById('home-filters').addEventListener('click', (ev) => {
+    const b = ev.target.closest('.flt'); if (!b) return;
+    if (b.dataset.list) { SX.hList = b.dataset.list; document.querySelectorAll('#home-filters [data-list]').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); }
+    if (b.dataset.sector) { const on = SX.hSector !== b.dataset.sector; SX.hSector = on ? b.dataset.sector : null; document.querySelectorAll('#home-filters [data-sector]').forEach((x) => x.setAttribute('aria-pressed', String(on && x === b))); }
+    SX.draw();
+  });
+  const hq = document.getElementById('q-home');
+  hq.addEventListener('input', () => { document.getElementById('home-table')._q = hq.value; if (SX.active !== 'home') SX.show('home'); else SX.draw(); });
+  SX.plan = '20%';
+  document.querySelectorAll('#plan-tabs button').forEach((b) => b.addEventListener('click', () => {
+    SX.plan = b.dataset.plan;
+    document.querySelectorAll('#plan-tabs button').forEach((x) => x.setAttribute('aria-selected', String(x === b)));
+    document.querySelectorAll('[data-plan-mark]').forEach((el) => el.setAttribute('data-where', 'plan=' + encodeURIComponent(SX.plan)));
+    dash.setLink('plans'); SX.draw();
+  }));
+  const qi = document.getElementById('q-top');
+  qi.addEventListener('input', () => { document.getElementById('top-table')._q = qi.value; SX.draw(); });
+
+  const named = location.hash.slice(1);
+  if (['home', 'week', 'plans', 'signal', 'backtest', 'stocks', 'demo', 'news'].includes(named)) SX.active = named;
+  let first = true;
+  dash.onData(() => {
+    if (first) { first = false; SX.show(SX.active); return; }
+    SX.draw();
+  });
+})();
+</script>
+
+</div>
+
+<footer class="site-foot" id="sources">
+  <b>Data sources and last update</b>
+  <table id="src-table"><tbody></tbody></table>
+  <p>Signal500 is a personal research tool. Backtests, rankings and the demo account are simulations, not financial advice. Data: Federal Reserve Bank of St. Louis (FRED), Robert Shiller's S&amp;P 500 dataset, the public S&amp;P 500 companies datasets on GitHub, FactSet Earnings Insight, multpl.com, AAII, LPL Research.</p>
+</footer>
+<script>
+fetch('data/meta.json?v=' + Math.floor(Date.now() / 600000)).then((r) => r.json()).then((m) => {
+  const tb = document.querySelector('#src-table tbody');
+  const fmt = (t) => { try { return new Date(t).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }); } catch (e) { return t; } };
+  Object.values(m).sort((a, b) => (a.refresh > b.refresh ? 1 : -1)).forEach((d) => {
+    const tr = document.createElement('tr');
+    [d.title, d.description, d.refresh === 'static' ? 'Fixed research data' : 'Updates ' + d.refresh, fmt(d.updated)].forEach((v, i) => { const td = document.createElement('td'); td.textContent = v; if (i === 0) td.style.fontWeight = '600'; tr.appendChild(td); });
+    tb.appendChild(tr);
+  });
+}).catch(() => {});
+</script>
+</body>
+</html>
