@@ -1,0 +1,42 @@
+name: Probe momentum deciles
+on: workflow_dispatch
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - shell: bash
+        run: |
+          pip -q install pandas numpy
+          python - <<'PY'
+          import io, zipfile, urllib.request, pandas as pd, numpy as np
+          B='https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/'
+          def z(f):
+              raw=urllib.request.urlopen(urllib.request.Request(B+f,headers={'User-Agent':'Mozilla/5.0'}),timeout=60).read()
+              zz=zipfile.ZipFile(io.BytesIO(raw)); return zz.read(zz.namelist()[0]).decode('latin-1')
+          def block(txt):
+              lines=txt.splitlines(); out=[]; hdr=None
+              for l in lines:
+                  p=[x.strip() for x in l.split(',')]
+                  if hdr is None and len(p)>5 and p[0]=='' : hdr=p; continue
+                  if hdr is not None:
+                      if len(p)==len(hdr) and len(p[0])==6 and p[0].isdigit(): out.append(p)
+                      elif out: break
+              df=pd.DataFrame(out,columns=['m']+hdr[1:]).set_index('m').astype(float)/100
+              return df
+          mo=block(z('10_Portfolios_Prior_12_2_CSV.zip'))   # first block = value-weighted monthly
+          ff=block(z('F-F_Research_Data_Factors_CSV.zip'))
+          mkt=ff['Mkt-RF']+ff['RF']; rf=ff['RF']
+          d=pd.concat([mo,mkt.rename('MKT'),rf.rename('RF')],axis=1).dropna()
+          hi=d.columns[9]; lo=d.columns[0]
+          def st(r,name,per):
+              eq=(1+r).cumprod(); n=len(r); c=(eq.iloc[-1]**(12/n)-1)*100; dd=(eq/eq.cummax()-1).min()*100
+              print(f"::notice::{per} {name}: {c:.1f}%/yr maxDD {dd:.0f}% vol {r.std()*np.sqrt(12)*100:.0f}%")
+          for per,s in [('1927+','192701'),('1990+','199001'),('2007+','200701'),('2015+','201501')]:
+              x=d[d.index>=s]
+              st(x.MKT,'market',per); st(x[hi],'top decile momentum',per)
+              st(0.7*x.MKT+0.3*x[hi],'70 mkt/30 top',per)
+              st(x.MKT+0.3*(x[hi]-x[lo]),'mkt + 30pct L/S top-bottom',per)
+          print("::notice::cols "+hi+" | "+lo+" | last "+d.index[-1])
+          PY
