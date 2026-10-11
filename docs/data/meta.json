@@ -45,19 +45,19 @@
   "title": "Market indicators",
   "description": "Trend, fear, recession, credit, rates and valuation readings. FRED (daily); FactSet, multpl.com, AAII and LPL Research (as of 9 Oct 2026, not auto-updated).",
   "refresh": "daily",
-  "updated": "2026-10-11T15:55:00Z"
+  "updated": "2026-10-11T16:17:29Z"
  },
  "signal_now": {
   "title": "Monthly signal",
   "description": "Rule-based monthly signal from FRED data.",
   "refresh": "daily",
-  "updated": "2026-10-11T15:55:00Z"
+  "updated": "2026-10-11T16:17:29Z"
  },
  "spx_weekly": {
   "title": "S&P 500 weekly closes",
   "description": "Last two years. FRED SP500.",
   "refresh": "daily",
-  "updated": "2026-10-11T15:55:00Z"
+  "updated": "2026-10-11T16:17:29Z"
  },
  "history": {
   "title": "Monthly history 1990\u20132026",
