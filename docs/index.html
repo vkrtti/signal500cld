@@ -27,7 +27,7 @@
 .sx .brand svg{flex:none}
 .sx .topbar .sp{flex:1}
 .sx .search{font:inherit;font-size:13px;padding:8px 12px 8px 32px;border:0;border-radius:10px;background:var(--panel);color:var(--color-fg);width:min(100%,16rem);background-image:none}
-.sx .searchbox{position:relative} .sx .searchbox::before{content:"⌕";position:absolute;left:11px;top:50%;transform:translateY(-52%);color:var(--muted);font-size:15px}
+.sx .searchbox{position:relative;flex:0 1 16rem;min-width:0} .sx .searchbox .search{width:100%} .sx .searchbox::before{content:"⌕";position:absolute;left:11px;top:50%;transform:translateY(-52%);color:var(--muted);font-size:15px}
 .sx .badge{font-size:12px;color:var(--muted);background:var(--panel);border-radius:8px;padding:6px 10px;white-space:nowrap}
 .sx .badge b{color:var(--color-fg)}
 /* big text tabs */
@@ -170,7 +170,7 @@
 .sx .askbar{position:fixed;left:50%;bottom:48px;transform:translateX(-50%);z-index:20;display:flex;align-items:center;gap:10px;width:min(560px,calc(100vw - 32px));padding:10px 12px 10px 16px;border-radius:16px;
   background:color-mix(in srgb,var(--color-bg) 78%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));
   box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 12%,transparent),0 8px 30px color-mix(in srgb,var(--accent) 28%,transparent);cursor:text;color:var(--muted);font:inherit;font-size:14px;font-weight:600;text-align:left}
-.sx .askbar .spark{width:18px;height:18px;flex:none;color:var(--accent)}
+.sx .askico{width:18px;height:18px;flex:none;color:var(--accent);display:block}
 .sx .askbar .lbl2{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sx .askbar kbd{font:inherit;font-size:12px;font-weight:700;color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 55%,transparent);border-radius:8px;padding:2px 8px;background:color-mix(in srgb,var(--accent) 12%,transparent);white-space:nowrap}
 .sx .askbar .hide{background:none;border:0;color:var(--muted);cursor:pointer;padding:2px;display:flex}
@@ -913,10 +913,10 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
     </div>
 
   </section>
-  <button class="askbar" id="askbar" type="button" aria-label="Ask IndexPilot AI (Shift + /)"><svg class="spark" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2l1.9 5.6L19.5 9.5l-5.6 1.9L12 17l-1.9-5.6L4.5 9.5l5.6-1.9z" fill="currentColor"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z" fill="currentColor" opacity=".6"/></svg><span class="lbl2">Ask IndexPilot AI</span><kbd>Shift + /</kbd><span class="hide" title="Hide" aria-label="Hide the assistant"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l18 18M10.6 10.6a2 2 0 002.8 2.8M9.9 5.1A9.8 9.8 0 0112 5c5 0 9 5 9 7a11 11 0 01-2.6 3.4M6.6 6.6C4.3 8 3 10.6 3 12c0 2 4 7 9 7a9.7 9.7 0 004.4-1"/></svg></span></button>
-  <button class="askmini" id="askmini" type="button" aria-label="Ask IndexPilot AI" hidden><svg class="spark" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2l1.9 5.6L19.5 9.5l-5.6 1.9L12 17l-1.9-5.6L4.5 9.5l5.6-1.9z" fill="currentColor"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z" fill="currentColor" opacity=".6"/></svg></button>
+  <button class="askbar" id="askbar" type="button" aria-label="Ask IndexPilot AI (Shift + /)"><svg class="askico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2l1.9 5.6L19.5 9.5l-5.6 1.9L12 17l-1.9-5.6L4.5 9.5l5.6-1.9z" fill="currentColor"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z" fill="currentColor" opacity=".6"/></svg><span class="lbl2">Ask IndexPilot AI</span><kbd>Shift + /</kbd><span class="hide" title="Hide" aria-label="Hide the assistant"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l18 18M10.6 10.6a2 2 0 002.8 2.8M9.9 5.1A9.8 9.8 0 0112 5c5 0 9 5 9 7a11 11 0 01-2.6 3.4M6.6 6.6C4.3 8 3 10.6 3 12c0 2 4 7 9 7a9.7 9.7 0 004.4-1"/></svg></span></button>
+  <button class="askmini" id="askmini" type="button" aria-label="Ask IndexPilot AI" hidden><svg class="askico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2l1.9 5.6L19.5 9.5l-5.6 1.9L12 17l-1.9-5.6L4.5 9.5l5.6-1.9z" fill="currentColor"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z" fill="currentColor" opacity=".6"/></svg></button>
   <div class="askpanel" id="askpanel" role="dialog" aria-label="Ask IndexPilot AI" hidden>
-    <div class="askhead"><svg class="spark" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2l1.9 5.6L19.5 9.5l-5.6 1.9L12 17l-1.9-5.6L4.5 9.5l5.6-1.9z" fill="currentColor"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z" fill="currentColor" opacity=".6"/></svg><span>Ask IndexPilot AI</span><span class="mode" id="askmode">Site data</span><span class="sp"></span><button id="askgear" type="button" title="Settings" aria-label="Settings">⚙</button><button id="askclose" type="button" title="Close (Esc)" aria-label="Close">×</button></div>
+    <div class="askhead"><svg class="askico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2l1.9 5.6L19.5 9.5l-5.6 1.9L12 17l-1.9-5.6L4.5 9.5l5.6-1.9z" fill="currentColor"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z" fill="currentColor" opacity=".6"/></svg><span>Ask IndexPilot AI</span><span class="mode" id="askmode">Site data</span><span class="sp"></span><button id="askgear" type="button" title="Settings" aria-label="Settings">⚙</button><button id="askclose" type="button" title="Close (Esc)" aria-label="Close">×</button></div>
     <div class="askset" id="askset">Optional: use Claude with your own Anthropic API key for free-form answers. The key is stored only in this browser and sent only to api.anthropic.com; usage is billed to your account. Leave empty to keep the built-in answers.
       <input id="askkey" type="password" placeholder="sk-ant-…" autocomplete="off" aria-label="Anthropic API key">
       <button id="askkeysave" type="button">Save key</button><button id="askkeyclear" type="button">Remove key</button></div>
