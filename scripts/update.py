@@ -44,7 +44,10 @@ def get_text(url, offline_name):
             log(f'fetch failed ({attempt + 1}/4) {url}: {e}'); time.sleep(5 * (attempt + 1))
     raise RuntimeError('could not fetch ' + url)
 
-def fred(series, start='2015-01-01'):
+LONG = {'NASDAQCOM': '1971-01-01', 'NASDAQ100': '1986-01-01', 'NIKKEI225': '1960-01-01', 'DEXUSEU': '1999-01-01', 'CBBTCUSD': '2014-12-01', 'DCOILBRENTEU': '1987-01-01'}
+
+def fred(series, start=None):
+    start = start or LONG.get(series, '2015-01-01')
     txt = get_text(f'https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}&cosd={start}', series + '.csv')
     df = pd.read_csv(io.StringIO(txt))
     df.columns = ['date', 'v']
@@ -56,7 +59,8 @@ def fred(series, start='2015-01-01'):
 
 # ---------------------------------------------------------------- fetch
 S = {}
-for sid in ['SP500', 'VIXCLS', 'NFCI', 'SAHMREALTIME', 'T10Y3M', 'BAMLH0A0HYM2', 'DFF', 'DGS10', 'UNRATE', 'CPIAUCSL']:
+for sid in ['SP500', 'VIXCLS', 'NFCI', 'SAHMREALTIME', 'T10Y3M', 'BAMLH0A0HYM2', 'DFF', 'DGS10', 'UNRATE', 'CPIAUCSL',
+            'NASDAQCOM', 'NASDAQ100', 'DJIA', 'NIKKEI225', 'DEXUSEU', 'DCOILBRENTEU', 'DTWEXBGS', 'CBBTCUSD']:
     try: S[sid] = fred(sid); log(sid, 'ok', S[sid].index[-1].date(), S[sid].iloc[-1])
     except Exception as e: log('WARN', sid, e)
 GH = 'https://raw.githubusercontent.com/datasets/'
@@ -147,6 +151,44 @@ if 'SP500' in S:
                              spx_close=spx, ma50=round(ma50, 2), ma200=round(ma200, 2), ath=ath, ath_date=sp.idxmax().strftime('%Y-%m-%d'),
                              low52=float(yr.min()), high52=float(yr.max()))])
 
+# ---------------------------------------------------------------- daily: markets table
+def market_row(key, name, group, s, unit='', note=''):
+    s = s.dropna()
+    if s.empty: return None
+    last_v, last_d = float(s.iloc[-1]), s.index[-1]
+    def chg(days):
+        past = s[s.index <= last_d - pd.Timedelta(days=days)]
+        return round((last_v / float(past.iloc[-1]) - 1) * 100, 2) if len(past) else None
+    ytd_base = s[s.index < pd.Timestamp(year=last_d.year, month=1, day=1)]
+    yr = s[s.index > last_d - pd.Timedelta(days=365)]
+    ma200 = float(s.iloc[-200:].mean()) if len(s) >= 200 else None
+    wk = s.groupby(s.index.to_period('W')).tail(1).iloc[-53:]
+    ath = float(s.max()); ath_date = s.idxmax()
+    lr = None; first = s.index[0]
+    if (last_d - first).days > 3650:
+        yrs = (last_d - first).days / 365.25; lr = round(((last_v / float(s.iloc[0])) ** (1 / yrs) - 1) * 100, 1)
+    eq = s / s.cummax() - 1
+    return dict(key=key, name=name, group=group, last=round(last_v, 4 if last_v < 10 else 2), date=last_d.strftime('%Y-%m-%d'),
+                w1=chg(7), w4=chg(28), ytd=round((last_v / float(ytd_base.iloc[-1]) - 1) * 100, 2) if len(ytd_base) else None, y1=chg(365),
+                from_high_52w=round((last_v / float(yr.max()) - 1) * 100, 2), from_ath=round((last_v / ath - 1) * 100, 2), ath_date=ath_date.strftime('%Y-%m-%d'),
+                trend='Above' if ma200 and last_v >= ma200 else 'Below' if ma200 else None, since=first.strftime('%Y'), cagr_since=lr,
+                max_dd=round(float(eq.min()) * 100, 1), spark=[round(float(v), 2) for v in wk.values], unit=unit, note=note)
+mk = []
+if 'SP500' in S:
+    mk.append(market_row('spx', 'S&P 500', 'US stocks', S['SP500'], 'pts'))
+    if 'DEXUSEU' in S:
+        fx = S['DEXUSEU'].reindex(S['SP500'].index).ffill()
+        mk.append(market_row('spx_eur', 'S&P 500 in euros', 'US stocks', (S['SP500'] / fx).dropna(), 'pts', 'S&P 500 divided by EUR/USD: what a euro investor sees'))
+for sid, key, name, group, unit, note in [('NASDAQCOM', 'nasdaq', 'Nasdaq Composite', 'US stocks', 'pts', ''), ('NASDAQ100', 'ndx', 'Nasdaq-100', 'US stocks', 'pts', 'Largest 100 non-financial Nasdaq stocks'),
+                                          ('DJIA', 'dow', 'Dow Jones Industrial Average', 'US stocks', 'pts', '30 large US companies'), ('NIKKEI225', 'nikkei', 'Nikkei 225', 'World stocks', 'pts', 'Japan, in yen'),
+                                          ('DEXUSEU', 'eurusd', 'Euro / US dollar', 'Currencies & commodities', '$ per €', 'Up = euro stronger, which lowers your US returns in euros'),
+                                          ('DTWEXBGS', 'usd', 'US dollar index (broad)', 'Currencies & commodities', 'index', ''), ('DCOILBRENTEU', 'brent', 'Brent crude oil', 'Currencies & commodities', '$/barrel', ''),
+                                          ('CBBTCUSD', 'btc', 'Bitcoin', 'Currencies & commodities', '$', 'Highly volatile; for context only')]:
+    if sid in S:
+        r = market_row(key, name, group, S[sid], unit, note)
+        if r: mk.append(r)
+if mk: save('markets', [m for m in mk if m])
+
 # ---------------------------------------------------------------- weekly roll (Saturday run)
 if args.weekly:
     need = ['SP500', 'VIXCLS', 'NFCI', 'SAHMREALTIME', 'T10Y3M']
@@ -166,6 +208,14 @@ if args.weekly:
     if r.returncode: sys.exit(r.returncode)
     for n in ['weekly_now', 'weekly_history', 'meter_now', 'rank_top', 'rank_bottom', 'demo_positions', 'demo_ledger']:
         save(n, json.load(open(f'work/out/{n}.json')))
+    # archive this week's prices of all ranked stocks (builds our own price history for future testing of the picks)
+    try:
+        fp = pd.read_csv('work/fin.csv').dropna(subset=['Price'])
+        yr_file = os.path.join(D, 'archive', f'prices_{inputs["date"][:4]}.json'); os.makedirs(os.path.dirname(yr_file), exist_ok=True)
+        arc = json.load(open(yr_file)) if os.path.exists(yr_file) else {}
+        arc[inputs['date']] = {t: round(float(p), 2) for t, p in zip(fp.Symbol, fp.Price)}
+        json.dump(arc, open(yr_file, 'w'), separators=(',', ':')); log('archived prices for', len(fp), 'stocks')
+    except Exception as e: log('WARN price archive', e)
     summary = json.loads(r.stdout.strip().splitlines()[-1])
     open('work/summary.md', 'w').write(
         f"### Week of {summary['week_of']}\n\n- **Buy €{summary['amount']}** ({summary['tier']})\n- Signal strength **{summary['meter']:+d}** ({summary['label']})\n"

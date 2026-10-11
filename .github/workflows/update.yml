@@ -34,6 +34,10 @@ jobs:
           else
             python scripts/update.py
           fi
+      - name: Long-history research (Saturday / manual weekly runs)
+        if: github.event.schedule == '0 6 * * 6' || inputs.weekly == true
+        continue-on-error: true
+        run: python scripts/research.py
       - name: Write run summary
         if: always()
         run: if [ -f work/summary.md ]; then cat work/summary.md >> "$GITHUB_STEP_SUMMARY"; fi
@@ -41,7 +45,7 @@ jobs:
         run: |
           git config user.name "signal500-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/data
+          git add docs/data research_data
           if git diff --cached --quiet; then
             echo "No data changes"
           else

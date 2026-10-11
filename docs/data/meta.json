@@ -148,5 +148,47 @@
   "description": "Static.",
   "refresh": "static",
   "updated": "2026-10-11T15:55:00Z"
+ },
+ "hist_plans": {
+  "title": "Plans over 100 years",
+  "description": "The 10/20/30% plans simulated 1927\u20132026 on Kenneth French US market total returns (monthly), with daily-reset drag, fees and cash at the T-bill rate.",
+  "refresh": "weekly",
+  "updated": "2026-10-11T16:56:50Z"
+ },
+ "hist_plans_growth": {
+  "title": "Plan growth since 1927",
+  "description": "Value of 1 unit invested in Jan 1927, at each year end.",
+  "refresh": "weekly",
+  "updated": "2026-10-11T16:56:50Z"
+ },
+ "hist_weekly_rule": {
+  "title": "Weekly rule over 100 years",
+  "description": "Money-weighted yearly return of the EUR 40-200 drawdown tiers vs a flat amount, US market total returns (French).",
+  "refresh": "weekly",
+  "updated": "2026-10-11T16:56:50Z"
+ },
+ "hist_factors": {
+  "title": "Value and momentum since 1927",
+  "description": "Long/short factor returns 1927\u20132026 (Kenneth French data library), premium over cash, before costs.",
+  "refresh": "weekly",
+  "updated": "2026-10-11T16:56:50Z"
+ },
+ "hist_factor_growth": {
+  "title": "Factor growth since 1927",
+  "description": "Value of 1 unit in each long/short factor, year-end.",
+  "refresh": "weekly",
+  "updated": "2026-10-11T16:56:50Z"
+ },
+ "hist_decades": {
+  "title": "Returns by decade",
+  "description": "Yearly returns by decade 1927\u20132026: US market, 20%/30% plans, value, momentum, their mix and cash.",
+  "refresh": "weekly",
+  "updated": "2026-10-11T16:56:50Z"
+ },
+ "markets": {
+  "title": "Markets today",
+  "description": "S&P 500 (also in euros), Nasdaq, Dow, Nikkei 225, EUR/USD, dollar index, Brent oil and Bitcoin. Federal Reserve (FRED).",
+  "refresh": "daily",
+  "updated": ""
  }
 }
