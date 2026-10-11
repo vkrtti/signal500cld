@@ -77,6 +77,7 @@
 .sx .ex-h{font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px}
 .sx .ex-h.l{color:var(--up)} .sx .ex-h.s{color:var(--down)}
 .sx .mini.ex-list li{grid-template-columns:26px 1fr auto auto}
+.sx .mini.mk-list li{grid-template-columns:1fr auto auto 64px}
 .sx .exrec{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
 .sx .exrec b{color:var(--color-fg)}
 /* strategy page */
@@ -99,6 +100,13 @@
 .sx code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;background:var(--color-bg);border-radius:6px;padding:2px 6px}
 .sx .formula{display:block;padding:10px 12px;margin:8px 0;white-space:pre-wrap;line-height:1.6}
 .sx .lbl{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:10px 0 2px}
+/* markets & history */
+.sx .spark{display:block}
+.sx .heat{display:grid;gap:2px;font-size:12px;overflow-x:auto}
+.sx .heat div{padding:5px 6px;border-radius:4px;text-align:right;white-space:nowrap}
+.sx .heat .h{font-weight:700;color:var(--muted);text-align:center;background:none}
+.sx .heat .y{font-weight:700;color:var(--muted);text-align:left;background:none}
+.sx .grp-pill{font-size:11px;color:var(--muted);font-weight:600}
 /* chips & filters */
 .sx .chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:none}
 .sx .chip{font:inherit;font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--panel);color:var(--color-fg);border-radius:999px;padding:6px 12px;white-space:nowrap;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
@@ -160,12 +168,14 @@
 
   <div class="tabs" role="tablist">
     <button role="tab" data-tab="home" id="tab-home" aria-selected="true">Overview</button>
+    <button role="tab" data-tab="markets" id="tab-markets" aria-selected="false">Markets</button>
     <button role="tab" data-tab="week" id="tab-week" aria-selected="false">This week</button>
     <button role="tab" data-tab="strategy" id="tab-strategy" aria-selected="false">Strategy</button>
     <button role="tab" data-tab="extra" id="tab-extra" aria-selected="false">Extra profit</button>
     <button role="tab" data-tab="plans" id="tab-plans" aria-selected="false">Return plans</button>
     <button role="tab" data-tab="signal" id="tab-signal" aria-selected="false">Market signal</button>
     <button role="tab" data-tab="backtest" id="tab-backtest" aria-selected="false">Backtest</button>
+    <button role="tab" data-tab="history" id="tab-history" aria-selected="false">100-year history</button>
     <button role="tab" data-tab="stocks" id="tab-stocks" aria-selected="false">Stock screen</button>
     <button role="tab" data-tab="demo" id="tab-demo" aria-selected="false">Demo account</button>
     <button role="tab" data-tab="news" id="tab-news" aria-selected="false">News &amp; method</button>
@@ -192,6 +202,7 @@
       </div>
       <div class="card"><h3><button data-go="stocks">Top ranked</button></h3><ul class="mini" id="hl-top" data-source="rank_top"></ul></div>
       <div class="card"><h3><button data-go="stocks">Bottom ranked</button></h3><ul class="mini" id="hl-bottom" data-source="rank_bottom"></ul></div>
+      <div class="card"><h3><button data-go="markets">Markets</button></h3><ul class="mini mk-list" id="hl-markets" data-source="markets"></ul></div>
     </div>
 
     <div class="card" id="extra-card" style="margin-bottom:12px">
@@ -230,6 +241,90 @@
       </table>
     </div>
     <p class="note" style="margin-top:8px">Value + momentum ranking of the 486 S&amp;P 500 members with complete data; the top and bottom 50 are listed. Factor rankings, not recommendations.</p>
+  </section>
+
+  <!-- ================= MARKETS ================= -->
+  <section id="markets" data-page hidden>
+    <h1 class="ttl">Markets</h1>
+    <p class="lede">Major indexes, the S&amp;P 500 as a euro investor sees it, currencies and commodities, updated every weekday after the US close. Then 36 years of stock markets around the world.</p>
+    <div class="tbl tall">
+      <table id="mk-table" data-source="markets" data-row-key="key">
+        <thead><tr><th data-field="name">Market</th><th data-field="last" class="n">Last</th><th data-field="w1" class="n">1 week</th><th data-field="w4" class="n">4 weeks</th><th data-field="ytd" class="n">This year</th><th data-field="y1" class="n">1 year</th><th data-field="from_high_52w" class="n">From 52w high</th><th data-field="trend">200-day trend</th><th data-field="spark">Last 52 weeks</th></tr></thead>
+        <tbody></tbody></table>
+    </div>
+    <p class="note" style="margin-top:6px">Changes in %, price only. Source: Federal Reserve (FRED). The S&amp;P 500 in euros is the index divided by the EUR/USD rate.</p>
+
+    <h2 id="mk-long-h">Long-run record</h2>
+    <div class="card tbl">
+      <table id="mk-long" data-source="markets" data-row-key="key">
+        <thead><tr><th data-field="name">Market</th><th data-field="since" class="n">Data since</th><th data-field="cagr_since" class="n">Yearly change since then (%)</th><th data-field="max_dd" class="n">Worst fall (%)</th><th data-field="from_ath" class="n">From all-time high (%)</th><th data-field="ath_date" class="n">All-time high</th><th data-field="note">Note</th></tr></thead>
+        <tbody></tbody></table>
+    </div>
+    <p class="note">Price only (no dividends). The Nikkei 225 needed 34 years to regain its 1989 peak, a reminder that a single country can stall for a generation.</p>
+
+    <h2 id="regions-h">World stock markets since 1990</h2>
+    <p class="note">Total returns with dividends, in US dollars, Jul 1990 to the latest month. Kenneth French data library.</p>
+    <div class="card tbl">
+      <table id="regions-table" data-source="regions" data-row-key="key">
+        <thead><tr><th data-field="region">Region</th><th data-field="cagr" class="n">Per year since 1990 (%)</th><th data-field="last10" class="n">Last 10 years (%/yr)</th><th data-field="ytd" class="n">This year (%)</th><th data-field="max_dd" class="n">Worst fall (%)</th><th data-field="worst_year" class="n">Worst year (%)</th><th data-field="vol" class="n">Volatility (%)</th><th data-field="corr_us" class="n">Moves with US (0–1)</th></tr></thead>
+        <tbody></tbody></table>
+    </div>
+    <h2 id="regions-years-h">Year by year</h2>
+    <div class="card"><div class="heat" id="regions-heat" data-source="regions_years"></div>
+      <p class="note" style="margin-top:8px">Green up, red down. No region wins every year; the US led most of the last 15, other regions led 2000–2007 and 2025.</p></div>
+  </section>
+
+  <!-- ================= 100-YEAR HISTORY ================= -->
+  <section id="history" data-page hidden>
+    <h1 class="ttl">100 years of evidence</h1>
+    <p class="lede">The strategy's methods tested on US stock market returns since January 1927: the 1929 crash, the 1930s, WWII, 1970s inflation, 2000, 2008, 2020 and 2022. Monthly total returns from the Kenneth French data library, the standard dataset of academic finance.</p>
+
+    <h2 id="h-plans-h">The 10/20/30% plans since 1927</h2>
+    <div class="card tbl">
+      <table id="h-plans" data-source="hist_plans" data-row-key="plan">
+        <thead><tr><th data-field="name">Plan</th><th data-field="setup">Setup</th><th data-field="cagr" class="n">Per year (%)</th><th data-field="since_1990" class="n">Since 1990 (%/yr)</th><th data-field="max_dd" class="n">Worst fall (%)</th><th data-field="worst_year" class="n">Worst year (%)</th><th data-field="worst_year_when" class="n">When</th><th data-field="median_10y" class="n">Typical 10y (%/yr)</th><th data-field="min_10y" class="n">Worst 10y (%/yr)</th><th data-field="hit_target_10y_pct" class="n">10y spans on target (%)</th></tr></thead>
+        <tbody></tbody></table>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <div class="legend" id="h-growth-legend"></div>
+      <div class="chart" id="h-growth" data-source="hist_plans_growth" style="min-height:300px"></div>
+      <p class="note">€1 invested in January 1927, log scale. Dashed: 2x and 3x held without the trend rule (3x was wiped out in 1931).</p>
+    </div>
+    <div class="warnbox">Since 1990 the leveraged plans looked strong. Over 100 years, 2x with the trend rule still fell 86% at its worst, and 3x fell 99.7%: crashes inside a single month (1929–32, May 1940, October 1987) hit before a monthly or weekly rule can react. Leverage added little return for a risk of near-total loss.</div>
+
+    <h2 id="h-weekly-h">Weekly €40–€200 rule since 1927</h2>
+    <div class="card tbl">
+      <table id="h-weekly" data-source="hist_weekly_rule" data-row-key="period">
+        <thead><tr><th data-field="period">Starting</th><th data-field="rule" class="n">Rule (%/yr)</th><th data-field="flat" class="n">Flat amount (%/yr)</th><th data-field="diff" class="n">Difference (pp)</th><th data-field="avg_weekly" class="n">Avg weekly (€)</th><th data-field="crash_share" class="n">Months at €150+ (%)</th></tr></thead>
+        <tbody></tbody></table>
+    </div>
+    <p class="note">Money-weighted returns. Before 1990 there was no VIX or Fed stress index, so this version uses the drawdown tiers only. The rule never did worse than a flat amount and was slightly better in most periods.</p>
+
+    <h2 id="h-factors-h">Value and momentum since 1927 (the idea behind the stock picks)</h2>
+    <div class="card tbl">
+      <table id="h-factors" data-source="hist_factors" data-row-key="key">
+        <thead><tr><th data-field="factor">Long/short strategy</th><th data-field="premium" class="n">Per year (%)</th><th data-field="vol" class="n">Volatility (%)</th><th data-field="max_dd" class="n">Worst fall (%)</th><th data-field="worst_year" class="n">Worst year (%)</th><th data-field="pos_years" class="n">Up years (%)</th><th data-field="longest_underwater_years" class="n">Longest below peak (years)</th><th data-field="since_2007" class="n">Since 2007 (%/yr)</th><th data-field="last_12m" class="n">Last 12 months (%)</th></tr></thead>
+        <tbody></tbody></table>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <div class="legend" id="h-fgrowth-legend"></div>
+      <div class="chart" id="h-fgrowth" data-source="hist_factor_growth" style="min-height:260px"></div>
+      <p class="note">Return above cash of the academic long/short portfolios (all US stocks, monthly rebalancing, before costs), log scale. The site's 3+3 weekly picks are a tiny, noisier version of the 50/50 mix.</p>
+    </div>
+
+    <h2 id="h-decades-h">Decade by decade</h2>
+    <div class="card tbl">
+      <table id="h-decades" data-source="hist_decades" data-row-key="decade">
+        <thead><tr><th data-field="decade">Decade</th><th data-field="market" class="n">US market (%/yr)</th><th data-field="plan20" class="n">20% plan</th><th data-field="plan30" class="n">30% plan</th><th data-field="value" class="n">Value</th><th data-field="momentum" class="n">Momentum</th><th data-field="mix" class="n">Value + momentum</th><th data-field="cash" class="n">Cash</th></tr></thead>
+        <tbody></tbody></table>
+    </div>
+
+    <h2 id="h-take-h">What 100 years says</h2>
+    <div class="grid">
+      <div class="card"><h3>Holds up</h3><ul class="m"><li>Buying the whole market and holding: about 10% a year, despite a −84% fall in 1929–32.</li><li>Buying more after falls (the weekly rule): small edge, never harmful.</li><li>Value and momentum combined: positive in 80% of years over the full century.</li></ul></div>
+      <div class="card"><h3>Does not hold up</h3><ul class="m"><li>2x/3x leverage, even with a trend rule: near-total losses in the 1930s and 1940.</li><li>Expecting 20–30% a year: no plan delivered it over the long run.</li></ul></div>
+      <div class="card"><h3>Watch out</h3><ul class="m"><li>Value and momentum have earned about nothing since 2007: long dry spells happen, the longest lasted 18–24 years.</li><li>Past returns, even 100 years of them, don't guarantee the future.</li></ul></div>
+    </div>
   </section>
 
   <!-- ================= THIS WEEK ================= -->
@@ -309,7 +404,7 @@
     </div>
 
     <div class="toc">
-      <a class="chip" href="#s-routine">Weekly routine</a><a class="chip" href="#s-amount">Weekly amount</a><a class="chip" href="#s-meter">Signal meter</a><a class="chip" href="#s-trend">Trend rule &amp; plans</a><a class="chip" href="#s-monthly">Monthly signal</a><a class="chip" href="#s-ind">Indicators</a><a class="chip" href="#s-val">Valuation</a><a class="chip" href="#s-rank">Stock ranking</a><a class="chip" href="#s-extra">Extra profit &amp; demo</a><a class="chip" href="#s-test">How it was tested</a><a class="chip" href="#s-risk">Risk management</a><a class="chip" href="#s-data">Data &amp; updates</a><a class="chip" href="#s-limits">Limits</a>
+      <a class="chip" href="#s-routine">Weekly routine</a><a class="chip" href="#s-amount">Weekly amount</a><a class="chip" href="#s-meter">Signal meter</a><a class="chip" href="#s-trend">Trend rule &amp; plans</a><a class="chip" href="#s-monthly">Monthly signal</a><a class="chip" href="#s-ind">Indicators</a><a class="chip" href="#s-val">Valuation</a><a class="chip" href="#s-rank">Stock ranking</a><a class="chip" href="#s-extra">Extra profit &amp; demo</a><a class="chip" href="#s-test">How it was tested</a><a class="chip" href="#s-risk">Risk management</a><a class="chip" href="#s-data">Data &amp; updates</a><a class="chip" href="#s-limits">Limits</a><a class="chip" href="#history" data-go="history">100-year history</a>
     </div>
 
     <h2 id="s-routine">1 · The weekly routine</h2>
@@ -335,7 +430,7 @@
         <tr><td>Dip</td><td>5–10% below the record</td><td class="n">€100</td></tr>
         <tr><td>Normal</td><td>Within 5% of the record</td><td class="n">€60</td></tr></tbody></table>
       <span class="lbl">Evidence</span>
-      <p>Money-weighted yearly return vs a flat weekly amount (price only): 1990–2026 9.24% vs 8.99%; 2000–2026 10.01% vs 9.86%; 2007–2026 12.45% vs 12.03%; 2016–2026 14.55% vs 14.01%. Exact weekly test Jul 2017–Oct 2026: with the same €42,490 total, the rule ended 2.66% higher. Small but consistent in every period.</p>
+      <p>Money-weighted yearly return vs a flat weekly amount (price only): 1990–2026 9.24% vs 8.99%; 2000–2026 10.01% vs 9.86%; 2007–2026 12.45% vs 12.03%; 2016–2026 14.55% vs 14.01%. Exact weekly test Jul 2017–Oct 2026: with the same €42,490 total, the rule ended 2.66% higher. Small but consistent in every period. Over 100 years (1927–2026, drawdown tiers only): 11.21% vs 11.07% a year; never worse than a flat amount.</p>
       <span class="lbl">Budget</span><p>Averaged €80–110 a week; in a 2008-style crash it asks for €200 a week for over a year (~€13,000).</p>
     </div></details>
 
@@ -360,6 +455,7 @@
         <tr><td>20% Growth</td><td>2x daily-leveraged ETF</td><td>Hold above the trend line, cash below</td><td class="n">16.4%/yr</td><td class="n">−38%</td><td class="n">18.9%/yr</td></tr>
         <tr><td>30% Aggressive</td><td>3x daily-leveraged ETP</td><td>Same rule</td><td class="n">17.9%/yr</td><td class="n">−58%</td><td class="n">25.3%/yr</td></tr></tbody></table>
       <p>Share of 10-year spans that reached the target: 48% (10% plan), 15% (20%), 0% (30%; best 29.0%/yr). Without the trend rule, 3x lost 99% between 2000 and 2009. About 3 sell/buy-back switches a year.</p>
+      <p><b>100-year test (1927–2026, monthly total returns):</b> 1x hold 10.3%/yr, worst fall −84% · 2x + trend rule 11.1%/yr, worst fall −86% · 3x + trend rule 6.8%/yr, worst fall −99.7%. Crashes inside one month (1929–32, May 1940, October 1987) defeat the trend rule. A volatility brake did not fix it (3x still fell about −90%). The leveraged plans are shown for comparison; the evidence does not support them.</p>
     </div></details>
 
     <details class="mth" id="s-monthly"><summary>Monthly market signal (BUY / BUY EXTRA / HOLD)<span class="k">risk gauge</span></summary><div class="body">
@@ -389,7 +485,7 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
       <p><b>Stock leg (Extra profit):</b> €83.33 long in each of the 3 highest-ranked stocks and €83.33 short in each of the 3 lowest-ranked (skipping flagged P/E data; longs must be profitable). Long and short balance, so the result depends on the picks rather than on the market direction.</p>
       <p><b>Index leg:</b> S&amp;P 500 position of <code>€500 × |meter| ÷ 100</code>, long if the meter is positive, short if negative, nothing if |meter| &lt; 10. Total weekly stake never exceeds €1,000.</p>
       <p><b>Booking:</b> open at the Friday close, close at the next Friday close. <code>P/L = stake × (exit ÷ entry − 1)</code> for longs, the negative for shorts. No fees, spreads or borrow costs.</p>
-      <p><b>Index leg backtest:</b> 1990–2026 monthly €4.27 profit per €1 of average stake vs €3.41 always long; 2017–2026 weekly €1.14 vs €1.30. The stock leg cannot be backtested (no free price history for all stocks); its record starts 9 Oct 2026.</p>
+      <p><b>Index leg backtest:</b> 1990–2026 monthly €4.27 profit per €1 of average stake vs €3.41 always long; 2017–2026 weekly €1.14 vs €1.30. The stock leg cannot be backtested (no free price history for all stocks); its record starts 9 Oct 2026. The academic version of the idea (value + momentum, all US stocks) earned about 5.6% a year above cash since 1927 and was up in 80% of years, but has made roughly nothing since 2007.</p>
     </div></details>
 
     <details class="mth" id="s-test"><summary>How everything was tested<span class="k">methodology</span></summary><div class="body">
@@ -418,7 +514,9 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
       <table><thead><tr><th>Source</th><th>Used for</th><th>Updates</th></tr></thead><tbody>
         <tr><td>Federal Reserve (FRED): SP500, VIXCLS, NFCI, SAHMREALTIME, T10Y3M, BAMLH0A0HYM2, DFF, DGS10, UNRATE, CPIAUCSL</td><td>Weekly amount, meter, trend rule, indicators, monthly signal</td><td>Every weekday after the US close; weekly decisions Saturday morning</td></tr>
         <tr><td>Public S&amp;P 500 datasets (GitHub): constituents and fundamentals</td><td>Stock ranking, extra profit, demo stock prices</td><td>Saturday</td></tr>
-        <tr><td>Robert Shiller's S&amp;P 500 data (1871 onward)</td><td>Long-run backtests, CAPE study</td><td>Fixed research data</td></tr>
+        <tr><td>Robert Shiller's S&amp;P 500 data (1871 onward)</td><td>1990–2026 backtests, CAPE study</td><td>Fixed research data</td></tr>
+        <tr><td>Kenneth French data library: US market, value, momentum and T-bill returns since 1926; regional markets since 1990</td><td>100-year history, world markets</td><td>Every Saturday (French publishes monthly)</td></tr>
+        <tr><td>FRED: NASDAQCOM, NASDAQ100, DJIA, NIKKEI225, DEXUSEU, DTWEXBGS, DCOILBRENTEU, CBBTCUSD</td><td>Markets page, S&amp;P 500 in euros</td><td>Every weekday</td></tr>
         <tr><td>FactSet Earnings Insight, multpl.com, AAII, LPL Research</td><td>Forward P/E, earnings growth, CAPE, sentiment, news</td><td>As of 9 Oct 2026 (manual)</td></tr></tbody></table>
     </div></details>
 
@@ -426,7 +524,8 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
       <ul class="m">
         <li>Backtests describe the past; the future can be worse. Results are before tax and in dollars.</li>
         <li>No rule here has reliably beaten plain, steady buying of the index; the gains from the weekly amount rule are small.</li>
-        <li>The 20% and 30% plans did not reach their targets over the full 1990–2026 history.</li>
+        <li>The 20% and 30% plans did not reach their targets over 1990–2026, and over 100 years they suffered near-total losses.</li>
+        <li>The S&amp;P 500 is one country; other regions led for long stretches (e.g. 2000–2007). See the Markets page.</li>
         <li>The stock picks are untested historically; judge them by the live record over months, not weeks.</li>
         <li>The site is a personal research tool, not financial advice. You make and place every trade yourself.</li>
       </ul>
@@ -444,6 +543,11 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
       <div class="card"><div class="ex-h s">▼ Short: sell this week</div>
         <table id="ex-short-table" data-source="extra_picks" data-row-key="ticker">
           <thead><tr><th data-field="ticker">Stock</th><th data-field="entry_price" class="n">Price ($)</th><th data-field="rank" class="n">Rank</th><th data-field="score" class="n">Score</th><th data-field="off_52w_high" class="n">From 52w high (%)</th><th data-field="euros" class="n">Stake (€)</th></tr></thead><tbody></tbody></table></div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <h3>100 years of evidence for the idea</h3>
+      <p style="margin:0">The academic version (all US stocks, 50% value + 50% momentum, long/short) earned <b data-source="hist_factors" data-field="premium" data-where="key=vm">—</b>% a year above cash since 1927 and was up in <b data-source="hist_factors" data-field="pos_years" data-where="key=vm">—</b>% of years. But its worst fall was <b data-source="hist_factors" data-field="max_dd" data-where="key=vm">—</b>%, it has made <b data-source="hist_factors" data-field="since_2007" data-where="key=vm">—</b>% a year since 2007, and its longest stretch below an earlier peak lasted <b data-source="hist_factors" data-field="longest_underwater_years" data-where="key=vm">—</b> years (the current one began in 2008). <button class="chip" data-go="history" style="margin-left:6px">See 100 years</button></p>
     </div>
 
     <h2 id="ex-record-h">Track record</h2>
@@ -477,6 +581,7 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
   <!-- ================= RETURN PLANS ================= -->
   <section id="plans" data-page hidden>
     <div class="warnbox">You can't order a return, only choose a risk level. The S&amp;P 500 has returned about 10–11% a year; reaching for 20–30% means leverage (2x or 3x daily-leveraged funds), which multiplies crashes too. Each plan below uses the same risk control: leveraged money is only held while the S&amp;P 500 is above its 200-day average, checked every Friday. Results are backtests, before tax, and in dollars (euro/dollar moves not included).</div>
+    <div class="warnbox" style="border-color:var(--color-bad)"><b style="color:var(--color-fg)">100-year check:</b> over 1927–2026 the 20% plan (2x + trend rule) made <b data-source="hist_plans" data-field="cagr" data-where="plan=20%25">—</b>% a year but fell <b data-source="hist_plans" data-field="max_dd" data-where="plan=20%25">—</b>% at its worst; the 30% plan made <b data-source="hist_plans" data-field="cagr" data-where="plan=30%25">—</b>% a year and fell <b data-source="hist_plans" data-field="max_dd" data-where="plan=30%25">—</b>%. Plain buying made <b data-source="hist_plans" data-field="cagr" data-where="plan=10%25">—</b>%. The 1990–2026 figures below are much kinder than the full century. <button class="chip" data-go="history" style="margin-left:6px">See 100 years</button></div>
     <div class="tabs" role="tablist" id="plan-tabs" style="margin-top:0">
       <button role="tab" data-plan="10%" aria-selected="false">10% plan · Steady</button>
       <button role="tab" data-plan="20%" aria-selected="true">20% plan · Growth</button>
@@ -1030,6 +1135,62 @@ SX.line = (box, series, o) => {
 
     const mrows = SX.rows('meter_now'); const mt = mrows && mrows.find((r) => r.component === 'Total');
     ['gauge-home', 'gauge-week', 'gauge-signal'].forEach((id) => { const b = document.getElementById(id); if (b.offsetParent && !SX.fail(b, 'meter_now') && mt) SX.gauge(b, +mt.contribution, mt.reading); });
+    SX.spark = (td, arr) => {
+      if (!arr || arr.length < 2) return; const W = 120, H = 30; const x = d3.scaleLinear([0, arr.length - 1], [1, W - 1]); const y = d3.scaleLinear(d3.extent(arr), [H - 2, 2]);
+      const svg = d3.select(td).append('svg').attr('class', 'spark').attr('width', W).attr('height', H).attr('viewBox', `0 0 ${W} ${H}`);
+      svg.append('path').attr('d', d3.line().x((v, i) => x(i)).y(y)(arr)).attr('fill', 'none').attr('stroke-width', 1.6).attr('stroke-linejoin', 'round')
+        .attr('stroke', arr[arr.length - 1] >= arr[0] ? 'var(--up)' : 'var(--down)');
+    };
+    const pc = (td, v) => { td.textContent = v == null ? '—' : (v > 0 ? '+' : '') + v + '%'; td.style.color = v > 0 ? 'var(--up)' : v < 0 ? 'var(--down)' : ''; };
+    const num = (td, v) => { td.textContent = v == null ? '—' : v; td.style.color = v > 0 ? 'var(--up)' : v < 0 ? 'var(--down)' : ''; };
+    if (SX.active === 'home') {
+      const ul = document.getElementById('hl-markets'); const mk = SX.rows('markets');
+      if (ul && mk) ul.replaceChildren(...['spx_eur', 'ndx', 'nikkei', 'eurusd', 'brent'].map((k) => mk.find((m) => m.key === k)).filter(Boolean).map((m) => {
+        const li = document.createElement('li'); const n = document.createElement('span'); n.className = 'tk'; n.textContent = m.name;
+        const v = document.createElement('span'); v.textContent = d3.format(m.last < 10 ? ',.4f' : ',.0f')(m.last);
+        const c = document.createElement('span'); c.className = 'c ' + (m.w1 >= 0 ? 'up' : 'down'); c.style.fontSize = '12px'; c.style.fontWeight = '700'; c.textContent = Math.abs(m.w1) + '%';
+        const sp = document.createElement('span'); SX.spark(sp, (m.spark || []).slice(-13)); sp.querySelector('svg')?.setAttribute('width', 64);
+        li.append(n, v, c, sp); return li; }));
+    }
+    if (SX.active === 'markets') {
+      SX.table('mk-table', 'markets', { name: (td, v, r) => { const d = document.createElement('div'); d.style.display = 'flex'; d.style.flexDirection = 'column'; const a = document.createElement('span'); a.textContent = v; a.style.fontWeight = '700'; const g = document.createElement('span'); g.className = 'grp-pill'; g.textContent = r.group + (r.unit ? ' · ' + r.unit : ''); d.append(a, g); td.appendChild(d); },
+        last: (td, v) => { td.textContent = d3.format(v < 10 ? ',.4f' : ',.2f')(v); }, w1: pc, w4: pc, ytd: pc, y1: pc, from_high_52w: pc,
+        trend: (td, v) => { const p = document.createElement('span'); p.className = 'lst ' + (v === 'Above' ? 'top' : 'bot'); p.textContent = v || '—'; td.appendChild(p); },
+        spark: (td, v) => { SX.spark(td, v); } });
+      SX.table('mk-long', 'markets', { name: (td, v) => { td.textContent = v; td.style.fontWeight = '700'; }, cagr_since: num, max_dd: num, from_ath: num, note: (td, v) => { td.textContent = v || ''; td.className = 'wrapc'; td.style.color = 'var(--muted)'; } });
+      SX.table('regions-table', 'regions', { region: (td, v) => { td.textContent = v; td.style.fontWeight = '700'; }, cagr: num, last10: num, ytd: num, max_dd: num, worst_year: (td, v, r) => { td.textContent = v + ' (' + r.worst_year_when + ')'; td.style.color = 'var(--down)'; } });
+      const hb = document.getElementById('regions-heat'); const ry = SX.rows('regions_years'); const rg = SX.rows('regions');
+      if (hb && ry && rg) {
+        const keys = rg.map((r) => r.key); const names = Object.fromEntries(rg.map((r) => [r.key, r.region]));
+        const cs = getComputedStyle(hb); const up = cs.getPropertyValue('--color-ok').trim() || '#13a46b', dn = cs.getPropertyValue('--color-bad').trim() || '#e5383b', bg = cs.getPropertyValue('--color-panel').trim() || '#fff';
+        const col = (v) => v == null ? 'transparent' : v >= 0 ? d3.interpolateRgb(bg, up)(Math.min(1, v / 40)) : d3.interpolateRgb(bg, dn)(Math.min(1, -v / 40));
+        hb.style.gridTemplateColumns = `56px repeat(${keys.length}, minmax(64px, 1fr))`;
+        const cells = []; const mkc = (t, c) => { const d = document.createElement('div'); d.className = c || ''; d.textContent = t; return d; };
+        cells.push(mkc('', 'h')); keys.forEach((k) => cells.push(mkc(names[k], 'h')));
+        ry.slice().reverse().forEach((row) => { cells.push(mkc(row.year + (row.year === String(new Date().getFullYear()) ? '*' : ''), 'y')); keys.forEach((k) => { const v = row[k]; const d = mkc(v == null ? '' : (v > 0 ? '+' : '') + v.toFixed(1)); d.style.background = col(v); cells.push(d); }); });
+        hb.replaceChildren(...cells);
+      }
+    }
+    if (SX.active === 'history') {
+      SX.table('h-plans', 'hist_plans', { name: (td, v) => { td.textContent = v; td.style.fontWeight = '700'; }, setup: (td, v) => { td.textContent = v; td.style.color = 'var(--muted)'; td.style.fontWeight = '500'; }, cagr: num, since_1990: num, max_dd: num, worst_year: num, median_10y: num, min_10y: num });
+      SX.table('h-weekly', 'hist_weekly_rule', { diff: num });
+      SX.table('h-factors', 'hist_factors', { factor: (td, v) => { td.textContent = v; td.style.fontWeight = '700'; }, premium: num, max_dd: num, worst_year: (td, v, r) => { td.textContent = v + ' (' + r.worst_year_when + ')'; td.style.color = 'var(--down)'; }, since_2007: num, last_12m: num });
+      SX.table('h-decades', 'hist_decades', { market: num, plan20: num, plan30: num, value: num, momentum: num, mix: num, cash: num, decade: (td, v) => { td.textContent = v; td.style.fontWeight = '700'; } });
+      const g = SX.rows('hist_plans_growth'); const gb = document.getElementById('h-growth');
+      if (!SX.fail(gb, 'hist_plans_growth') && g) {
+        const ser = [['p10', '10% plan: 1x hold', dash.colors[0], 2.5], ['p20', '20% plan: 2x + rule', dash.colors[1], 1.8], ['p30', '30% plan: 3x + rule', dash.colors[2], 1.8], ['x2', '2x, no rule', 'var(--cds-chart-muted)', 1.4], ['x3', '3x, no rule', 'var(--cds-chart-muted)', 1.4]];
+        document.getElementById('h-growth-legend').replaceChildren(...ser.slice(0, 4).map((k) => { const sp = document.createElement('span'); const i = document.createElement('i'); i.style.background = k[2]; sp.append(i, k[0] === 'x2' ? 'No rule (dashed)' : k[1]); return sp; }));
+        SX.line(gb, ser.map((k) => ({ name: k[1], color: k[2], w: k[3], dash: k[0].startsWith('x') ? '4 4' : null, pts: g.map((r) => ({ x: new Date(Date.UTC(+r.year, 11, 31)), y: +r[k[0]] > 1e-3 ? +r[k[0]] : null })) })),
+          { h: 300, log: true, yfmt: (v) => '€' + d3.format(',.0~s')(v), tipfmt: (v) => '€' + d3.format(',.2f')(v), tipDate: d3.utcFormat('%Y') });
+      }
+      const fg = SX.rows('hist_factor_growth'); const fb = document.getElementById('h-fgrowth');
+      if (!SX.fail(fb, 'hist_factor_growth') && fg) {
+        const ser = [['vm', 'Value + momentum', dash.colors[0], 2.5], ['mom', 'Momentum', dash.colors[1], 1.5], ['hml', 'Value', dash.colors[2], 1.5]];
+        document.getElementById('h-fgrowth-legend').replaceChildren(...ser.map((k) => { const sp = document.createElement('span'); const i = document.createElement('i'); i.style.background = k[2]; sp.append(i, k[1]); return sp; }));
+        SX.line(fb, ser.map((k) => ({ name: k[1], color: k[2], w: k[3], pts: fg.map((r) => ({ x: new Date(Date.UTC(+r.year, 11, 31)), y: +r[k[0]] })) })),
+          { h: 260, log: true, yfmt: (v) => '€' + d3.format(',.0~s')(v), tipfmt: (v) => '€' + d3.format(',.2f')(v), tipDate: d3.utcFormat('%Y') });
+      }
+    }
     SX.exList = (ulId, side) => {
       const ul = document.getElementById(ulId); const rows = SX.rows('extra_picks'); if (!ul || !rows) return;
       const sel = rows.filter((r) => r.side === side);
@@ -1263,7 +1424,7 @@ SX.line = (box, series, o) => {
   qi.addEventListener('input', () => { document.getElementById('top-table')._q = qi.value; SX.draw(); });
 
   const named = location.hash.slice(1);
-  if (['home', 'week', 'strategy', 'extra', 'plans', 'signal', 'backtest', 'stocks', 'demo', 'news'].includes(named)) SX.active = named;
+  if (['home', 'markets', 'week', 'strategy', 'extra', 'plans', 'signal', 'backtest', 'history', 'stocks', 'demo', 'news'].includes(named)) SX.active = named;
   let first = true;
   dash.onData(() => {
     if (first) { first = false; SX.show(SX.active); return; }
