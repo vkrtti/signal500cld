@@ -1,4 +1,4 @@
-"""Long-history research for Signal500 (run weekly by GitHub Actions, or by hand).
+"""Long-history research for IndexPilot (run weekly by GitHub Actions, or by hand).
 
 Downloads Kenneth French's data library (US market, value, momentum, risk-free rate since 1926;
 regional markets since 1990) and recomputes:
@@ -35,7 +35,7 @@ def save(name, obj, title=None, desc=None):
 def fetch_zip_csv(fname):
     for attempt in range(4):
         try:
-            req = urllib.request.Request(BASE + fname, headers={'User-Agent': 'Mozilla/5.0 (Signal500 research)'})
+            req = urllib.request.Request(BASE + fname, headers={'User-Agent': 'Mozilla/5.0 (IndexPilot research)'})
             raw = urllib.request.urlopen(req, timeout=90).read()
             z = zipfile.ZipFile(io.BytesIO(raw)); return z.read(z.namelist()[0]).decode('latin-1')
         except Exception as e:

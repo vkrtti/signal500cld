@@ -22,9 +22,10 @@ feeds = [
     ('Central banks', 'Federal Reserve', 'https://www.federalreserve.gov/feeds/press_all.xml', 6),
     ('Central banks', 'European Central Bank', 'https://www.ecb.europa.eu/rss/press.html', 6),
     ('Central banks', 'Bank of Japan', 'https://www.boj.or.jp/en/rss/whatsnew.xml', 4),
-    ('Markets', 'CNBC', 'https://www.cnbc.com/id/100003114/device/rss/rss.html', 8),
+    ('Markets', 'CNBC Markets', 'https://www.cnbc.com/id/15839069/device/rss/rss.html', 8),
     ('Markets', 'CNBC Economy', 'https://www.cnbc.com/id/20910258/device/rss/rss.html', 6),
-    ('Markets', 'MarketWatch', 'https://feeds.content.dowjones.io/public/rss/mw_topstories', 8),
+    ('Markets', 'MarketWatch', 'https://feeds.content.dowjones.io/public/rss/mw_marketpulse', 8),
+    ('Markets', None, gnews('stock market OR "global markets"'), 6),
     ("This week's index", None, gnews(QUERY.get(pick, 'stock market')), 10),
 ]
 for p in [p for p in (L('demo_positions') or []) if p.get('leg') == 'Stocks' and p.get('side') == 'Long'][:3]:

@@ -1,7 +1,14 @@
-# Signal500
+# IndexPilot
 
-A self-updating S&P 500 signals website: this week's buy amount (€40–€200), a signal-strength meter,
-10/20/30% return plans, value + momentum stock rankings, a simulated demo account and the backtests behind them.
+A self-updating website that tells a euro investor, each week:
+
+- **which index to buy**: six euro-listed index ETFs (MSCI World, S&P 500, Nasdaq-100, MSCI Europe, MSCI Japan,
+  MSCI Emerging Markets) ranked by 52-week return; the leader becomes the main index, but only if it leads the
+  current pick by more than 5 percentage points;
+- **how much to buy** (€40–€200), set by the world market's distance from its record and US stress gauges;
+- **which stocks** of that index rank highest and lowest (value + momentum for the S&P 500, price momentum elsewhere);
+- a simulated **demo account**, **headlines** and the **backtests** behind every rule (2012–today on real ETF prices,
+  1990–2026 regional data, 100 years of US data).
 
 **Not financial advice.** Backtests, rankings and the demo account are simulations.
 
@@ -10,28 +17,25 @@ A self-updating S&P 500 signals website: this week's buy amount (€40–€200)
 | Part | What it does |
 |---|---|
 | `docs/` | The website (static HTML + JSON data), served by GitHub Pages |
-| `scripts/update.py` | Downloads Federal Reserve (FRED) data and the public S&P 500 datasets, recalculates everything, writes `docs/data/*.json` |
-| `scripts/weekly_update.py` | The weekly rules: buy amount, meter, rankings, demo account |
-| `.github/workflows/update.yml` | Runs the update every weekday after the US close, and the weekly roll every Saturday morning |
+| `scripts/update.py` | Daily: Federal Reserve (FRED) indicators, markets table, US research. Weekly (`--weekly`): runs the IndexPilot roll |
+| `scripts/indexpilot.py` | The weekly rules: index pick, amount, meter, stock ranking, demo account, 2012–today backtest (prices from Yahoo Finance via `yfinance`) |
+| `scripts/universes.json` | Stock lists per index (Europe, Japan, Nasdaq-100, emerging markets). Review once a year |
+| `scripts/news.py` | Headlines (titles and links) from the Fed, ECB, Bank of Japan, CNBC, MarketWatch and Google News |
+| `scripts/research.py` | Long-history research from the Kenneth French data library |
+| `.github/workflows/update.yml` | Runs every weekday after the US close, and the weekly roll every Saturday morning |
 
 No API keys or servers are needed. Everything runs on free GitHub Actions and GitHub Pages.
+ETF price history is cached in `research_data/etf_daily.csv`, so a failed download never loses data.
 
 ## One-time setup
 
 1. **Settings → Pages →** Source: *Deploy from a branch*, Branch: `main`, folder `/docs` → Save.
-   The site appears at `https://<your-username>.github.io/<repo-name>/` within a minute or two.
-2. **Settings → Actions → General → Workflow permissions →** *Read and write permissions* → Save
-   (lets the update job commit new data).
-3. Optional: **Actions → Update data → Run workflow** to run an update right away.
-
-### Own domain (optional)
-
-Settings → Pages → Custom domain, then add the DNS record your domain registrar asks for (a `CNAME` to `<your-username>.github.io`).
+2. **Settings → Actions → General → Workflow permissions →** *Read and write permissions* → Save.
+3. Optional: **Actions → Update data → Run workflow** (tick *weekly*) to run the weekly roll right away.
 
 ## What updates when
 
-- **Every weekday ~22:30 UTC:** market indicators, monthly signal, S&P 500 chart.
-- **Every Saturday 06:00 UTC:** next week's buy amount, signal meter, top/bottom 50 rankings, demo account (closes last week's trades, opens new ones).
-- **Fixed research data:** 1990–2026 backtests, return plans, CAPE study. FactSet, CAPE, sentiment and news figures are as of 9 Oct 2026; edit `docs/data/indicators.json` / `news.json` to update them.
+- **Every weekday ~22:30 UTC:** market indicators, markets table, headlines.
+- **Every Saturday 06:00 UTC:** index pick, weekly amount, signal meter, stock ranking, demo account, backtests, long-history research.
 
 GitHub can delay scheduled runs by a few minutes at busy times.
