@@ -246,6 +246,22 @@ def rotation(df):
         m = list(g.index); k = 12 / len(m)
         cg = lambda r: round((float((1 + r.loc[m]).prod()) ** k - 1) * 100, 1)
         dec.append(dict(decade=dd_ + '0s', pick=cg(res['pick'][1]), nobuf=cg(res['old'][1]), world=cg(d['Developed']) if 'Developed' in d else None, us=cg(d['US'])))
+    # rule vs North America (the S&P 500's region; French data, US dollars), month by month
+    pr = res['pick'][1]; na = d['US'].loc[pr.index]
+    gp, gu = (1 + pr).cumprod(), (1 + na).cumprod()
+    roll = ((gp / gp.shift(36)) ** (1 / 3) - (gu / gu.shift(36)) ** (1 / 3)) * 100
+    first = list(d.index).index(pr.index[0]) - 1
+    reg = [dict(month=d.index[first], pick=1.0, us=1.0, diff_3y=None)] + [dict(month=m, pick=float(f'{gp[m]:.4g}'), us=float(f'{gu[m]:.4g}'),
+           diff_3y=round(float(roll[m]), 2) if pd.notna(roll[m]) else None) for m in pr.index]
+    cg_ = lambda g: (float(g.iloc[-1]) ** (12 / len(g)) - 1) * 100
+    ref = next(r for r in rows if r['key'] == 'pick')['cagr']
+    if abs(cg_(gp) - ref) > 0.1: raise RuntimeError(f'hist_regional pick {cg_(gp):.2f} != hist_rotation {ref}')
+    save('hist_regional', reg, 'Index pick vs North America, monthly', 'Growth of 1 US dollar from 1991: the index pick on regional data vs North America (the S&P 500 region), with the rolling 3-year difference in points a year (Kenneth French data library).')
+    yrs_ = []
+    for y, g in pd.Series(pr.index, index=pr.index).groupby(pr.index.str[:4]):
+        m = list(g.index); a = (float((1 + pr.loc[m]).prod()) - 1) * 100; b = (float((1 + na.loc[m]).prod()) - 1) * 100
+        yrs_.append(dict(year=y, pick=round(a, 1), us=round(b, 1), pick_minus_us=round(a - b, 1), partial=len(m) < 12))
+    save('hist_regional_years', yrs_, 'Index pick vs North America by year', 'Calendar-year return of the index pick on regional data and of North America, US dollars (Kenneth French data library).')
     save('hist_rotation_decades', dec, 'Index pick by decade', 'Yearly return by decade of the index pick, the previous rule, the developed world and North America.')
 
 

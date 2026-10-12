@@ -28,7 +28,7 @@ for (const m of html.matchAll(/<script>([\s\S]*?)<\/script>/g)) run('script', ()
 const fire = () => cbs.forEach((f) => run('onData', f));
 fire();
 const SX = w.SX;
-for (const t of ['home', 'indexes', 'week', 'stocks', 'extra', 'demo', 'strategy', 'news', 'markets', 'history', 'plans', 'gauges']) {
+for (const t of ['home', 'sim', 'longrun', 'indexes', 'week', 'stocks', 'extra', 'demo', 'strategy', 'news', 'markets', 'history', 'plans', 'gauges']) {
   run('show ' + t, () => SX.show(t)); fire();
   const sec = w.document.getElementById(t);
   const empties = [...sec.querySelectorAll('[data-source]')].filter((el) => el.tagName !== 'TABLE' && !el.classList.contains('chart') && el.tagName !== 'UL' && !el.classList.contains('gauge-box') && (el.textContent.trim() === '—' || el.textContent.trim() === ''));
@@ -48,6 +48,6 @@ run('sort', () => { w.document.querySelector('#home-table th[data-field="price"]
 console.log('statusbar:', w.document.getElementById('statusbar').textContent.replace(/\s+/g, ' ').trim());
 console.log('takeaway:', w.document.getElementById('takeaway').textContent);
 console.log(errors.length ? 'ERRORS:\n' + errors.join('\n') : 'NO ERRORS'); process.exitCode = errors.length ? 1 : 0;
-for (const q of ["Which index should I buy this week?", "How much should I invest?", "Top stocks and their weights", "How is the demo account doing?", "Does the strategy work?", "why is there US data", "tell me about TSMC", "how is nasdaq doing", "what is the vix", "what does the buffer mean", "why msci world now?", "what changed?", "how do I buy it", "what is the score", "Japan vs Nasdaq", "is S&P 500 better than world", "what is momentum", "what does volatility mean", "fees and taxes?", "when was the data updated", "what is an ISIN", "what are the weakest stocks", "should I sell?", "what's the market meter saying", "blah blah zzz", "hello"]) {
+for (const q of ["Which index should I buy this week?", "How much should I invest?", "Top stocks and their weights", "How is the demo account doing?", "Does the strategy work?", "why is there US data", "tell me about TSMC", "how is nasdaq doing", "what is the vix", "what does the buffer mean", "why msci world now?", "what changed?", "how do I buy it", "what is the score", "Japan vs Nasdaq", "is S&P 500 better than world", "what is momentum", "what does volatility mean", "fees and taxes?", "when was the data updated", "what is an ISIN", "what are the weakest stocks", "should I sell?", "what's the market meter saying", "how is the plan doing vs the S&P 500 so far?", "compare all strategies", "how has the rule done over the long run?", "show me the simulation", "blah blah zzz", "hello"]) {
   try { const a = w.SX.askLocal(q); console.log('Q:', q, '\n  A:', a.text.split('\n').slice(0, 3).join(' | ').slice(0, 230), '| go', a.go); } catch (e) { console.log('BOT ERROR', q, e.message); }
 }

@@ -221,6 +221,9 @@ def run(S, D, research, fin, cons, log, offline=None):
     # ---- ETF prices, weekly closes from 2011
     daily = etf_prices(research, log, offline)
     W = weekly(daily[daily.index >= START]).dropna()
+    # A run before that Friday's close (e.g. a mid-week manual run) must not decide on an unfinished week.
+    if not offline and W.index[-1].date() >= dt.datetime.now(dt.timezone.utc).date():
+        log('latest week not finished yet; deciding on the previous Friday close'); W = W.iloc[:-1]
     date = W.index[-1]
     last_trading = daily.index[daily.index <= date][-1]
     dstr = last_trading.strftime('%Y-%m-%d')
@@ -526,31 +529,37 @@ def run(S, D, research, fin, cons, log, offline=None):
     # money-weighted: the weekly amounts actually bought
     amts = H['amount'].astype(float); flat = float(amts.mean())
     def mw(kind, amounts, switch_all):
-        hold = {k: 0.0 for k in EK}; flows = []
-        for d in H.index[:-1]:
+        hold = {k: 0.0 for k in EK}; flows = []; path_ = []
+        hix = list(H.index)
+        for i, d in enumerate(hix[:-1]):
             target = picks[d] if kind == 'pick' else kind
             if switch_all and kind == 'pick':
                 tot = sum(hold.values()); hold = {k: 0.0 for k in EK}; hold[target] = tot
             hold[target] += amounts[d]; flows.append(amounts[d])
             for k in EK: hold[k] *= 1 + (R.loc[d, k] if pd.notna(R.loc[d, k]) else 0)
+            path_.append((hix[i + 1], sum(flows), sum(hold.values())))
         val = sum(hold.values())
-        return round(sum(flows)), round(val), round(irr(flows, val) * 100, 1)
-    mwrows = []
-    for label_, kind, amounts, sw in [('Flat amount into MSCI World', 'world', pd.Series(flat, index=H.index), False),
-                                      ('Weekly rule into MSCI World', 'world', amts, False),
-                                      ('Weekly rule into S&P 500', 'us', amts, False),
-                                      ('Weekly rule into the pick, new money only', 'pick', amts, False),
-                                      ('Weekly rule into the pick, move everything on a switch', 'pick', amts, True)]:
-        inv, val, r_ = mw(kind, amounts, sw)
-        mwrows.append(dict(plan=label_, invested=inv, value=val, irr=r_))
+        return round(sum(flows)), round(val), round(irr(flows, val) * 100, 1), path_
+    mwrows, mwpaths = [], {}
+    for key_, label_, kind, amounts, sw in [('flat_world', 'Flat amount into MSCI World', 'world', pd.Series(flat, index=H.index), False),
+                                            ('rule_world', 'Weekly rule into MSCI World', 'world', amts, False),
+                                            ('rule_us', 'Weekly rule into S&P 500', 'us', amts, False),
+                                            ('rule_pick', 'Weekly rule into the pick, new money only', 'pick', amts, False),
+                                            ('rule_pick_move', 'Weekly rule into the pick, move everything on a switch', 'pick', amts, True)]:
+        inv, val, r_, path_ = mw(kind, amounts, sw)
+        mwrows.append(dict(key=key_, plan=label_, invested=inv, value=val, irr=r_)); mwpaths[key_] = path_
     out['ip_backtest'] = bt
     # rule variants that were tested (same data, same costs: none); halves show whether a result holds in both periods
-    def var_stats(sq, trend_fb=None):
+    def var_ret(sq, trend_fb=None):
         r = pd.Series([R.loc[d, k] for d, k in sq.items()], index=H.index)
         if trend_fb:
             ma = W.rolling(40).mean()
             r = pd.Series([R.loc[d, trend_fb] if float(W.loc[pd.Timestamp(d), k]) < float(ma.loc[pd.Timestamp(d), k]) else R.loc[d, k] for d, k in sq.items()], index=H.index)
-        r = r.dropna(); yrs = len(r) / 52.18; eq = (1 + r).cumprod()
+        return r.dropna()
+    def var_stats(sq, trend_fb=None, r=None):
+        r = var_ret(sq, trend_fb) if r is None else r.dropna()
+        sq = sq if sq is not None else pd.Series(0, index=r.index)
+        yrs = len(r) / 52.18; eq = (1 + r).cumprod()
         cg = lambda x: round((float((1 + x).prod()) ** (52.18 / len(x)) - 1) * 100, 1)
         return dict(cagr=round((eq.iloc[-1] ** (1 / yrs) - 1) * 100, 1), max_dd=round(float((eq / eq.cummax() - 1).min()) * 100, 1),
                     sharpe=round(float(r.mean() / r.std() * math.sqrt(52)), 2), switches_per_year=round(float((sq != sq.shift(1)).iloc[1:].sum()) / yrs, 1),
@@ -565,6 +574,54 @@ def run(S, D, research, fin, cons, log, offline=None):
     step = max(1, len(H) // 300)
     out['ip_growth'] = [dict(date=d, **{k: round(float(curves[k].get(d, np.nan)), 4) for k in ['pick', 'world', 'us', 'ndx', 'europe', 'equal']})
                         for i, d in enumerate(H.index[:-1]) if i % step == 0 or i == len(H) - 2]
+    # ---- Simulation tab: every strategy on the same weekly ETF data (backtest, no costs). Value at the END of each week,
+    # so the series starts at 1.0 on the first decision Friday and each point uses only decisions made a week earlier.
+    sg4 = lambda v: None if v is None or not np.isfinite(v) else float(f'{v:.4g}')
+    hix = list(H.index)
+    vret = {k: var_ret(sq.ffill().bfill(), fb) for k, nm, sq, fb in vrows}
+    vret['pick'] = vret.pop('riskadj')
+    rets = {**vret, 'equal': series('equal').dropna(), **{k: series(k).dropna() for k in EK}}
+    order = ['pick', 'old', 'ret_buf10', 'ret_nobuf', 'ret26', 'riskadj_nobuf', 'trend', 'equal'] + EK
+    rets = {k: rets[k] for k in order if k in rets}
+    vnames = {('pick' if k == 'riskadj' else k): nm for k, nm, sq, fb in vrows}
+    groups = {'pick': 'Current rule', 'old': 'Previous rule', 'equal': 'Benchmark', **{k: 'Tested variant' for k in vret if k not in ('pick', 'old')}, **{k: 'Hold one index' for k in EK}}
+    sim_names = {**vnames, 'equal': 'All six, equal weight', **{k: f"Hold {E[k]['index']}" for k in EK}}
+    G = pd.DataFrame({k: (1 + rets[k].reindex(hix[:-1]).fillna(0)).cumprod().values for k in rets}, index=hix[1:])
+    G = pd.concat([pd.DataFrame({k: [1.0] for k in rets}, index=[hix[0]]), G])
+    seq = {'pick': picks, 'old': old, 'ret_nobuf': on_h(buffered(r52, 0.0)), 'ret_buf10': on_h(buffered(r52, 0.10)), 'riskadj_nobuf': nobuf,
+           'ret26': on_h(buffered(r26.dropna(), OLD_BUFFER)), 'trend': old}
+    sim_rows = []
+    for k in rets:
+        st_ = var_stats(seq[k].ffill().bfill() if k in seq else None, r=rets[k])
+        if k not in seq: st_['switches_per_year'] = None
+        st_['vol'] = round(float(rets[k].std() * math.sqrt(52) * 100), 1)
+        sim_rows.append(dict(key=k, strategy=sim_names[k], group=groups[k], **st_))
+    # consistency: the new series must agree with the summary files
+    chk = {r['key']: r for r in out['ip_variants']}; bmap = {b['key']: b for b in bt}
+    for r in sim_rows:
+        ref = chk.get('riskadj' if r['key'] == 'pick' else r['key']) or bmap.get(r['key'])
+        if ref and abs(ref['cagr'] - r['cagr']) > 0.1: raise RuntimeError(f"sim_strategies {r['key']} CAGR {r['cagr']} != summary {ref['cagr']}")
+        n = len(rets[r['key']]); cg_ = (float(G[r['key']].iloc[-1]) ** (52.18 / n) - 1) * 100
+        if abs(cg_ - r['cagr']) > 0.1: raise RuntimeError(f"sim_growth {r['key']} ends at {cg_:.2f}%/yr, table says {r['cagr']}")
+    d3y = ((G['pick'] / G['pick'].shift(156)) ** (1 / 3) - (G['us'] / G['us'].shift(156)) ** (1 / 3)) * 100
+    out['sim_strategies'] = sim_rows
+    out['sim_growth'] = [dict(date=d, **{k: sg4(float(G.loc[d, k])) for k in rets}, pick_vs_us_3y=sg4(float(d3y.loc[d])) if pd.notna(d3y.loc[d]) else None) for d in G.index]
+    out['sim_buying'] = [dict(date=pth[0], invested=round(pth[1]), invested_flat=round(mwpaths['flat_world'][i][1]), **{k: round(mwpaths[k][i][2]) for k in mwpaths}) for i, pth in enumerate(mwpaths['rule_pick'])]
+    for r in mwrows:
+        if abs(out['sim_buying'][-1][r['key']] - r['value']) > 1: raise RuntimeError(f"sim_buying {r['key']} != ip_buying")
+    # ---- live record: the published weekly amounts into the published pick vs the same euros into the S&P 500 ETF
+    COST_ = 0.002
+    units, units_us, inv_, live = {k: 0.0 for k in EK}, 0.0, 0.0, []
+    for h in [h for h in weekly_history if h['week'] >= LIVE_START]:
+        ts = pd.Timestamp(h['week'])
+        if ts not in W.index: continue
+        px_ = W.loc[ts]; amt = float(h['amount'])
+        units[h['pick']] += amt * (1 - COST_) / float(px_[h['pick']]); units_us += amt * (1 - COST_) / float(px_['us']); inv_ += amt
+        plan_v = sum(u * float(px_[k]) for k, u in units.items()); us_v = units_us * float(px_['us'])
+        live.append(dict(date=h['week'], pick=h['pick'], amount=amt, invested=round(inv_, 2), plan=round(plan_v, 2), sp500=round(us_v, 2),
+                         plan_pct=round((plan_v / inv_ - 1) * 100, 2), sp500_pct=round((us_v / inv_ - 1) * 100, 2)))
+    out['live_vs_sp500'] = live
+
     # calendar years
     yrs = []
     for y in sorted({d[:4] for d in H.index}):
@@ -572,7 +629,7 @@ def run(S, D, research, fin, cons, log, offline=None):
         if not m: continue
         r = {k: round((float((1 + series(k).loc[m].fillna(0)).prod()) - 1) * 100, 1) for k in ['pick'] + EK}
         top = picks.loc[m].value_counts()
-        yrs.append(dict(year=y, held=E[top.index[0]]['index'], **r))
+        yrs.append(dict(year=y, held=E[top.index[0]]['index'], **r, pick_minus_us=round(r['pick'] - r['us'], 1), partial=len(m) < 50))
     out['ip_years'] = yrs
     # pick periods
     per, cur = [], None

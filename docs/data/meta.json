@@ -214,5 +214,35 @@
   "description": "Each rule variant tested monthly 1991-today on regional data, with results for 1991-2008 and 2009-today.",
   "refresh": "weekly",
   "updated": "2026-10-11T20:48:59Z"
+ },
+ "sim_strategies": {
+  "refresh": "weekly",
+  "title": "All strategies compared",
+  "description": "Every rule, tested variant and single index on the six euro ETFs, weekly 2012-today: return per year, volatility, Sharpe, worst fall, switches and both halves (backtest, no costs)."
+ },
+ "sim_growth": {
+  "refresh": "weekly",
+  "title": "All strategies: growth of 1 euro",
+  "description": "Weekly value of 1 euro invested in January 2012 in every strategy and index (backtest, no costs), plus the rolling 3-year difference between the pick and the S&P 500 ETF."
+ },
+ "sim_buying": {
+  "refresh": "weekly",
+  "title": "Weekly buying: growth",
+  "description": "Weekly value of buying every week since 2012: the EUR 40-200 rule into MSCI World, the S&P 500 or the pick, and a flat amount into MSCI World (backtest, no costs)."
+ },
+ "live_vs_sp500": {
+  "refresh": "weekly",
+  "title": "Live record vs the S&P 500",
+  "description": "Since the first live decision (9 Oct 2026): each week's published amount bought into the published pick vs the same euros into the S&P 500 ETF (SXR8), 0.2% cost on every buy."
+ },
+ "hist_regional": {
+  "refresh": "weekly",
+  "title": "Index pick vs North America, monthly",
+  "description": "Growth of 1 US dollar from 1991: the index pick on regional data vs North America (the S&P 500 region), with the rolling 3-year difference in points a year (Kenneth French data library)."
+ },
+ "hist_regional_years": {
+  "refresh": "weekly",
+  "title": "Index pick vs North America by year",
+  "description": "Calendar-year return of the index pick on regional data and of North America, US dollars (Kenneth French data library)."
  }
 }

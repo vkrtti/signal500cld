@@ -8,12 +8,12 @@ import functools, http.server, os, sys, threading
 from playwright.sync_api import sync_playwright
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = sys.argv[1] if len(sys.argv) > 1 else 'shots'
-TABS = (sys.argv[2] if len(sys.argv) > 2 else 'home,indexes,week,stocks,extra,demo,strategy,news,markets,history,plans,gauges').split(',')
+TABS = (sys.argv[2] if len(sys.argv) > 2 else 'home,sim,longrun,strategy,stocks,extra,demo,indexes,week,news,markets,history,plans,gauges').split(',')
 D3 = os.path.join(ROOT, 'tools/test/node_modules/d3/dist/d3.min.js')
 os.makedirs(OUT, exist_ok=True)
 class Quiet(http.server.SimpleHTTPRequestHandler):
     def log_message(self, *a): pass
-H = functools.partial(Quiet, directory=os.path.join(ROOT, 'docs'))
+H = functools.partial(Quiet, directory=os.environ.get('SITE_DIR', os.path.join(ROOT, 'docs')))  # SITE_DIR: test another copy of the site
 srv = http.server.ThreadingHTTPServer(('127.0.0.1', 0), H); threading.Thread(target=srv.serve_forever, daemon=True).start()
 url = f'http://127.0.0.1:{srv.server_address[1]}/'
 problems = []

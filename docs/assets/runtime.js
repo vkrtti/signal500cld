@@ -3,7 +3,7 @@
 (function () {
   let saved = null; try { saved = localStorage.getItem('theme'); } catch (e) {}
   document.documentElement.dataset.theme = saved || 'dark';
-  const DATASETS = ['indicators', 'weekly_now', 'weekly_history', 'weekly_tiers', 'meter_now', 'meter_test', 'demo_positions', 'demo_ledger', 'demo_value', 'plans_summary', 'plans_growth', 'plans_years', 'markets', 'regions', 'regions_years', 'hist_plans', 'hist_plans_growth', 'hist_weekly_rule', 'hist_factors', 'hist_factor_growth', 'hist_decades', 'index_rank', 'pick_rank', 'ip_backtest', 'ip_buying', 'ip_growth', 'ip_years', 'ip_periods', 'news_feed', 'hist_rotation', 'hist_rotation_decades', 'extra_positions', 'extra_ledger', 'hist_overlay', 'ip_variants', 'hist_rotation_variants'];
+  const DATASETS = ['indicators', 'weekly_now', 'weekly_history', 'weekly_tiers', 'meter_now', 'meter_test', 'demo_positions', 'demo_ledger', 'demo_value', 'plans_summary', 'plans_growth', 'plans_years', 'markets', 'regions', 'regions_years', 'hist_plans', 'hist_plans_growth', 'hist_weekly_rule', 'hist_factors', 'hist_factor_growth', 'hist_decades', 'index_rank', 'pick_rank', 'ip_backtest', 'ip_buying', 'ip_growth', 'ip_years', 'ip_periods', 'news_feed', 'hist_rotation', 'hist_rotation_decades', 'extra_positions', 'extra_ledger', 'hist_overlay', 'ip_variants', 'hist_rotation_variants', 'sim_strategies', 'sim_growth', 'sim_buying', 'live_vs_sp500', 'hist_regional', 'hist_regional_years'];
   const store = {}, calcs = {}, callbacks = [];
   const css = getComputedStyle(document.documentElement);
   const colors = () => [1, 2, 3, 4, 5, 6, 7, 8].map((i) => css.getPropertyValue('--series-' + i).trim() || '#5b6cf9');
