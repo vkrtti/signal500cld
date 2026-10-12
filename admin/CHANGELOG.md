@@ -1,6 +1,7 @@
 # Changelog (newest first)
 
 ## 2026-10-13
+- Redesign for simplicity: Overview / Simulation / History / Method + More menu; live plan-vs-S&P 500 chart on the Overview; all strategies in one Simulation chart; History compares the rule with the S&P 500 (ETFs 2012–today, regions 1991–today). New data files listed in PLAYBOOK. Unfinished-week guard in the engine.
 - Scheduled task "IndexPilot admin" created (Saturdays 12:47 Helsinki).
 - Daily data update dispatched by hand: the 22:30 UTC scheduled run had not fired (no scheduled run has fired yet). Run succeeded; page test clean.
 - PLAYBOOK: workflow dispatch must use the REST API (GraphQL is blocked).

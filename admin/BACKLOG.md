@@ -5,9 +5,10 @@ Re-rank every run. Format: [priority] title — benefit / effort / notes. Move d
 - [P1] Confirm GitHub scheduled runs fire (none had by 2026-10-12 23:10 UTC; a manual daily run was dispatched then). If still none by 2026-10-17, add a fallback (e.g. the Saturday admin task dispatches the weekly roll itself) and tell the owner — reliability / small.
 - [P1] Demo: switch the core from MSCI Emerging Markets (IEMA) to the pick at the next roll and check the trades in demo_ledger are sensible — correctness / small / first roll under the new rule.
 - [P1] demo_value.pick records the current pick, not what the core holds (currently says world while holding IEMA) — add a `core` field or label it clearly — correctness / small.
-- [P2] Demo page "Why this mix" table: show when each worst fall happened (e.g. −50% (2007–09)) and name the columns "Worst fall from peak" — clarity / small / user asked why all are red.
+- [P3] Demo page "Why this mix" table: show when each worst fall happened (e.g. −50% (2007–09)) and name the columns "Worst fall from peak" — clarity / small / user asked why all are red.
 - [P2] Overview step 2: remove the one-time rule-change note after week 2026-10-12 (RULE_CHANGE in indexpilot.py only fires for that week; check it is gone).
-- [P3] Live record chart on the Index pick page once there are 8+ live weeks — usefulness / medium.
+- [P2] Overview live chart: check it starts drawing after the 2nd live week (2026-10-16) and the numbers match live_vs_sp500 — correctness / small.
+- [P3] sim_growth + sim_buying are ~300 KB together; if page load gets slow, thin them to every 2nd week before 2020 — speed / small.
 
 ## Research questions (one per month, log in EXPERIMENTS.csv before running)
 - [R1] Monthly-only rebalance of the pick vs weekly with 0.25 buffer — fewer trades, maybe same return.
