@@ -55,6 +55,8 @@ def monthly_block(txt, cols):
     return df[['month'] + cols].assign(**{c: pd.to_numeric(df[c]) for c in cols})
 
 # ------------------------------------------------------------ momentum stocks: why the demo account holds what it holds
+MOMD = None   # US momentum deciles (set by overlay), reused for the Free Money stand-in
+
 def overlay():
     """US stocks sorted into 10 groups by 12-1 month momentum (value-weighted, monthly, Kenneth French data library).
     Compares the market with the demo's mix (70% market + 30% top-decile momentum stocks) and alternatives."""
@@ -67,6 +69,7 @@ def overlay():
         d = m.set_index('month')[['Hi PRIOR', 'Lo PRIOR']].rename(columns={'Hi PRIOR': 'hi', 'Lo PRIOR': 'lo'}) / 100
         d = d.join(f.set_index('month')[['mkt', 'rf']], how='inner')
         d.round(6).to_csv(cache)
+    global MOMD; MOMD = d
     strat = {'market': ('100% US market', lambda x: x.mkt),
              'demo': ('Demo mix: 70% market + 30% top momentum stocks', lambda x: 0.7 * x.mkt + 0.3 * x.hi),
              'top': ('100% top momentum stocks', lambda x: x.hi),
@@ -256,6 +259,27 @@ def rotation(df):
     cg_ = lambda g: (float(g.iloc[-1]) ** (12 / len(g)) - 1) * 100
     ref = next(r for r in rows if r['key'] == 'pick')['cagr']
     if abs(cg_(gp) - ref) > 0.1: raise RuntimeError(f'hist_regional pick {cg_(gp):.2f} != hist_rotation {ref}')
+    # Free Money stand-in: the same idea on all US stocks (top 10% minus bottom 10% by 12-1 month momentum, half the money on
+    # each side, no interest on cash, before costs and borrowing fees). Monthly; compared with the rule and North America.
+    if MOMD is not None:
+        md = MOMD.copy(); md['fm'] = (md['hi'] - md['lo']) / 2
+        common = [m for m in pr.index if m in md.index]
+        if len(common) > 120:
+            fmr = md.loc[common, 'fm']; gf = (1 + fmr).cumprod(); gp2 = (1 + pr.loc[common]).cumprod(); gu2 = (1 + na.loc[common]).cumprod()
+            start = d.index[list(d.index).index(common[0]) - 1]
+            save('free_money_proxy', [dict(month=start, free_money=1.0, rule=1.0, us=1.0)] + [dict(month=m, free_money=float(f'{gf[m]:.4g}'), rule=float(f'{gp2[m]:.4g}'), us=float(f'{gu2[m]:.4g}')) for m in common],
+                 'Free Money stand-in since 1991', 'Growth of 1: US momentum long/short (top 10% minus bottom 10% of US stocks, half the money each side, Kenneth French data) vs the index pick on regional data and North America. A stand-in, not the real picks.')
+            def stat(key, nm, r, per):
+                eq = (1 + r).cumprod(); yr = (1 + r).groupby(r.index.str[:4]).prod() - 1; full = yr[yr.index < r.index[-1][:4]]
+                full = full[full.index > r.index[0][:4]] if r.index[0][4:] != '01' else full
+                return dict(key=key, strategy=nm, period=per, cagr=round((float(eq.iloc[-1]) ** (12 / len(r)) - 1) * 100, 1), vol=round(float(r.std() * np.sqrt(12) * 100), 1),
+                            max_dd=round(float((eq / eq.cummax() - 1).min()) * 100, 1), worst_year=round(float(full.min()) * 100, 1), worst_year_when=str(full.idxmin()),
+                            best_year=round(float(full.max()) * 100, 1), pos_years=round(float((full > 0).mean()) * 100))
+            allm = md['fm'].dropna(); per0 = allm.index[0][:4] + '–today'
+            save('free_money_proxy_stats', [stat('fm_all', 'Free Money stand-in (US momentum long/short)', allm, per0), stat('mkt_all', 'US stock market', md['mkt'].loc[allm.index], per0),
+                                            stat('fm', 'Free Money stand-in (US momentum long/short)', fmr, '1991–today'), stat('rule', 'IndexPilot rule (regions)', pr.loc[common], '1991–today'),
+                                            stat('us', 'North America ≈ S&P 500', na.loc[common], '1991–today')],
+                 'Free Money stand-in: statistics', 'Return per year, volatility, worst fall and worst year of the US momentum long/short stand-in, the US market, the index pick on regional data and North America (Kenneth French data, before costs).')
     save('hist_regional', reg, 'Index pick vs North America, monthly', 'Growth of 1 US dollar from 1991: the index pick on regional data vs North America (the S&P 500 region), with the rolling 3-year difference in points a year (Kenneth French data library).')
     yrs_ = []
     for y, g in pd.Series(pr.index, index=pr.index).groupby(pr.index.str[:4]):

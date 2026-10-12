@@ -250,5 +250,20 @@
   "title": "Index pick vs North America by year",
   "description": "Calendar-year return of the index pick on regional data and of North America, US dollars (Kenneth French data library).",
   "updated": "2026-10-12T23:41:16Z"
+ },
+ "free_money_live": {
+  "refresh": "weekly",
+  "title": "Free Money vs the rule and the S&P 500 (live)",
+  "description": "Weekly since 9 Oct 2026, as % of a one-off stake: Free Money (Extra profit, both sides, compounded), holding each week's published pick, and holding the S&P 500 ETF. Before costs."
+ },
+ "free_money_proxy": {
+  "refresh": "weekly",
+  "title": "Free Money stand-in since 1991",
+  "description": "Growth of 1: US momentum long/short (top 10% minus bottom 10% of US stocks, half the money each side, Kenneth French data) vs the index pick on regional data and North America. A stand-in, not the real picks."
+ },
+ "free_money_proxy_stats": {
+  "refresh": "weekly",
+  "title": "Free Money stand-in: statistics",
+  "description": "Return per year, volatility, worst fall and worst year of the US momentum long/short stand-in, the US market, the index pick on regional data and North America (Kenneth French data, before costs)."
  }
 }
