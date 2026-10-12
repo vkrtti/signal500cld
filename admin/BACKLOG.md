@@ -2,6 +2,7 @@
 Re-rank every run. Format: [priority] title — benefit / effort / notes. Move done items to CHANGELOG.md.
 
 ## Fixes and small wins
+- [P1] Confirm GitHub scheduled runs fire (none had by 2026-10-12 23:10 UTC; a manual daily run was dispatched then). If still none by 2026-10-17, add a fallback (e.g. the Saturday admin task dispatches the weekly roll itself) and tell the owner — reliability / small.
 - [P1] Demo: switch the core from MSCI Emerging Markets (IEMA) to the pick at the next roll and check the trades in demo_ledger are sensible — correctness / small / first roll under the new rule.
 - [P1] demo_value.pick records the current pick, not what the core holds (currently says world while holding IEMA) — add a `core` field or label it clearly — correctness / small.
 - [P2] Demo page "Why this mix" table: show when each worst fall happened (e.g. −50% (2007–09)) and name the columns "Worst fall from peak" — clarity / small / user asked why all are red.

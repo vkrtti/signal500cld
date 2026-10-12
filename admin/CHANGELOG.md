@@ -1,5 +1,10 @@
 # Changelog (newest first)
 
+## 2026-10-13
+- Scheduled task "IndexPilot admin" created (Saturdays 12:47 Helsinki).
+- Daily data update dispatched by hand: the 22:30 UTC scheduled run had not fired (no scheduled run has fired yet). Run succeeded; page test clean.
+- PLAYBOOK: workflow dispatch must use the REST API (GraphQL is blocked).
+
 ## 2026-10-12
 - Admin setup: admin/ memory folder, page/body.html as the page source, tools/build_site.py, tools/test/page_test.js, tools/shots.py.
 - Overview explains once that the new rule replaced this week's earlier pick (MSCI Emerging Markets → MSCI World).
