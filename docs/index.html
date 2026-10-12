@@ -398,7 +398,7 @@
 .sx .ctl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
 .sx .live-h{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
 .sx .live-h>div:first-child{max-width:62ch}
-.sx .lk{display:grid;gap:10px 18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,9.5rem),1fr));margin:0 0 14px}
+.sx .lk{display:grid;gap:10px 18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,8rem),1fr));margin:0 0 14px}
 .sx .lk .l{font-size:12px;color:var(--muted);font-weight:550}
 .sx .lk .v{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-top:2px}
 .sx .lk .s{font-size:12px;color:var(--muted)}
@@ -550,7 +550,7 @@
   <section id="longrun" data-page hidden>
     <h1 class="ttl">History: the rule vs the S&amp;P 500</h1>
     <p class="lede" id="lr-lead">—</p>
-    <div class="seg" role="group" aria-label="Data set" id="lr-set" style="margin:4px 0 14px"><button class="flt" data-set="etf" aria-pressed="true">ETFs 2012–today (euros)</button><button class="flt" data-set="reg" aria-pressed="false">Regions 1991–today (US dollars)</button></div>
+    <div class="seg" role="group" aria-label="Data set" id="lr-set" style="margin:4px 0 14px"><button class="flt" data-set="etf" aria-pressed="true">ETFs 2012–today</button><button class="flt" data-set="reg" aria-pressed="false">Regions 1991–today</button></div>
     <div class="card">
       <div class="lk" id="lr-kpis"></div>
       <div class="legend" id="lr-legend"></div>
@@ -758,7 +758,7 @@
           <tbody></tbody>
         </table>
       </div>
-      <div class="card">
+      <div class="card" style="overflow-x:auto">
         <h3 id="tiers-h">The weekly rule</h3>
         <p class="note">Checked every Friday after the US close. Highlighted row = this week.</p>
         <table id="tier-table" data-source="weekly_tiers" data-row-key="tier">
@@ -775,7 +775,7 @@
     </div>
 
     <h2 id="meter-hist-h">Market meter since 2012</h2>
-    <div class="card">
+    <div class="card" style="overflow-x:auto">
       <p class="note">Weekly meter reading. Lines: weak below −10, very strong above +40.</p>
       <div class="chart" id="meter-chart" data-source="weekly_history" style="min-height:220px"></div>
       <table id="mb-table" data-source="meter_test" data-row-key="bucket" style="margin-top:var(--cds-gap-md)">
