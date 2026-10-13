@@ -1,6 +1,7 @@
 # Changelog (newest first)
 
 ## 2026-10-13
+- Three main tabs (Overview, Your plan, FAQ), the rest under More. New 'Your plan' page: buy amount + ISIN + when, what to sell (nothing unless the list says so), optional Keepers stocks with Buy/Keep/Sell, next check date. Method text moved to docs/data/method.json (page −21 KB). free_money_holdings gains an action field.
 - Simulation: Combinations section (the index pick + 0–100% in a stock strategy, 1991–today, both halves): best return per risk was the rule + 70% Keepers with guard (13.3%/yr, worst year −18.1%, Sharpe 0.72 vs 0.48 for the rule alone), but the best share differs by half (90% vs 40%). Live 70/30 mixes shown from 16 Oct. Page slimmed (dead code, shorter AI guide); tools/dash_page.py also minifies CSS.
 - Free Money: two long-only paper versions tracked live from 9 Oct (A Keepers, B Keepers + trend guard; state in free_money_variants_state.json, holdings in free_money_holdings.json), all live lines now after 0.2% per trade, stand-in adds long + trend guard (14.2%/yr since 1991). Tab rebuilt: 3 strategy cards, one live chart, one history chart, details folded away.
 - Free Money: long-only and short-only lines in the live chart and the 1991 stand-in (stand-in: long 15.4%/yr, short −12.4%/yr, both 3.7%/yr; before costs). Index pick details: removed the growth chart and backtest tables that duplicated Simulation (page size).

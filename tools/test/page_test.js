@@ -28,7 +28,7 @@ for (const m of html.matchAll(/<script>([\s\S]*?)<\/script>/g)) run('script', ()
 const fire = () => cbs.forEach((f) => run('onData', f));
 fire();
 const SX = w.SX;
-for (const t of ['home', 'sim', 'longrun', 'faq', 'indexes', 'week', 'stocks', 'extra', 'demo', 'strategy', 'news', 'markets', 'history', 'plans', 'gauges']) {
+for (const t of ['home', 'plan', 'sim', 'longrun', 'faq', 'indexes', 'week', 'stocks', 'extra', 'demo', 'strategy', 'news', 'markets', 'history', 'plans', 'gauges']) {
   run('show ' + t, () => SX.show(t)); fire();
   const sec = w.document.getElementById(t);
   const empties = [...sec.querySelectorAll('[data-source]')].filter((el) => el.tagName !== 'TABLE' && !el.classList.contains('chart') && el.tagName !== 'UL' && !el.classList.contains('gauge-box') && (el.textContent.trim() === '—' || el.textContent.trim() === ''));

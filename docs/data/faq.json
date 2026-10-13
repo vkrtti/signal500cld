@@ -2,12 +2,12 @@
 {
 "q": "What does IndexPilot do?",
 "a": "Every Friday after the close it picks one of six euro index ETFs and tells you how much to buy this week (€40–200). You place the buy yourself at your broker. The site only suggests and keeps score.",
-"go": "home"
+"go": "plan"
 },
 {
 "q": "What do I do each week?",
-"a": "Open the Overview and follow the 3 steps: buy the amount shown into this week's ETF (copy the ISIN), keep what you already own, and optionally take the Free Money picks. That's it.",
-"go": "home"
+"a": "Open Your plan and follow it: buy the amount shown into this week's ETF (copy the ISIN), sell nothing, and optionally hold the 3 stocks listed. It takes a few minutes once a week.",
+"go": "plan"
 },
 {
 "q": "How is the index chosen?",

@@ -291,5 +291,10 @@
   "description": "Growth of 1 US dollar: the index pick alone, North America, and the pick with 30% (or 50%) in a stock strategy, rebalanced monthly (stand-in data, before costs).",
   "refresh": "weekly",
   "updated": "2026-10-13T00:55:40Z"
+ },
+ "method": {
+  "title": "Method",
+  "description": "The plain-language explanation of every rule, the tests and the data sources (HTML shown on the Method page; numbers inside are filled from the other data files).",
+  "refresh": "manual"
  }
 }

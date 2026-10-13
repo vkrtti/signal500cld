@@ -435,8 +435,14 @@ def run(S, D, research, fin, cons, log, offline=None):
             tot = st_['cash'] + sum(p_['value'] for p_ in st_['pos'])
             for p_ in st_['pos']:
                 hold_rows.append(dict(strategy=key_, ticker=p_['ticker'], company=p_['company'], weight=round(p_['value'] / tot * 100), since=p_['since'],
-                                      return_pct=round((p_['last'] / p_['entry'] - 1) * 100, 1), price=p_['last'], currency=p_['currency']))
-            if st_['cash'] / tot > 0.02: hold_rows.append(dict(strategy=key_, ticker='Cash', company='Waiting (trend guard)' if key_ == 'B' and guard_on else 'Cash', weight=round(st_['cash'] / tot * 100), since=None, return_pct=None, price=None, currency='EUR'))
+                                      return_pct=round((p_['last'] / p_['entry'] - 1) * 100, 1), price=p_['last'], currency=p_['currency'],
+                                      action='Buy' if p_['since'] == dstr else 'Keep'))
+            last_h = st_['hist'][-1] if st_['hist'] else {}
+            prev_pos = {p_['ticker']: p_ for p_ in (VS.get(key_) or {}).get('pos', [])}
+            for t_ in last_h.get('sold', []):
+                q_ = prev_pos.get(t_, {})
+                hold_rows.append(dict(strategy=key_, ticker=t_, company=q_.get('company', t_), weight=0, since=q_.get('since'), return_pct=None, price=None, currency=q_.get('currency'), action='Sell'))
+            if st_['cash'] / tot > 0.02: hold_rows.append(dict(strategy=key_, ticker='Cash', company='Waiting (trend guard)' if key_ == 'B' and guard_on else 'Cash', weight=round(st_['cash'] / tot * 100), since=None, return_pct=None, price=None, currency='EUR', action='Hold cash'))
         out['free_money_holdings'] = hold_rows
     else:
         VA = VB = None
