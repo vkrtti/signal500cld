@@ -1,6 +1,7 @@
 # Changelog (newest first)
 
 ## 2026-10-13
+- FAQ tab: 14 short answers from docs/data/faq.json with live numbers. Fixed direct links to the new tabs drawing nothing. Active tab stays visible on phones.
 - Extra profit renamed "Free Money :D" (owner's request) and moved to the main tabs: live record vs the rule and the S&P 500 since 9 Oct, plus a stand-in simulation since 1991 (US momentum long/short: 3.7%/yr vs rule 9.8% and North America 11.0%; worst year −43.7% in 2009).
 - Redesign for simplicity: Overview / Simulation / History / Method + More menu; live plan-vs-S&P 500 chart on the Overview; all strategies in one Simulation chart; History compares the rule with the S&P 500 (ETFs 2012–today, regions 1991–today). New data files listed in PLAYBOOK. Unfinished-week guard in the engine.
 - Scheduled task "IndexPilot admin" created (Saturdays 12:47 Helsinki).

@@ -268,5 +268,10 @@
   "title": "Free Money stand-in: statistics",
   "description": "Return per year, volatility, worst fall and worst year of the US momentum long/short stand-in, the US market, the index pick on regional data and North America (Kenneth French data, before costs).",
   "updated": "2026-10-12T23:59:19Z"
+ },
+ "faq": {
+  "title": "FAQ",
+  "description": "Short questions and answers about what IndexPilot does. Numbers in the answers are filled in from the other data files.",
+  "refresh": "manual"
  }
 }

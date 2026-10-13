@@ -1,0 +1,72 @@
+[
+{
+"q": "What does IndexPilot do?",
+"a": "Every Friday after the close it picks one of six euro index ETFs and tells you how much to buy this week (€40–200). You place the buy yourself at your broker. The site only suggests and keeps score.",
+"go": "home"
+},
+{
+"q": "What do I do each week?",
+"a": "Open the Overview and follow the 3 steps: buy the amount shown into this week's ETF (copy the ISIN), keep what you already own, and optionally take the Free Money picks. That's it.",
+"go": "home"
+},
+{
+"q": "How is the index chosen?",
+"a": "Each ETF gets a score: its 52-week return divided by its volatility, so steady gains beat jumpy ones. The current pick only changes when another ETF scores more than 0.25 higher, which avoids switching back and forth. That happens about {{sim_strategies|key=pick|switches_per_year}} times a year.",
+"go": "strategy"
+},
+{
+"q": "Why does the amount change?",
+"a": "It buys more when the world market is below its record or stress gauges (VIX, financial conditions, the Sahm recession rule) are high, and less when things look stretched. Honest note: in tests since 2012 this made {{ip_buying|key=rule_world|irr}}% a year vs {{ip_buying|key=flat_world|irr}}% for a flat amount, so it's about comfort more than profit.",
+"go": "week"
+},
+{
+"q": "Does it beat the S&P 500?",
+"a": "Sometimes. On euro ETFs since 2012 the rule made {{sim_strategies|key=pick|cagr}}% a year vs {{sim_strategies|key=us|cagr}}% for the S&P 500. On regional data since 1991 it made {{hist_rotation|key=pick|cagr}}% vs {{hist_rotation|key=US|cagr}}% for North America, so it lost there. Both are backtests; the live record started on 9 Oct 2026.",
+"go": "longrun"
+},
+{
+"q": "Do I ever have to sell?",
+"a": "No. When the pick switches, new money goes into the new ETF and you keep what you already hold. There are no forced sales, so there's less tax and fewer costs.",
+"go": "home"
+},
+{
+"q": "Is the market meter a buy or sell signal?",
+"a": "No. It describes how the market looks today (−100 to +100). Tests since 2012 and on US data since 1927 found it doesn't predict what comes next, so it doesn't change what you buy.",
+"go": "week"
+},
+{
+"q": "What is Free Money :D?",
+"a": "An optional side bet: buy the 3 strongest and short the 3 weakest stocks of this week's index, held one week. It is not free: a stand-in on US data since 1991 made {{free_money_proxy_stats|key=fm|cagr}}% a year with a {{free_money_proxy_stats|key=fm|worst_year}}% year. Shorts can lose more than their stake.",
+"go": "extra"
+},
+{
+"q": "What is the demo account?",
+"a": "A pretend account that puts in €1,000 every Friday: 70% in this week's ETF and 30% in its 3 strongest stocks, with 0.2% costs. It's compared with putting the same money into MSCI World, so you can see whether the extras help.",
+"go": "demo"
+},
+{
+"q": "What does the Simulation page show?",
+"a": "Every strategy we tested on the same 2012–today data in one chart: the current rule, the previous one, the rejected variants and simply holding each index. It's all backtest, so it shows what would have happened, not what will.",
+"go": "sim"
+},
+{
+"q": "Where does the data come from?",
+"a": "Free public sources: Yahoo Finance for ETF and stock prices, the US Federal Reserve (FRED) for the gauges, the Kenneth French data library for long history, and news feeds for headlines (titles and links only). Prices update every weekday; the pick is decided every Saturday morning. A banner appears if the data is out of date.",
+"go": "strategy"
+},
+{
+"q": "Are costs and taxes included?",
+"a": "Backtests are before costs. The live record and the demo charge 0.2% per buy. Taxes aren't modelled at all, so check your own situation.",
+"go": "strategy"
+},
+{
+"q": "Is this financial advice?",
+"a": "No. It's a personal research and simulation tool. It never trades, never connects to a broker, and can be wrong. Past results, real or simulated, don't guarantee anything, and you can lose money.",
+"go": null
+},
+{
+"q": "Can I ask questions?",
+"a": "Yes: use the Ask IndexPilot AI bar at the bottom of every page. It answers from the site's own data and links you to the right page.",
+"go": null
+}
+]

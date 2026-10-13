@@ -35,10 +35,8 @@
 .sx .gauge{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px}
 .sx .gauge span{display:inline-flex;align-items:center;gap:6px}
 .sx .dot{width:.55rem;height:.55rem;border-radius:50%;display:inline-block;flex:none}
-.sx .d-good{background:var(--up)} .sx .d-neutral{background:var(--cds-chart-muted)} .sx .d-warn{background:var(--color-warn)} .sx .d-bad{background:var(--down)}
-.sx .pill{font-size:12px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--color-bg);white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
-.sx .p-good{color:var(--up)} .sx .p-warn{color:var(--color-warn)} .sx .p-bad{color:var(--down)} .sx .p-neutral{color:var(--muted)}
-/* highlights row */
+   .sx .pill{font-size:12px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--color-bg);white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
+.sx .p-good{color:var(--up)} .sx .p-warn{color:var(--color-warn)} .sx .p-bad{color:var(--down)} /* highlights row */
 .sx .hl{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,19rem),1fr));margin:12px 0}
 .sx .hl .card{padding:14px}
 .sx .hl h3{display:flex;align-items:center;gap:4px;font-size:14px}
@@ -64,9 +62,6 @@
 .sx .ex-h{font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px}
 .sx .ex-h.l{color:var(--up)} .sx .ex-h.s{color:var(--down)}
 .sx .mini.ex-list li{grid-template-columns:26px 1fr auto auto}
-.sx .mini.mk-list li{grid-template-columns:1fr auto auto 64px}
-.sx .exrec{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
-.sx .exrec b{color:var(--color-fg)}
 /* strategy page */
 .sx .toc{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 16px}
 .sx .flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:10px;counter-reset:st}
@@ -137,7 +132,6 @@
 .sx .pick-fund{font-size:13px;color:var(--muted);font-weight:600}
 .sx .pick-fund b{color:var(--color-fg)}
 .sx .swb[hidden]{display:none} .sx .swb{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:6px;color:#fff;background:var(--accent);margin-left:8px;vertical-align:middle}
-.sx .hero3{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,17rem),1fr));align-items:stretch;margin:12px 0}
 .sx .idx-st{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;white-space:nowrap}
 .sx .idx-st.on{color:#fff;background:var(--accent)} .sx .idx-st.lead{color:var(--color-warn);background:color-mix(in srgb,var(--color-warn) 14%,transparent)}
 .sx tr.picked td{background:color-mix(in srgb,var(--accent) 7%,transparent)}
@@ -301,7 +295,6 @@
 .sx input.q{background:var(--raised);border-radius:10px}
 .sx .mini li{padding:8px 0;border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
 .sx .mini li:last-child{border-bottom:0}
-.sx .exrec{border-top-color:var(--line)}
 .sx .mt{background:var(--raised)}
 /* strategy page: the explained methods */
 .sx .toc{gap:6px}
@@ -366,7 +359,7 @@
 :root[data-theme=dark] .sx{--sp:#C3CBDD}
 @media (prefers-color-scheme: dark){:root:not([data-theme=light]) .sx{--sp:#C3CBDD}}
 .sx .nav{display:flex;align-items:flex-end;gap:22px;border-bottom:1px solid var(--line);padding:4px 24px 0}
-.sx .nav .tabs{border-bottom:0;padding:0;min-width:0;flex:0 1 auto}
+.sx .nav .tabs{border-bottom:0;padding:0;min-width:0;flex:0 1 auto;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 18px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 18px),transparent)}
 .sx .more{position:relative;flex:none;margin-left:auto}
 .sx .more-btn{font:inherit;font-size:15px;font-weight:550;background:none;border:0;padding:12px 0 13px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
 .sx .more-btn::after{content:"";width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px)}
@@ -401,6 +394,14 @@
 .sx .live .empty{display:flex;align-items:center;justify-content:center;min-height:120px;border:1px dashed var(--line);border-radius:12px;color:var(--muted);font-size:13px;text-align:center;padding:16px}
 .sx button:focus-visible,.sx a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
 @media (max-width:640px){.sx .nav{padding:0 16px;gap:14px}.sx .nav .tabs{gap:2px 16px}.sx .nav .tabs button,.sx .more-btn{font-size:14px}.sx .more-btn #more-cur{display:none}}
+.sx .faq{display:grid;gap:10px;max-width:820px}
+.sx .faq details{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:0 16px}
+.sx .faq summary{cursor:pointer;list-style:none;padding:14px 0;font-weight:650;font-size:15px;display:flex;justify-content:space-between;gap:12px}
+.sx .faq summary::-webkit-details-marker{display:none}
+.sx .faq summary::after{content:"+";color:var(--muted);font-weight:500;font-size:18px;line-height:1}
+.sx .faq details[open] summary::after{content:"−"}
+.sx .faq .a{margin:0 0 14px;color:var(--muted);line-height:1.6;font-size:14px}
+.sx .faq .a .chip{margin-left:6px;padding:3px 10px;font-size:12px}
 @media (prefers-reduced-motion:reduce){.sx *{transition:none!important}}
 </style>
 
@@ -419,6 +420,7 @@
       <button role="tab" data-tab="longrun" id="tab-longrun" aria-selected="false">History</button>
       <button role="tab" data-tab="extra" id="tab-extra" aria-selected="false">Free Money :D</button>
       <button role="tab" data-tab="strategy" id="tab-strategy" aria-selected="false">Method</button>
+      <button role="tab" data-tab="faq" id="tab-faq" aria-selected="false">FAQ</button>
     </div>
     <div class="more">
       <button class="more-btn" id="more-btn" aria-haspopup="true" aria-expanded="false" aria-controls="more-menu">More<span id="more-cur"></span></button>
@@ -550,6 +552,13 @@
     <div class="card tbl"><table id="lr-dec" data-source="hist_rotation_decades" data-row-key="decade">
       <thead><tr><th data-field="decade">Decade</th><th data-field="pick" class="n">Rule (%/yr)</th><th data-field="us" class="n">S&amp;P 500 (%/yr)</th><th data-field="diff" class="n">Difference</th></tr></thead><tbody></tbody></table></div>
     <div class="warnbox" id="lr-honest" style="margin-top:14px"></div>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section id="faq" data-page hidden>
+    <h1 class="ttl">FAQ</h1>
+    <p class="lede">The short version of what IndexPilot does. Numbers come straight from the site's data.</p>
+    <div class="faq" id="faq-list"></div>
   </section>
 
   <!-- ================= INDEX PICK ================= -->
@@ -1325,13 +1334,15 @@ SX.gauge = (box, v, label) => {
 
 // ---- tabs ----
 SX.RESEARCH = ['history', 'plans', 'gauges'];
-SX.MAIN = ['home', 'sim', 'longrun', 'extra', 'strategy'];
+SX.MAIN = ['home', 'sim', 'longrun', 'extra', 'strategy', 'faq'];
 SX.show = (name) => {
   if (name === 'research') name = SX.RESEARCH.includes(SX.active) ? SX.active : 'history';
   if (!document.getElementById(name)) name = 'home';
   const tab = SX.MAIN.includes(name) ? name : 'more';
   document.querySelectorAll('.sx [data-page]').forEach((s) => { s.hidden = s.id !== name; });
   document.querySelectorAll('.sx .tabs button[data-tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === tab)));
+  const tb = document.querySelector('.sx .nav .tabs'), ab = tb && tb.querySelector('button[aria-selected=true]');
+  if (tb && ab) { const l = ab.offsetLeft - tb.offsetLeft, r = l + ab.offsetWidth; if (l < tb.scrollLeft || r > tb.scrollLeft + tb.clientWidth) tb.scrollLeft = Math.max(0, r - tb.clientWidth + 26); }
   const mb = document.getElementById('more-btn'), mc = document.getElementById('more-cur');
   if (mb) { mb.classList.toggle('on', tab === 'more'); const key = SX.RESEARCH.includes(name) ? 'history' : name; const it = document.querySelector('#more-menu [data-go="' + key + '"]');
     document.querySelectorAll('#more-menu button').forEach((b) => b.toggleAttribute('aria-current', b === it)); if (it) it.setAttribute('aria-current', 'page');
@@ -1812,7 +1823,7 @@ SX.line = (box, series, o) => {
   }));
 
   const named = location.hash.replace(/^#\/?/, '');
-  if (['home', 'sim', 'longrun', 'indexes', 'markets', 'week', 'strategy', 'extra', 'plans', 'gauges', 'history', 'stocks', 'demo', 'news', 'research'].includes(named)) SX.active = named === 'research' ? 'history' : named;
+  if (['home', 'sim', 'longrun', 'faq', 'indexes', 'markets', 'week', 'strategy', 'extra', 'plans', 'gauges', 'history', 'stocks', 'demo', 'news', 'research'].includes(named)) SX.active = named === 'research' ? 'history' : named;
   let first = true;
   dash.onData(() => {
     if (first) { first = false; SX.show(SX.active); return; }
@@ -2020,6 +2031,17 @@ dash.calc('lr_dec_reg', {
     if (g('fm') && g('us') && fa && ma) document.getElementById('fm-sim-note').textContent = `Honest reading: since 1991 the stand-in made ${g('fm').cagr}% a year, ${g('fm').cagr < g('us').cagr ? 'below' : 'above'} simply holding North America (${g('us').cagr.toFixed(1)}%) and ${g('fm').cagr < g('rule').cagr ? 'below' : 'above'} the rule (${g('rule').cagr.toFixed(1)}%), and it lost ${Math.abs(g('fm').worst_year)}% in ${g('fm').worst_year_when}. Over ${fa.period} it made ${fa.cagr.toFixed(1)}% a year vs ${ma.cagr.toFixed(1)}% for the US market. Momentum long/short has paid something over a century, but with long dry spells and sudden crashes — not free money.`;
   };
 
+  // ---------- FAQ (text in docs/data/faq.json; {{dataset|key=value|field}} is filled from the data) ----------
+  SX.drawFAQ = () => {
+    const box = document.getElementById('faq-list'); const F = SX.rows('faq'); if (!box || !F || box.dataset.n === String(F.length) + (SX.rows('sim_strategies') || []).length) return;
+    const fill = (t) => t.replace(/\{\{(\w+)\|(\w+)=([^|}]+)\|(\w+)\}\}/g, (m, ds, k, v, f) => { const r = (SX.rows(ds) || []).find((x) => String(x[k]) === v); return r && r[f] != null ? (typeof r[f] === 'number' ? r[f].toFixed(1) : r[f]) : '—'; });
+    const NAMES = { home: 'Overview', sim: 'Simulation', longrun: 'History', extra: 'Free Money :D', strategy: 'Method', week: "This week's details", demo: 'Demo account' };
+    box.replaceChildren(...F.map((x, i) => { const d = document.createElement('details'); if (i === 0) d.open = true; const sm = document.createElement('summary'); sm.textContent = x.q; const p = document.createElement('p'); p.className = 'a'; p.textContent = fill(x.a);
+      if (x.go && NAMES[x.go]) { const b = document.createElement('button'); b.className = 'chip'; b.textContent = NAMES[x.go] + ' →'; b.addEventListener('click', () => { SX.show(x.go); document.getElementById('top').scrollIntoView({ block: 'start' }); }); p.appendChild(b); }
+      d.append(sm, p); return d; }));
+    box.dataset.n = String(F.length) + (SX.rows('sim_strategies') || []).length;
+  };
+
   // ---------- wiring ----------
   const seg = (id, attr, fn) => { const g = document.getElementById(id); if (!g) return; g.addEventListener('click', (ev) => { const b = ev.target.closest('.flt'); if (!b) return; g.querySelectorAll('.flt').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); fn(b.dataset[attr]); }); };
   document.querySelectorAll('#live-card .seg').forEach((g) => g.addEventListener('click', (ev) => { const b = ev.target.closest('.flt'); if (!b) return; g.querySelectorAll('.flt').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); SX.liveMode = b.dataset.live; SX.drawLive(); }));
@@ -2028,8 +2050,9 @@ dash.calc('lr_dec_reg', {
   seg('sim-scale', 'scale', (v) => { SX.sim.scale = v; SX.drawSim(); });
   seg('lr-set', 'set', (v) => { SX.lrSet = v; SX.drawLongrun(); });
   const base = SX.draw;
-  SX.draw = () => { base(); if (SX.active === 'home') SX.drawLive(); if (SX.active === 'sim') SX.drawSim(); if (SX.active === 'longrun') SX.drawLongrun(); if (SX.active === 'extra') SX.drawFM(); };
+  SX.draw = () => { base(); if (SX.active === 'home') SX.drawLive(); if (SX.active === 'sim') SX.drawSim(); if (SX.active === 'longrun') SX.drawLongrun(); if (SX.active === 'extra') SX.drawFM(); if (SX.active === 'faq') SX.drawFAQ(); };
   let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => SX.draw(), 150); });
+  if (SX.rows('weekly_now')) SX.draw();   // data may have arrived before this script ran (direct links like #/faq)
 })();
 </script>
 
@@ -2044,7 +2067,7 @@ dash.calc('lr_dec_reg', {
   const $ = (id) => document.getElementById(id);
   const bar = $('askbar'), mini = $('askmini'), panel = $('askpanel'), log = $('asklog'), form = $('askform'), inp = $('askinput'), modeEl = $('askmode');
   if (!bar || !panel) return;
-  const PAGES = { home: 'Overview', sim: 'Simulation', longrun: 'History', indexes: 'Index pick details', week: 'This week details', stocks: 'Stocks', extra: 'Free Money :D', demo: 'Demo account', strategy: 'Method', news: 'News', markets: 'Markets', history: 'Research: 100 years', plans: 'Research: plans', gauges: 'Research: gauges' };
+  const PAGES = { faq: 'FAQ', home: 'Overview', sim: 'Simulation', longrun: 'History', indexes: 'Index pick details', week: 'This week details', stocks: 'Stocks', extra: 'Free Money :D', demo: 'Demo account', strategy: 'Method', news: 'News', markets: 'Markets', history: 'Research: 100 years', plans: 'Research: plans', gauges: 'Research: gauges' };
   const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} } };
   const history = [];   // [{role, content}] for the AI engines
   let sample = null, busy = false;
