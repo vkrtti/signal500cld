@@ -279,5 +279,15 @@
   "description": "Current holdings of the two long-only paper versions (A keepers, B keepers + trend guard): weight, since when, return.",
   "refresh": "weekly",
   "updated": "2026-10-13T00:38:35Z"
+ },
+ "combo_grid": {
+  "title": "Index pick + stocks: every mix",
+  "description": "The index pick (regional data) mixed with a stock strategy (US momentum stand-in: keepers = top 10%, keepers + guard, long/short), 0-100% in stocks, rebalanced monthly, 1991-today and both halves, before costs.",
+  "refresh": "weekly"
+ },
+ "combo_growth": {
+  "title": "Index pick + stocks: growth since 1991",
+  "description": "Growth of 1 US dollar: the index pick alone, North America, and the pick with 30% (or 50%) in a stock strategy, rebalanced monthly (stand-in data, before costs).",
+  "refresh": "weekly"
  }
 }

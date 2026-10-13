@@ -13,6 +13,7 @@ Re-rank every run. Format: [priority] title — benefit / effort / notes. Move d
 - [P3] sim_growth + sim_buying are ~300 KB together; if page load gets slow, thin them to every 2nd week before 2020 — speed / small.
 
 - [P2] Free Money A/B: after the 16 Oct close check the keepers' trades (sells only on leaving the top 20% or a 25% fall) and that their % matches a hand calculation — correctness / small.
+- [R0b] The combinations suggest the demo's 30% stock share is low (best 40–90% with the guard). Re-check with the live record before proposing a demo change; it needs owner approval.
 - [R0] After ~26 live weeks compare Free Money current vs A vs B; if A or B leads and the 1991 stand-in agrees, propose switching (pull request).
 
 ## Research questions (one per month, log in EXPERIMENTS.csv before running)

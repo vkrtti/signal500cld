@@ -555,6 +555,20 @@
         <tbody></tbody></table>
     </div>
     <p class="note" id="sim-live" style="margin-top:12px"></p>
+
+    <h2>Combinations: the index pick + stocks</h2>
+    <div class="card">
+      <p class="note" style="margin:0 0 10px">How much of your money should go to stocks next to the index pick? Each line mixes the pick (regional data) with one stock strategy (US momentum stand-in), from 0% to 100% in stocks, rebalanced monthly, 1991–today, before costs. The dashed line is the demo's 30%.</p>
+      <div class="ctl"><div class="seg" role="group" aria-label="Measure" id="cb-metric"><button class="flt" data-m="sharpe" aria-pressed="true">Return per risk</button><button class="flt" data-m="cagr" aria-pressed="false">Return per year</button><button class="flt" data-m="worst_year" aria-pressed="false">Worst year</button></div></div>
+      <div class="legend" id="cb-legend"></div>
+      <div class="chart" id="cb-grid" data-source="combo_grid" style="min-height:240px"></div>
+      <p class="note" id="cb-note" style="margin:10px 0 0"></p>
+      <div class="sub-h">Growth since 1991</div>
+      <div class="legend" id="cb-glegend"></div>
+      <div class="chart" id="cb-growth" data-source="combo_growth" style="min-height:260px"></div>
+      <div class="sub-h">Live since 9 Oct 2026: 70% the rule + 30% stocks</div>
+      <div class="lk" id="cb-live"></div>
+    </div>
   </section>
 
   <!-- ================= HISTORY (rule vs S&P 500) ================= -->
@@ -1499,13 +1513,6 @@ SX.line = (box, series, o) => {
     const pc = (td, v) => { td.textContent = v == null ? '—' : (v > 0 ? '+' : '') + v + '%'; td.style.color = v > 0 ? 'var(--up)' : v < 0 ? 'var(--down)' : ''; };
     const num = (td, v) => { td.textContent = v == null ? '—' : v; td.style.color = v > 0 ? 'var(--up)' : v < 0 ? 'var(--down)' : ''; };
     if (SX.active === 'home') {
-      const ul = document.getElementById('hl-markets'); const mk = SX.rows('markets');
-      if (ul && mk) ul.replaceChildren(...['spx_eur', 'ndx', 'nikkei', 'eurusd', 'brent'].map((k) => mk.find((m) => m.key === k)).filter(Boolean).map((m) => {
-        const li = document.createElement('li'); const n = document.createElement('span'); n.className = 'tk'; n.textContent = m.name;
-        const v = document.createElement('span'); v.textContent = d3.format(m.last < 10 ? ',.4f' : ',.0f')(m.last);
-        const c = document.createElement('span'); c.className = 'c ' + (m.w1 >= 0 ? 'up' : 'down'); c.style.fontSize = '12px'; c.style.fontWeight = '700'; c.textContent = Math.abs(m.w1) + '%';
-        const sp = document.createElement('span'); SX.spark(sp, (m.spark || []).slice(-13)); sp.querySelector('svg')?.setAttribute('width', 64);
-        li.append(n, v, c, sp); return li; }));
     }
     if (SX.active === 'markets') {
       SX.table('mk-table', 'markets', { name: (td, v, r) => { const d = document.createElement('div'); d.style.display = 'flex'; d.style.flexDirection = 'column'; const a = document.createElement('span'); a.textContent = v; a.style.fontWeight = '700'; const g = document.createElement('span'); g.className = 'grp-pill'; g.textContent = r.group + (r.unit ? ' · ' + r.unit : ''); d.append(a, g); td.appendChild(d); },
@@ -1598,15 +1605,6 @@ SX.line = (box, series, o) => {
         svg.append('circle').attr('cx', x(arr.length - 1)).attr('cy', y(arr[arr.length - 1])).attr('r', 4).attr('fill', 'var(--accent)').attr('stroke', 'var(--color-panel)').attr('stroke-width', 2);
         const cap = document.createElement('span'); cap.className = 'cap'; cap.textContent = `${pk.etf} · last 52 weeks · €${d3.format(',.2f')(arr[arr.length - 1])}`; hs.appendChild(cap);
       }
-      const mini = (ulId, rows, good) => {
-        const ul = document.getElementById(ulId); if (!rows) return;
-        ul.replaceChildren(...rows.map((r) => {
-          const li = document.createElement('li'); const rk = document.createElement('span'); rk.className = 'rk'; rk.textContent = r.rank;
-          const nm = document.createElement('span'); nm.style.minWidth = '0'; const tk = document.createElement('div'); tk.className = 'tk'; tk.textContent = r.ticker; const co = document.createElement('div'); co.className = 'co'; co.textContent = r.company; nm.append(tk, co);
-          const p = document.createElement('span'); p.textContent = SX.money(r.price, r.currency);
-          const sc = document.createElement('span'); sc.className = 'pill ' + (good ? 'p-good' : 'p-bad'); sc.textContent = r.score;
-          li.append(rk, SX.icon(r.ticker), nm, p, sc); return li; }));
-      };
       const nf = SX.rows('news_feed'); const nh = document.getElementById('news-home');
       if (nf && nh) SX.newsList(nh, nf.filter((r) => r.group !== 'Central banks').slice(0, 3));
       SX.demoHome && SX.demoHome();
@@ -2024,6 +2022,40 @@ dash.calc('lr_dec_reg', {
     box.dataset.n = String(F.length) + (SX.rows('sim_strategies') || []).length;
   };
 
+  // ---------- Combinations (Simulation tab) ----------
+  SX.cbM = 'sharpe';
+  SX.xy = (box, series, o) => {
+    box.querySelector('svg')?.remove(); const W = box.clientWidth; if (!W) return; const H = o.h || 240, m = { t: 10, r: 10, b: 30, l: 44 };
+    const all = series.flatMap((s) => s.pts.map((p) => p.y)); const x = d3.scaleLinear([0, 100], [m.l, W - m.r]); const y = d3.scaleLinear(d3.extent(all), [H - m.b, m.t]).nice();
+    const svg = d3.select(box).insert('svg', ':first-child').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
+    svg.selectAll('line.g').data(y.ticks(4)).join('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y).attr('y2', y).attr('stroke', 'var(--cds-chart-grid)');
+    svg.selectAll('text.y').data(y.ticks(4)).join('text').attr('x', m.l - 6).attr('y', y).attr('dy', '0.32em').attr('text-anchor', 'end').attr('font-size', 11.5).attr('fill', 'var(--color-fg-muted)').text(o.yfmt);
+    svg.selectAll('text.x').data([0, 20, 40, 60, 80, 100]).join('text').attr('x', x).attr('y', H - 10).attr('text-anchor', 'middle').attr('font-size', 11.5).attr('fill', 'var(--color-fg-muted)').attr('text-anchor', (v) => (v === 0 ? 'start' : v === 100 ? 'end' : 'middle')).text((v) => v + '%' + (v === 0 ? ' in stocks' : ''));
+    if (o.mark != null) svg.append('line').attr('x1', x(o.mark)).attr('x2', x(o.mark)).attr('y1', m.t).attr('y2', H - m.b).attr('stroke', 'var(--cds-chart-axis)').attr('stroke-dasharray', '3 3');
+    const tip = SX.tip(box);
+    series.forEach((s) => { svg.append('path').attr('d', d3.line().x((p) => x(p.x)).y((p) => y(p.y))(s.pts)).attr('fill', 'none').attr('stroke', s.color).attr('stroke-width', s.w || 2.2);
+      svg.append('g').selectAll('circle').data(s.pts).join('circle').attr('cx', (p) => x(p.x)).attr('cy', (p) => y(p.y)).attr('r', 3.5).attr('fill', s.color)
+        .on('mousemove', (ev, p) => { tip.replaceChildren(); const a = document.createElement('div'); a.className = 'd'; a.textContent = `${s.name}, ${p.x}% in stocks`; const b = document.createElement('div'); b.textContent = o.tip(p.r); tip.append(a, b); const [mx, my] = d3.pointer(ev, box); SX.place(tip, box, mx, my); })
+        .on('mouseleave', () => { tip.style.display = 'none'; }); });
+  };
+  SX.drawCombo = () => {
+    const box = document.getElementById('cb-grid'); if (!box || !box.offsetParent) return;
+    const G = SX.rows('combo_grid') || [], P = SX.rows('combo_growth') || [], C = COL(); if (!G.length) return;
+    const legs = [{ k: 'keep', name: 'Rule + Keepers', color: 'var(--up)' }, { k: 'keep_guard', name: 'Rule + Keepers with guard', color: '#22B8CF' }, { k: 'longshort', name: 'Rule + long/short', color: 'var(--color-warn)' }];
+    legend(document.getElementById('cb-legend'), legs);
+    const M = SX.cbM, fm = { sharpe: (v) => d3.format('.2f')(v), cagr: (v) => d3.format('.1f')(v) + '%', worst_year: (v) => d3.format('.0f')(v) + '%' }[M];
+    SX.xy(box, legs.map((l) => ({ ...l, pts: G.filter((r) => r.stock === l.k).map((r) => ({ x: r.weight, y: r[M], r })) })), { h: 240, yfmt: fm, mark: 30, tip: (r) => `${r.cagr}% a year · return per risk ${r.sharpe} · worst year ${r.worst_year}% · 1991–2008 ${r.h1_cagr}%, 2009–today ${r.h2_cagr}%` });
+    const best = (k, f) => G.filter((r) => r.stock === k).reduce((a, b) => (b[f] > a[f] ? b : a));
+    const bg = best('keep_guard', 'sharpe'), bk = best('keep', 'sharpe'), b1 = best('keep_guard', 'h1_sharpe'), b2 = best('keep_guard', 'h2_sharpe'), r0 = G.find((r) => r.weight === 0);
+    document.getElementById('cb-note').textContent = `Best return per risk: the rule + ${bg.weight}% Keepers with guard (${bg.cagr}% a year, worst year ${bg.worst_year}%), against ${r0.cagr}% and a ${r0.worst_year}% year for the rule alone. With plain Keepers, more stocks always added return (${bk.weight}%+ is best per risk). Adding long/short lowers the return. Check for luck: the best guard mix was ${b1.weight}% in 1991–2008 but ${b2.weight}% in 2009–today, so treat the exact share as rough. US stand-in, hundreds of stocks, no costs.`;
+    const gs = [{ k: 'rule', name: 'The rule alone', color: C.pick, w: 2 }, { k: 'us', name: 'North America ≈ S&P 500', color: C.us, w: 1.8 }, { k: 'keep70', name: '+30% Keepers', color: 'var(--up)', w: 2.2 }, { k: 'guard70', name: '+30% Keepers with guard', color: '#22B8CF', w: 2.2 }, { k: 'ls70', name: '+30% long/short', color: 'var(--color-warn)', w: 1.8 }, { k: 'keep50', name: '+50% Keepers', color: 'var(--up)', w: 1.6, dash: '5 3' }];
+    legend(document.getElementById('cb-glegend'), gs);
+    if (P.length) SX.line(document.getElementById('cb-growth'), gs.map((s) => ({ ...s, pts: P.map((r) => ({ x: pm(r.month), y: r[s.k] * 100 })) })), { h: 260, log: true, yfmt: (v) => '$' + d3.format(',.0f')(v), tipfmt: (v) => '$' + d3.format(',.0f')(v), tipDate: d3.utcFormat('%b %Y') });
+    const F = SX.rows('free_money_live') || [], l = F[F.length - 1], wk = Math.max(0, F.length - 1);
+    const mix = (k) => (l && wk && l[k] != null && l.rule != null ? 0.7 * l.rule + 0.3 * l[k] : null);
+    kpis(document.getElementById('cb-live'), [['+30% Keepers', mix('keep'), 'keep'], ['+30% Keepers with guard', mix('keep_trend')], ['+30% long/short', mix('free_money')], ['The rule alone', l && wk ? l.rule : null], ['S&P 500', l && wk ? l.sp500 : null]].map(([n, v]) => [n, v == null ? '—' : pct(v, 2), wk ? `${wk} week${wk === 1 ? '' : 's'}` : 'from the 16 Oct close', v]));
+  };
+
   // ---------- wiring ----------
   const seg = (id, attr, fn) => { const g = document.getElementById(id); if (!g) return; g.addEventListener('click', (ev) => { const b = ev.target.closest('.flt'); if (!b) return; g.querySelectorAll('.flt').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); fn(b.dataset[attr]); }); };
   document.querySelectorAll('#live-card .seg').forEach((g) => g.addEventListener('click', (ev) => { const b = ev.target.closest('.flt'); if (!b) return; g.querySelectorAll('.flt').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); SX.liveMode = b.dataset.live; SX.drawLive(); }));
@@ -2031,8 +2063,9 @@ dash.calc('lr_dec_reg', {
   seg('sim-period', 'p', (v) => { SX.sim.p = v; SX.drawSim(); });
   seg('sim-scale', 'scale', (v) => { SX.sim.scale = v; SX.drawSim(); });
   seg('lr-set', 'set', (v) => { SX.lrSet = v; SX.drawLongrun(); });
+  seg('cb-metric', 'm', (v) => { SX.cbM = v; SX.drawCombo(); });
   const base = SX.draw;
-  SX.draw = () => { base(); if (SX.active === 'home') SX.drawLive(); if (SX.active === 'sim') SX.drawSim(); if (SX.active === 'longrun') SX.drawLongrun(); if (SX.active === 'extra') SX.drawFM(); if (SX.active === 'faq') SX.drawFAQ(); };
+  SX.draw = () => { base(); if (SX.active === 'home') SX.drawLive(); if (SX.active === 'sim') { SX.drawSim(); SX.drawCombo(); } if (SX.active === 'longrun') SX.drawLongrun(); if (SX.active === 'extra') SX.drawFM(); if (SX.active === 'faq') SX.drawFAQ(); };
   let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => SX.draw(), 150); });
   if (SX.rows('weekly_now')) SX.draw();   // data may have arrived before this script ran (direct links like #/faq)
 })();
@@ -2114,7 +2147,7 @@ dash.calc('lr_dec_reg', {
       markets: pickCols(R('markets'), ['name', 'last', 'w1', 'ytd', 'y1']),
     });
   }
-  const GUIDE = `IndexPilot is a personal research site for a euro investor. Main pages: Overview (this week's to-do, main index, amount, meter, index table, stock picks with weights, demo summary, headlines, and a live chart since 9 Oct 2026 of the weekly amounts bought into the pick vs the same euros in the S&P 500 ETF, with an optional backtest-since-2012 view), Simulation (every strategy, tested variant and single index on the six euro ETFs 2012-today in one chart, one-off or weekly buying, backtest before costs), History (the rule vs the S&P 500: euro ETFs 2012-today and regional data 1991-today with North America standing in for the S&P 500; yearly differences, rolling 3-year difference, decades), Method (all rules explained). Under More: Index pick details (how the weekly index is chosen: six euro ETFs scored by 52-week return in euros divided by 52-week volatility; the best score replaces the current pick only if it is more than 0.25 higher; adopted 11 Oct 2026 after it beat the previous 52-week-return rule on both test sets; backtests 2012-today and 1990-2026), This week (EUR 40-200 amount tiers set by the MSCI World ETF's distance from its record plus VIX, NFCI and Sahm rule; market meter -100..+100, descriptive only: tests showed it does not predict returns), Stocks (members of the picked index ranked: momentum 12-1 month + 52-week range; S&P 500 also uses value), Extra profit (weekly 3 longs and 3 shorts of the main index, each side split by inverse volatility, results in % of stake), Demo account (simulated: EUR 1,000 deposited every Friday, 70% main-index ETF + 30% its 3 strongest stocks, no shorts, no leverage, 0.2% cost per trade, benchmark = same deposits in MSCI World), News (Fed, ECB, BoJ, CNBC, MarketWatch, Google News headlines), Markets, Research (100 years of US data, 10/20/30% leveraged plans which IndexPilot does not use, US market gauges). Research uses US data because only the US has free monthly data back to 1927 and euro-listed leveraged funds.`;
+  const GUIDE = `IndexPilot: a personal research site for a euro investor; simulation only. Main tabs: Overview (this week's to-do, main index, €40-200 amount, meter, index table, stock picks, demo summary, headlines, live plan vs S&P 500 since 9 Oct 2026), Simulation (all strategies on six euro ETFs 2012-today; mixes of the index pick with stock strategies since 1991), History (the rule vs the S&P 500 on ETFs 2012-today and regions 1991-today), Free Money :D (weekly 3 long/3 short, plus long-only Keepers A and Keepers + trend guard B tracked live since 9 Oct; US momentum stand-in since 1991), Method (all rules), FAQ. Under More: stocks, demo, index pick details, this week's details, headlines, markets, research. Index pick: six euro ETFs scored by 52-week return / volatility; switch only if another scores 0.25 higher. Meter: descriptive only, no predictive value in tests. Demo: EUR 1,000 every Friday, 70% ETF + 30% top 3 stocks, 0.2% costs, benchmark MSCI World. Research uses US data because only the US has free data back to 1927.`;
   const RULES = `You are "Ask IndexPilot AI", the assistant on the IndexPilot website. Answer the user's question using ONLY the site guide and the live site data below. Be concise (2-6 short sentences or a short list), concrete, and use the numbers. If the data doesn't contain the answer, say so. Mention which page to open for more. This is simulation and research, not financial advice: never tell the user to place a specific trade with certainty, and say so briefly when they ask what to buy. Plain text, no markdown tables.`;
   function prompt(q) {
     return [...history.slice(-6), { role: 'user', content: `${RULES}\n\nSITE GUIDE:\n${GUIDE}\n\nLIVE SITE DATA (JSON):\n${context()}\n\nQUESTION: ${q}` }];

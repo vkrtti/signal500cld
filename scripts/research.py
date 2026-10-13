@@ -287,6 +287,27 @@ def rotation(df):
                                             stat('short', 'Short only: bottom 10% momentum', -md.loc[common, 'lo'], '1991–today'), stat('long_trend', 'Long only + trend guard', md.loc[common, 'lt'], '1991–today'), stat('rule', 'IndexPilot rule (regions)', pr.loc[common], '1991–today'),
                                             stat('us', 'North America ≈ S&P 500', na.loc[common], '1991–today')],
                  'Free Money stand-in: statistics', 'Return per year, volatility, worst fall and worst year of the US momentum long/short stand-in, the US market, the index pick on regional data and North America (Kenneth French data, before costs).')
+    # Combinations: the index pick (regional rule) mixed with a stock strategy, rebalanced monthly to the target weights.
+    # Grid of 0-100% in stocks, with both halves (1991-2008, 2009-today) so a 'best' mix can be checked for luck.
+    if MOMD is not None and 'lt' in md:
+        cm = [m for m in common if m in md.index]
+        legs = {'keep': md.loc[cm, 'hi'], 'keep_guard': md.loc[cm, 'lt'], 'longshort': md.loc[cm, 'fm']}
+        rr, rf_ = pr.loc[cm], md.loc[cm, 'rf']
+        def cst(r):
+            eq = (1 + r).cumprod(); yr = (1 + r).groupby(r.index.str[:4]).prod() - 1; full = yr[(yr.index > r.index[0][:4]) & (yr.index < r.index[-1][:4])]
+            return dict(cagr=round((float(eq.iloc[-1]) ** (12 / len(r)) - 1) * 100, 1), sharpe=round(float((r - rf_.loc[r.index]).mean() / r.std() * np.sqrt(12)), 2),
+                        max_dd=round(float((eq / eq.cummax() - 1).min()) * 100, 1), worst_year=round(float(full.min()) * 100, 1))
+        grid = []
+        for k_, leg in legs.items():
+            for w in range(0, 101, 10):
+                r = (1 - w / 100) * rr + (w / 100) * leg
+                a_, h1, h2 = cst(r), cst(r[r.index < '200901']), cst(r[r.index >= '200901'])
+                grid.append(dict(stock=k_, weight=w, **a_, h1_cagr=h1['cagr'], h1_sharpe=h1['sharpe'], h2_cagr=h2['cagr'], h2_sharpe=h2['sharpe']))
+        save('combo_grid', grid, 'Index pick + stocks: every mix', 'The index pick (regional data) mixed with a stock strategy (US momentum stand-in: keepers = top 10%, keepers + guard, long/short), 0-100% in stocks, rebalanced monthly, 1991-today and both halves, before costs.')
+        mix = lambda leg, w: (1 + ((1 - w) * rr + w * leg)).cumprod()
+        cg_ = {'rule': (1 + rr).cumprod(), 'us': (1 + na.loc[cm]).cumprod(), 'keep70': mix(legs['keep'], 0.3), 'guard70': mix(legs['keep_guard'], 0.3), 'ls70': mix(legs['longshort'], 0.3), 'keep50': mix(legs['keep'], 0.5)}
+        save('combo_growth', [dict(month=start, **{k: 1.0 for k in cg_})] + [dict(month=m, **{k: float(f'{v[m]:.4g}') for k, v in cg_.items()}) for m in cm],
+             'Index pick + stocks: growth since 1991', 'Growth of 1 US dollar: the index pick alone, North America, and the pick with 30% (or 50%) in a stock strategy, rebalanced monthly (stand-in data, before costs).')
     save('hist_regional', reg, 'Index pick vs North America, monthly', 'Growth of 1 US dollar from 1991: the index pick on regional data vs North America (the S&P 500 region), with the rolling 3-year difference in points a year (Kenneth French data library).')
     yrs_ = []
     for y, g in pd.Series(pr.index, index=pr.index).groupby(pr.index.str[:4]):
