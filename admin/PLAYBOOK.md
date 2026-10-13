@@ -20,7 +20,7 @@ Your memory between runs. Keep under two pages; merge or delete outdated lines.
 ## Dashboard sync
 - Upload a changed data file: Artifact publish (url above, asset: true, file_path; one file per call) → returns /_blob/<id>.
 - Then one ArtifactData batch: update datasets/<name> with source {kind:"file", url:"/_blob/<id>", name:"<name>.json"}, updated {at, by:"Claude"}, if_version from a fresh `list` of collection datasets.
-- Page: set files/index.html from a JSON file {"text": page/body.html} with if_version.
+- Page: `python3 tools/dash_page.py /tmp/page_doc.json` (light minify; the dashboard caps one document at 256 KiB), then set files/index.html from that file with if_version. Check its output with page_test.js (`--html` writes the minified page).
 - The Saturday 10:57 Helsinki task "IndexPilot weekly pick" syncs datasets and messages the user; if you change a data file name or format, update its prompt (scheduled task trig_01Qxph4Y6DKzJdtsojazZdV3) and say so in the report.
 
 ## Lessons

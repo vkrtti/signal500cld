@@ -2,6 +2,7 @@
 Re-rank every run. Format: [priority] title — benefit / effort / notes. Move done items to CHANGELOG.md.
 
 ## Fixes and small wins
+- [P1] Page size: the dashboard copy is ~255 KB of a 256 KiB limit (tools/dash_page.py). Before adding features, slim page/body.html: drop unused CSS from older designs and duplicated text, or the next sync will fail — reliability / medium.
 - [P2] Free Money live chart: check it draws after the 16 Oct close and that its weekly % matches extra_weeks (same ledger, same formula) — correctness / small.
 - [P1] Confirm GitHub scheduled runs fire (none had by 2026-10-12 23:10 UTC; a manual daily run was dispatched then). If still none by 2026-10-17, add a fallback (e.g. the Saturday admin task dispatches the weekly roll itself) and tell the owner — reliability / small.
 - [P1] Demo: switch the core from MSCI Emerging Markets (IEMA) to the pick at the next roll and check the trades in demo_ledger are sensible — correctness / small / first roll under the new rule.
