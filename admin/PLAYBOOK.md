@@ -12,6 +12,10 @@ Your memory between runs. Keep under two pages; merge or delete outdated lines.
 - scripts/indexpilot.py: pick (score = 52-week return ÷ 52-week volatility, BUFFER 0.25, LIVE_START 2026-10-09), amount tiers, market meter, stock ranking, Extra profit, demo account, backtests. scripts/research.py: Kenneth French history tests. scripts/update.py: FRED gauges, markets. scripts/news.py: RSS titles and links only.
 - History files you must never delete or rewrite: docs/data/weekly_history.json (published rows from LIVE_START), demo_state, demo_ledger, extra_ledger, free_money_variants_state, docs/data/archive/.
 
+## Data duty (owner's request, 2026-10-13)
+- Every run: refresh all data (dispatch the weekly roll and/or a daily run when stale), fix failing sources, and sync every changed data file to the dashboard, not only the ones you touched.
+- Look for free, public, keyless data that makes the site more accurate (prices, longer history, fundamentals, index members, FX); add it when it clearly helps and document the source in Method and here.
+
 ## Verify before every push
 1. `(cd tools/test && npm ci)` once per run, then `node tools/test/page_test.js` → must print NO ERRORS (exit 0). EMPTY visuals for ip-strip (drawn with <i>, not svg), ex-chart and demo-chart (fewer than 2 weeks of data, empty-state text shows) are expected.
 2. `python3 tools/build_site.py && python3 tools/shots.py shots` → NO PROBLEMS; open a few PNGs and look.
