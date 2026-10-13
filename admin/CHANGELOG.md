@@ -1,6 +1,7 @@
 # Changelog (newest first)
 
 ## 2026-10-13
+- Free Money: two long-only paper versions tracked live from 9 Oct (A Keepers, B Keepers + trend guard; state in free_money_variants_state.json, holdings in free_money_holdings.json), all live lines now after 0.2% per trade, stand-in adds long + trend guard (14.2%/yr since 1991). Tab rebuilt: 3 strategy cards, one live chart, one history chart, details folded away.
 - Free Money: long-only and short-only lines in the live chart and the 1991 stand-in (stand-in: long 15.4%/yr, short −12.4%/yr, both 3.7%/yr; before costs). Index pick details: removed the growth chart and backtest tables that duplicated Simulation (page size).
 - FAQ tab: 14 short answers from docs/data/faq.json with live numbers. Fixed direct links to the new tabs drawing nothing. Active tab stays visible on phones.
 - Extra profit renamed "Free Money :D" (owner's request) and moved to the main tabs: live record vs the rule and the S&P 500 since 9 Oct, plus a stand-in simulation since 1991 (US momentum long/short: 3.7%/yr vs rule 9.8% and North America 11.0%; worst year −43.7% in 2009).

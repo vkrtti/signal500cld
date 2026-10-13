@@ -254,7 +254,7 @@
  "free_money_live": {
   "refresh": "weekly",
   "title": "Free Money vs the rule and the S&P 500 (live)",
-  "description": "Weekly since 9 Oct 2026, as % of a one-off stake: Free Money (Extra profit, both sides, compounded), holding each week's published pick, and holding the S&P 500 ETF. Before costs.",
+  "description": "Weekly since 9 Oct 2026, % of a one-off stake after 0.2% per trade: keepers (A), keepers + trend guard (B), the weekly long/short and each of its sides, holding each week's published pick, and the S&P 500 ETF.",
   "updated": "2026-10-13T00:21:25Z"
  },
  "free_money_proxy": {
@@ -273,5 +273,10 @@
   "title": "FAQ",
   "description": "Short questions and answers about what IndexPilot does. Numbers in the answers are filled in from the other data files.",
   "refresh": "manual"
+ },
+ "free_money_holdings": {
+  "title": "Free Money: what the keepers hold",
+  "description": "Current holdings of the two long-only paper versions (A keepers, B keepers + trend guard): weight, since when, return.",
+  "refresh": "weekly"
  }
 }

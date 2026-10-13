@@ -12,6 +12,9 @@ Re-rank every run. Format: [priority] title — benefit / effort / notes. Move d
 - [P2] Overview live chart: check it starts drawing after the 2nd live week (2026-10-16) and the numbers match live_vs_sp500 — correctness / small.
 - [P3] sim_growth + sim_buying are ~300 KB together; if page load gets slow, thin them to every 2nd week before 2020 — speed / small.
 
+- [P2] Free Money A/B: after the 16 Oct close check the keepers' trades (sells only on leaving the top 20% or a 25% fall) and that their % matches a hand calculation — correctness / small.
+- [R0] After ~26 live weeks compare Free Money current vs A vs B; if A or B leads and the 1991 stand-in agrees, propose switching (pull request).
+
 ## Research questions (one per month, log in EXPERIMENTS.csv before running)
 - [R1] Monthly-only rebalance of the pick vs weekly with 0.25 buffer — fewer trades, maybe same return.
 - [R2] Buffer sensitivity of the risk-adjusted rule (0.15 / 0.25 / 0.35) — only to confirm robustness, NOT to pick the best; adopt nothing unless all data sets agree.

@@ -310,7 +310,12 @@ def run(S, D, research, fin, cons, log, offline=None):
     state = L('demo_state', {}) or {}
     if state.get('v') != 3: state = {}
     held_t = [h['ticker'] for h in state.get('holdings', []) if h['leg'] == 'Stocks']
-    need = [m['ticker'] for m in members[U]] + [p['ticker'] for p in L_extra_pos] + held_t
+    # Free Money paper variants (long only), state kept between runs; a same-day rerun starts again from last week's state
+    VS = L('free_money_variants_state', None) or {}
+    if VS.get('asof') == dstr and 'prev' in VS: VS = VS['prev']
+    VS_prev = json.loads(json.dumps(VS))
+    var_t = [p_['ticker'] for k_ in ('A', 'B') for p_ in (VS.get(k_) or {}).get('pos', [])]
+    need = [m['ticker'] for m in members[U]] + [p['ticker'] for p in L_extra_pos] + held_t + var_t
     px = download(need, (last_trading - pd.Timedelta(days=430)).strftime('%Y-%m-%d'), log, offline)
     if U == 'sp500':
         pr = {r['ticker']: r for r in price_rank(members[U], px, dstr)}
@@ -395,6 +400,46 @@ def run(S, D, research, fin, cons, log, offline=None):
                                       reason=f"Rank {r['rank']} of {len(rows)} in {E[pick]['index']} (score {r['score']})"))
     for p in extra_pos:
         p['vol'] = p.get('vol') or rank_of.get(p['ticker'], {}).get('vol')
+    # ---- Free Money variants, tracked live from LIVE_START as % of a 100 stake, 0.2% per trade:
+    #   A "keepers": hold the 3 strongest stocks; keep each while it stays in the top 20% of the ranking; sell if it drops out
+    #     or falls 25% below its highest weekly close since bought; refill to 3 from the top (weights: inverse volatility).
+    #   B "keepers + trend guard": the same, but no new buys while MSCI World is below its 40-week line.
+    top_set = {r['ticker'] for r in rows[:max(3, int(round(len(rows) * 0.2)))]}
+    cands = [r for r in rows if not r['note']]
+    guard_on = bool(float(world.iloc[-1]) < float(trend.iloc[-1]))
+    def vstep(st, use_guard):
+        st = json.loads(json.dumps(st)) if st else {'cash': 100.0, 'pos': [], 'hist': []}
+        for p_ in st['pos']:
+            xp = last_px(p_['ticker'])
+            if xp: p_['value'] *= xp / p_['last']; p_['last'] = xp; p_['peak'] = max(p_['peak'], xp)
+        kept, sold = [], []
+        for p_ in st['pos']:
+            if p_['ticker'] not in top_set or p_['last'] <= 0.75 * p_['peak']: st['cash'] += p_['value'] * (1 - COST); sold.append(p_['ticker'])
+            else: kept.append(p_)
+        st['pos'], bought = kept, []
+        if not (use_guard and guard_on):
+            new = [r for r in cands if r['ticker'] not in {p_['ticker'] for p_ in kept} and r.get('price')][:3 - len(kept)]
+            if new and st['cash'] > 0.01:
+                budget = st['cash']
+                for r, w in zip(new, invw(new)):
+                    amt = budget * w / 100; st['cash'] -= amt; bought.append(r['ticker'])
+                    st['pos'].append(dict(ticker=r['ticker'], company=r['company'], currency=r.get('currency', 'USD'), since=dstr, entry=r['price'], last=r['price'], peak=r['price'], value=amt * (1 - COST)))
+        tot = st['cash'] + sum(p_['value'] for p_ in st['pos'])
+        st['hist'] = [h for h in st['hist'] if h['date'] != dstr] + [dict(date=dstr, pct=round(tot - 100, 2), bought=bought, sold=sold, guard=guard_on if use_guard else None)]
+        return st
+    if dstr >= LIVE_START:
+        VA, VB = vstep(VS.get('A'), False), vstep(VS.get('B'), True)
+        out['free_money_variants_state'] = dict(asof=dstr, prev=VS_prev, A=VA, B=VB)
+        hold_rows = []
+        for key_, st_ in (('A', VA), ('B', VB)):
+            tot = st_['cash'] + sum(p_['value'] for p_ in st_['pos'])
+            for p_ in st_['pos']:
+                hold_rows.append(dict(strategy=key_, ticker=p_['ticker'], company=p_['company'], weight=round(p_['value'] / tot * 100), since=p_['since'],
+                                      return_pct=round((p_['last'] / p_['entry'] - 1) * 100, 1), price=p_['last'], currency=p_['currency']))
+            if st_['cash'] / tot > 0.02: hold_rows.append(dict(strategy=key_, ticker='Cash', company='Waiting (trend guard)' if key_ == 'B' and guard_on else 'Cash', weight=round(st_['cash'] / tot * 100), since=None, return_pct=None, price=None, currency='EUR'))
+        out['free_money_holdings'] = hold_rows
+    else:
+        VA = VB = None
     if not extra_led: extra_led = [dict(id='open', week_of=dstr, closed_on=dstr, leg='Account', ticker='', side='', euros=0, entry_price=0, exit_price=0, return_pct=0, pnl_eur=0, note='Record started')]
     out['extra_positions'], out['extra_ledger'] = extra_pos, extra_led
 
@@ -630,21 +675,25 @@ def run(S, D, research, fin, cons, log, offline=None):
             e_ = ex_by.setdefault(l['closed_on'], {'both': [0.0, 0.0], 'Long': [0.0, 0.0], 'Short': [0.0, 0.0]})
             for k_ in ('both', l.get('side')):
                 if k_ in e_: e_[k_][0] += float(l.get('pnl_eur') or 0); e_[k_][1] += float(l.get('euros') or 0)
-    fm, ce, cl, cs, cr, cu = [], 1.0, 1.0, 1.0, 1.0, 1.0
-    if lw: fm.append(dict(date=lw[0]['week'], free_money=0.0, long_only=0.0, short_only=0.0, rule=0.0, sp500=0.0,
+    # all lines after 0.2% per trade: the weekly long/short closes and reopens every position (2 trades a week = 0.4%);
+    # the rule and the S&P 500 pay 0.2% once when bought; the keepers pay 0.2% on each buy and sell (inside vstep)
+    hA = {h['date']: h for h in (VA or {}).get('hist', [])}; hB = {h['date']: h for h in (VB or {}).get('hist', [])}
+    fm, ce, cl, cs, cr, cu = [], 1.0, 1.0, 1.0, 1 - COST_, 1 - COST_
+    if lw: fm.append(dict(date=lw[0]['week'], free_money=0.0, long_only=0.0, short_only=0.0, keep=hA.get(lw[0]['week'], {}).get('pct'), keep_trend=hB.get(lw[0]['week'], {}).get('pct'),
+                          guard=hB.get(lw[0]['week'], {}).get('guard'), rule=round((cr - 1) * 100, 2), sp500=round((cu - 1) * 100, 2),
                           week_free_money=None, week_long_only=None, week_short_only=None, week_rule=None, week_sp500=None))
     for a_, b_ in zip(lw, lw[1:]):
         ta, tb = pd.Timestamp(a_['week']), pd.Timestamp(b_['week'])
         rr = float(W.loc[tb, a_['pick']]) / float(W.loc[ta, a_['pick']]) - 1; ru = float(W.loc[tb, 'us']) / float(W.loc[ta, 'us']) - 1
         e_ = ex_by.get(b_['week'], {}); wk_ = lambda k_: e_[k_][0] / e_[k_][1] if k_ in e_ and e_[k_][1] else None
-        re_, rl_, rs_ = wk_('both'), wk_('Long'), wk_('Short')
+        re_, rl_, rs_ = [None if v is None else v - 2 * COST_ for v in (wk_('both'), wk_('Long'), wk_('Short'))]
         if re_ is not None: ce *= 1 + re_
         if rl_ is not None: cl *= 1 + rl_
         if rs_ is not None: cs *= 1 + rs_
         cr *= 1 + rr; cu *= 1 + ru
         pc_ = lambda v: None if v is None else round(v * 100, 2)
         fm.append(dict(date=b_['week'], free_money=round((ce - 1) * 100, 2), long_only=round((cl - 1) * 100, 2), short_only=round((cs - 1) * 100, 2),
-                       rule=round((cr - 1) * 100, 2), sp500=round((cu - 1) * 100, 2), week_free_money=pc_(re_), week_long_only=pc_(rl_), week_short_only=pc_(rs_),
+                       keep=hA.get(b_['week'], {}).get('pct'), keep_trend=hB.get(b_['week'], {}).get('pct'), guard=hB.get(b_['week'], {}).get('guard'), rule=round((cr - 1) * 100, 2), sp500=round((cu - 1) * 100, 2), week_free_money=pc_(re_), week_long_only=pc_(rl_), week_short_only=pc_(rs_),
                        week_rule=round(rr * 100, 2), week_sp500=round(ru * 100, 2)))
     out['free_money_live'] = fm
 
