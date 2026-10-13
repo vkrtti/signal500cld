@@ -624,20 +624,28 @@ def run(S, D, research, fin, cons, log, offline=None):
     # ---- Free Money (Extra profit) live record vs the rule and the S&P 500, all as % of a one-off stake since LIVE_START.
     # Week i: the picks opened at Friday d_i close at d_(i+1); the rule holds the pick published at d_i; the S&P 500 holds SXR8.
     lw = [h for h in weekly_history if h['week'] >= LIVE_START and pd.Timestamp(h['week']) in W.index]
-    ex_by = {}
+    ex_by = {}   # closed_on -> [pnl, stake] for both sides, long only, short only
     for l in extra_led:
         if l.get('leg') == 'Stocks' and l.get('closed_on'):
-            e_ = ex_by.setdefault(l['closed_on'], [0.0, 0.0]); e_[0] += float(l.get('pnl_eur') or 0); e_[1] += float(l.get('euros') or 0)
-    fm, ce, cr, cu = [], 1.0, 1.0, 1.0
-    if lw: fm.append(dict(date=lw[0]['week'], free_money=0.0, rule=0.0, sp500=0.0, week_free_money=None, week_rule=None, week_sp500=None))
+            e_ = ex_by.setdefault(l['closed_on'], {'both': [0.0, 0.0], 'Long': [0.0, 0.0], 'Short': [0.0, 0.0]})
+            for k_ in ('both', l.get('side')):
+                if k_ in e_: e_[k_][0] += float(l.get('pnl_eur') or 0); e_[k_][1] += float(l.get('euros') or 0)
+    fm, ce, cl, cs, cr, cu = [], 1.0, 1.0, 1.0, 1.0, 1.0
+    if lw: fm.append(dict(date=lw[0]['week'], free_money=0.0, long_only=0.0, short_only=0.0, rule=0.0, sp500=0.0,
+                          week_free_money=None, week_long_only=None, week_short_only=None, week_rule=None, week_sp500=None))
     for a_, b_ in zip(lw, lw[1:]):
         ta, tb = pd.Timestamp(a_['week']), pd.Timestamp(b_['week'])
         rr = float(W.loc[tb, a_['pick']]) / float(W.loc[ta, a_['pick']]) - 1; ru = float(W.loc[tb, 'us']) / float(W.loc[ta, 'us']) - 1
-        e_ = ex_by.get(b_['week']); re_ = e_[0] / e_[1] if e_ and e_[1] else None
+        e_ = ex_by.get(b_['week'], {}); wk_ = lambda k_: e_[k_][0] / e_[k_][1] if k_ in e_ and e_[k_][1] else None
+        re_, rl_, rs_ = wk_('both'), wk_('Long'), wk_('Short')
         if re_ is not None: ce *= 1 + re_
+        if rl_ is not None: cl *= 1 + rl_
+        if rs_ is not None: cs *= 1 + rs_
         cr *= 1 + rr; cu *= 1 + ru
-        fm.append(dict(date=b_['week'], free_money=round((ce - 1) * 100, 2), rule=round((cr - 1) * 100, 2), sp500=round((cu - 1) * 100, 2),
-                       week_free_money=None if re_ is None else round(re_ * 100, 2), week_rule=round(rr * 100, 2), week_sp500=round(ru * 100, 2)))
+        pc_ = lambda v: None if v is None else round(v * 100, 2)
+        fm.append(dict(date=b_['week'], free_money=round((ce - 1) * 100, 2), long_only=round((cl - 1) * 100, 2), short_only=round((cs - 1) * 100, 2),
+                       rule=round((cr - 1) * 100, 2), sp500=round((cu - 1) * 100, 2), week_free_money=pc_(re_), week_long_only=pc_(rl_), week_short_only=pc_(rs_),
+                       week_rule=round(rr * 100, 2), week_sp500=round(ru * 100, 2)))
     out['free_money_live'] = fm
 
     # calendar years

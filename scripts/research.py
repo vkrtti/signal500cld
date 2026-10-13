@@ -266,8 +266,10 @@ def rotation(df):
         common = [m for m in pr.index if m in md.index]
         if len(common) > 120:
             fmr = md.loc[common, 'fm']; gf = (1 + fmr).cumprod(); gp2 = (1 + pr.loc[common]).cumprod(); gu2 = (1 + na.loc[common]).cumprod()
+            gl = (1 + md.loc[common, 'hi']).cumprod(); gs = (1 - md.loc[common, 'lo']).cumprod()   # long only: top 10%; short only: minus the bottom 10%
             start = d.index[list(d.index).index(common[0]) - 1]
-            save('free_money_proxy', [dict(month=start, free_money=1.0, rule=1.0, us=1.0)] + [dict(month=m, free_money=float(f'{gf[m]:.4g}'), rule=float(f'{gp2[m]:.4g}'), us=float(f'{gu2[m]:.4g}')) for m in common],
+            g4 = lambda v: float(f'{v:.4g}')
+            save('free_money_proxy', [dict(month=start, free_money=1.0, long_only=1.0, short_only=1.0, rule=1.0, us=1.0)] + [dict(month=m, free_money=g4(gf[m]), long_only=g4(gl[m]), short_only=g4(gs[m]), rule=g4(gp2[m]), us=g4(gu2[m])) for m in common],
                  'Free Money stand-in since 1991', 'Growth of 1: US momentum long/short (top 10% minus bottom 10% of US stocks, half the money each side, Kenneth French data) vs the index pick on regional data and North America. A stand-in, not the real picks.')
             def stat(key, nm, r, per):
                 eq = (1 + r).cumprod(); yr = (1 + r).groupby(r.index.str[:4]).prod() - 1; full = yr[yr.index < r.index[-1][:4]]
@@ -276,8 +278,10 @@ def rotation(df):
                             max_dd=round(float((eq / eq.cummax() - 1).min()) * 100, 1), worst_year=round(float(full.min()) * 100, 1), worst_year_when=str(full.idxmin()),
                             best_year=round(float(full.max()) * 100, 1), pos_years=round(float((full > 0).mean()) * 100))
             allm = md['fm'].dropna(); per0 = allm.index[0][:4] + '–today'
-            save('free_money_proxy_stats', [stat('fm_all', 'Free Money stand-in (US momentum long/short)', allm, per0), stat('mkt_all', 'US stock market', md['mkt'].loc[allm.index], per0),
-                                            stat('fm', 'Free Money stand-in (US momentum long/short)', fmr, '1991–today'), stat('rule', 'IndexPilot rule (regions)', pr.loc[common], '1991–today'),
+            save('free_money_proxy_stats', [stat('fm_all', 'Free Money stand-in (US momentum long/short)', allm, per0), stat('long_all', 'Long only: top 10% momentum', md['hi'].loc[allm.index], per0),
+                                            stat('short_all', 'Short only: bottom 10% momentum', -md['lo'].loc[allm.index], per0), stat('mkt_all', 'US stock market', md['mkt'].loc[allm.index], per0),
+                                            stat('fm', 'Free Money stand-in (US momentum long/short)', fmr, '1991–today'), stat('long', 'Long only: top 10% momentum', md.loc[common, 'hi'], '1991–today'),
+                                            stat('short', 'Short only: bottom 10% momentum', -md.loc[common, 'lo'], '1991–today'), stat('rule', 'IndexPilot rule (regions)', pr.loc[common], '1991–today'),
                                             stat('us', 'North America ≈ S&P 500', na.loc[common], '1991–today')],
                  'Free Money stand-in: statistics', 'Return per year, volatility, worst fall and worst year of the US momentum long/short stand-in, the US market, the index pick on regional data and North America (Kenneth French data, before costs).')
     save('hist_regional', reg, 'Index pick vs North America, monthly', 'Growth of 1 US dollar from 1991: the index pick on regional data vs North America (the S&P 500 region), with the rolling 3-year difference in points a year (Kenneth French data library).')

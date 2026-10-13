@@ -573,25 +573,7 @@
     </div>
     <p class="note" style="margin-top:6px">Euro-listed, accumulating iShares UCITS ETFs (dividends reinvested). Prices: Yahoo Finance, Friday close. Check the ISIN at your broker; any fund on the same index works.</p>
 
-    <h2 id="ip-growth-h">€1 invested in January 2012</h2>
-    <div class="card">
-      <div class="legend" id="ip-legend"></div>
-      <div class="chart" id="ip-growth" data-source="ip_growth" style="min-height:300px"></div>
-      <p class="note">Weekly, in euros, real ETF prices, log scale. The pick is decided at each Friday close and held for the next week. No costs or taxes on switches.</p>
-    </div>
-
-    <h2 id="ip-bt-h">Results 2012–today</h2>
-    <div class="grid">
-      <div class="card tbl"><h3>Hold one index vs the pick (lump sum)</h3>
-        <table id="ip-bt" data-source="ip_backtest" data-row-key="key">
-          <thead><tr><th data-field="strategy">Strategy</th><th data-field="cagr" class="n">Per year (%)</th><th data-field="max_dd" class="n">Worst fall (%)</th><th data-field="vol" class="n">Volatility (%)</th><th data-field="switches_per_year" class="n">Switches / year</th></tr></thead>
-          <tbody></tbody></table></div>
-      <div class="card tbl"><h3>Buying weekly with the €40–€200 rule</h3>
-        <table id="ip-buy" data-source="ip_buying" data-row-key="plan">
-          <thead><tr><th data-field="plan">Plan</th><th data-field="invested" class="n">Invested (€)</th><th data-field="value" class="n">Worth now (€)</th><th data-field="irr" class="n">Per year (%)</th></tr></thead>
-          <tbody></tbody></table>
-        <p class="note" style="margin-top:8px">Money-weighted return: each euro counts from the week it went in. "New money only" keeps old holdings when the pick changes (no sales, no tax); "move everything" sells and rebuys on each switch.</p></div>
-    </div>
+    <p class="note" style="margin:14px 0 0">The growth chart and the full backtest tables for every strategy are on the <button class="chip" data-go="sim">Simulation</button> tab; the rule against the S&amp;P 500 over time is on <button class="chip" data-go="longrun">History</button>.</p>
 
     <h2 id="ip-var-h">Rule variants tested</h2>
     <p class="note">Every variant on the same data. A rule is only adopted if it beats the current one on both the 2012–today ETF prices and the 1991–today regional data; the two period columns show whether a result held in both parts of each test.</p>
@@ -950,7 +932,7 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
 
     <h2 id="fm-live-h">Live record: Free Money vs the rule and the S&amp;P 500</h2>
     <div class="card live" id="fm-live-card">
-      <p class="note" style="margin:0 0 12px">All three as % of a one-off stake since 9 Oct 2026. Free Money = both sides together (half long, half short), compounded weekly. The rule = holding each week's published pick. S&amp;P 500 = holding the S&amp;P 500 ETF (SXR8). Before costs and fees.</p>
+      <p class="note" style="margin:0 0 12px">All as % of a one-off stake since 9 Oct 2026. Every Friday all 6 positions are closed and the new week's picks opened, so each week stands alone. Free Money = both sides together (half long, half short); long only and short only show each side on its own; all compounded weekly. The rule = holding each week's published pick. S&amp;P 500 = holding the S&amp;P 500 ETF (SXR8). Before costs and fees.</p>
       <div class="lk" id="fm-kpis"></div>
       <div class="legend" id="fm-legend"></div>
       <div class="chart" id="fm-live" data-source="free_money_live" style="min-height:220px"></div>
@@ -972,7 +954,7 @@ score    = 50% × value + 50% × momentum      (0–100; ranks are sector percen
 
     <h2 id="fm-sim-h">Simulation: the same idea since 1991 (stand-in)</h2>
     <div class="card">
-      <p class="note" style="margin:0 0 12px">There is no free price history for every past member of every index, so the real weekly picks can't be backtested. The closest honest stand-in: every US stock sorted by 12-1 month momentum each month, long the top 10% and short the bottom 10%, half the money on each side (Kenneth French data library, US dollars, before costs and borrowing fees). It holds hundreds of stocks for a month; Free Money holds 6 for a week, so its real results will swing far more.</p>
+      <p class="note" style="margin:0 0 12px">There is no free price history for every past member of every index, so the real weekly picks can't be backtested. The closest honest stand-in: every US stock sorted by 12-1 month momentum each month, long the top 10% and short the bottom 10%, half the money on each side, with each side also shown on its own (Kenneth French data library, US dollars, before costs and borrowing fees). It rebalances monthly and holds hundreds of stocks; Free Money holds 6 for one week, so its real results will swing far more.</p>
       <div class="lk" id="fm-sim-kpis"></div>
       <div class="legend" id="fm-sim-legend"></div>
       <div class="chart" id="fm-proxy" data-source="free_money_proxy" style="min-height:280px"></div>
@@ -1636,9 +1618,6 @@ SX.line = (box, series, o) => {
       SX.table('idx-table', 'index_rank', SX.idxFmt); SX.markPick('idx-table');
       const bold = (td, v) => { td.textContent = v; td.style.fontWeight = '700'; };
       const dd = (td, v) => { td.textContent = v; td.style.color = 'var(--down)'; };
-      SX.table('ip-bt', 'ip_backtest', { strategy: (td, v, r) => { td.textContent = v; td.style.fontWeight = r.key === 'pick' ? '800' : '500'; }, cagr: num, max_dd: dd, switches_per_year: (td, v) => { td.textContent = v ?? ''; } });
-      document.querySelectorAll('#ip-bt tbody tr').forEach((tr) => tr.classList.toggle('picked', tr.dataset.key === 'pick'));
-      SX.table('ip-buy', 'ip_buying', { plan: (td, v) => { td.textContent = v; td.className = 'wrapc'; td.style.fontWeight = '600'; }, invested: (td, v) => { td.textContent = SX.fmt(v); }, value: (td, v) => { td.textContent = SX.fmt(v); }, irr: num });
       SX.table('ip-periods', 'ip_periods', { index: bold, ret: num, world_ret: num });
       SX.table('ip-years', 'ip_years', { year: bold, held: (td, v) => { td.textContent = v; td.style.color = 'var(--muted)'; td.style.fontWeight = '500'; }, pick: (td, v) => { num(td, v); td.style.fontWeight = '800'; }, world: num, us: num, ndx: num, europe: num, japan: num, em: num });
       SX.table('rot-table', 'hist_rotation', { strategy: (td, v, r) => { td.textContent = v; td.style.fontWeight = r.key === 'pick' ? '800' : '500'; }, cagr: num, max_dd: dd, switches_per_year: (td, v) => { td.textContent = v ?? ''; } });
@@ -1648,12 +1627,6 @@ SX.line = (box, series, o) => {
       ['var-etf', 'var-reg'].forEach((id) => document.querySelectorAll('#' + id + ' tbody tr').forEach((tr) => tr.classList.toggle('picked', tr.dataset.key === 'riskadj' || tr.dataset.key === 'pick')));
       const IC = { world: dash.colors[0], us: dash.colors[1], ndx: dash.colors[2], europe: dash.colors[3], japan: dash.colors[4], em: dash.colors[5] };
       const NM = { world: 'MSCI World', us: 'S&P 500', ndx: 'Nasdaq-100', europe: 'MSCI Europe', japan: 'MSCI Japan', em: 'Emerging' };
-      const g = SX.rows('ip_growth'); const gb = document.getElementById('ip-growth');
-      if (!SX.fail(gb, 'ip_growth') && g && g.length) {
-        const ser = [['pick', 'IndexPilot pick', 'var(--color-fg)', 3], ['world', 'MSCI World', IC.world, 1.6], ['us', 'S&P 500', IC.us, 1.6], ['ndx', 'Nasdaq-100', IC.ndx, 1.6], ['europe', 'MSCI Europe', IC.europe, 1.6], ['equal', 'All six, equal', 'var(--cds-chart-muted)', 1.6]];
-        document.getElementById('ip-legend').replaceChildren(...ser.map((k) => { const sp = document.createElement('span'); const i = document.createElement('i'); i.style.background = k[2]; sp.append(i, k[1]); return sp; }));
-        SX.line(gb, ser.map((k) => ({ name: k[1], color: k[2], w: k[3], pts: g.map((r) => ({ x: pm(r.date), y: r[k[0]] == null ? null : +r[k[0]] })) })), { h: 300, log: true, yfmt: (v) => '€' + d3.format(',.1~f')(v), tipfmt: (v) => '€' + d3.format(',.2f')(v), tipDate: d3.utcFormat('%b %-d, %Y') });
-      }
       const wh = SX.rows('weekly_history'); const strip = document.getElementById('ip-strip');
       if (wh && wh.length && wh[0].pick) {
         strip.replaceChildren(...wh.map((r) => { const i = document.createElement('i'); i.style.flex = '1'; i.style.background = IC[r.pick] || 'var(--cds-chart-muted)'; i.title = r.week + ': ' + (NM[r.pick] || r.pick); return i; }));
@@ -2010,25 +1983,25 @@ dash.calc('lr_dec_reg', {
   SX.drawFM = () => {
     const box = document.getElementById('fm-live'); if (!box || !box.offsetParent) return;
     const C = COL(); const F = SX.rows('free_money_live') || []; const last = F[F.length - 1];
-    const ser = [{ k: 'free_money', name: 'Free Money :D', color: 'var(--color-warn)', w: 2.6 }, { k: 'rule', name: 'The rule (weekly pick)', color: C.pick, w: 2.2 }, { k: 'sp500', name: 'S&P 500 ETF', color: C.us, w: 2 }];
+    const ser = [{ k: 'free_money', name: 'Free Money :D (both)', color: 'var(--color-warn)', w: 2.6 }, { k: 'long_only', name: 'Long only', color: 'var(--up)', w: 1.6, dash: '5 3' }, { k: 'short_only', name: 'Short only', color: 'var(--down)', w: 1.6, dash: '5 3' }, { k: 'rule', name: 'The rule (weekly pick)', color: C.pick, w: 2.2 }, { k: 'sp500', name: 'S&P 500 ETF', color: C.us, w: 2 }];
     legend(document.getElementById('fm-legend'), ser);
     const weeks = Math.max(0, F.length - 1);
     kpis(document.getElementById('fm-kpis'), ser.map((s) => [s.name, last && weeks ? pct(last[s.k], 2) : '—', 'since ' + (F[0] ? F[0].date : '9 Oct 2026'), last && weeks ? last[s.k] : null]).concat([['Weeks closed', String(weeks), weeks < 26 ? 'too short to judge' : '']]));
     box.querySelector('.empty')?.remove(); box.querySelector('svg')?.remove();
     if (F.length < 2) { const e = document.createElement('div'); e.className = 'empty'; e.textContent = 'The record starts with this week\'s picks (opened at the 9 Oct close). The first week closes at the Friday 16 Oct close; the lines start then.'; box.appendChild(e); box.style.minHeight = '0'; }
-    else { box.style.minHeight = '220px'; SX.line(box, ser.map((s) => ({ ...s, pts: F.map((r) => ({ x: pm(r.date), y: r[s.k] })) })), { h: 220, yfmt: (v) => d3.format('+.1~f')(v) + '%', tipfmt: (v) => d3.format('+.2f')(v) + '%', refs: [{ y: 0, label: '0%' }], xfmt: d3.utcFormat('%-d %b') }); }
+    else { box.style.minHeight = '220px'; SX.line(box, ser.map((s) => ({ ...s, pts: F.map((r) => ({ x: pm(r.date), y: r[s.k] != null ? r[s.k] : null })) })), { h: 220, yfmt: (v) => d3.format('+.1~f')(v) + '%', tipfmt: (v) => d3.format('+.2f')(v) + '%', refs: [{ y: 0, label: '0%' }], xfmt: d3.utcFormat('%-d %b') }); }
     document.getElementById('fm-live-note').textContent = weeks < 26 ? 'A few weeks of 6 stocks is mostly luck, in either direction. Give it at least half a year before reading anything into it.' : '';
     // stand-in since 1991
     const P = SX.rows('free_money_proxy') || [], S = SX.rows('free_money_proxy_stats') || []; const pb = document.getElementById('fm-proxy');
-    const sp = [{ k: 'free_money', name: 'Free Money stand-in (US momentum long/short)', color: 'var(--color-warn)', w: 2.4 }, { k: 'rule', name: 'The rule (regions)', color: C.pick, w: 2 }, { k: 'us', name: 'North America ≈ S&P 500', color: C.us, w: 1.8 }];
+    const sp = [{ k: 'free_money', name: 'Stand-in, both sides', color: 'var(--color-warn)', w: 2.4 }, { k: 'long_only', name: 'Long only (top 10%)', color: 'var(--up)', w: 1.6, dash: '5 3' }, { k: 'short_only', name: 'Short only (bottom 10%)', color: 'var(--down)', w: 1.6, dash: '5 3' }, { k: 'rule', name: 'The rule (regions)', color: C.pick, w: 2 }, { k: 'us', name: 'North America ≈ S&P 500', color: C.us, w: 1.8 }];
     legend(document.getElementById('fm-sim-legend'), sp);
-    if (P.length) SX.line(pb, sp.map((s) => ({ ...s, pts: P.map((r) => ({ x: pm(r.month), y: r[s.k] * 100 })) })), { h: 280, log: true, yfmt: (v) => '$' + d3.format(',.0f')(v), tipfmt: (v) => '$' + d3.format(',.0f')(v), tipDate: d3.utcFormat('%b %Y') });
+    if (P.length) SX.line(pb, sp.map((s) => ({ ...s, pts: P.map((r) => ({ x: pm(r.month), y: r[s.k] != null ? r[s.k] * 100 : null })) })), { h: 280, log: true, yfmt: (v) => '$' + d3.format(',.0f')(v), tipfmt: (v) => '$' + d3.format(',.0f')(v), tipDate: d3.utcFormat('%b %Y') });
     const g = (k) => S.find((r) => r.key === k);
-    if (g('fm') && g('rule') && g('us')) kpis(document.getElementById('fm-sim-kpis'), [['Free Money stand-in', g('fm').cagr.toFixed(1) + '% /yr', 'worst year ' + g('fm').worst_year + '% (' + g('fm').worst_year_when + ')'], ['The rule (regions)', g('rule').cagr.toFixed(1) + '% /yr', 'worst year ' + g('rule').worst_year + '%'], ['North America ≈ S&P 500', g('us').cagr.toFixed(1) + '% /yr', 'worst year ' + g('us').worst_year + '%'], ['$100 in 1991 is now', P.length ? '$' + d3.format(',.0f')(P[P.length - 1].free_money * 100) : '—', 'stand-in, before costs']]);
+    if (g('fm') && g('rule') && g('us')) kpis(document.getElementById('fm-sim-kpis'), [['Free Money stand-in', g('fm').cagr.toFixed(1) + '% /yr', 'worst year ' + g('fm').worst_year + '% (' + g('fm').worst_year_when + ')'], ['The rule (regions)', g('rule').cagr.toFixed(1) + '% /yr', 'worst year ' + g('rule').worst_year + '%'], ['North America ≈ S&P 500', g('us').cagr.toFixed(1) + '% /yr', 'worst year ' + g('us').worst_year + '%'], ['Long only (top 10%)', g('long') ? g('long').cagr.toFixed(1) + '% /yr' : '—', g('long') ? 'worst year ' + g('long').worst_year + '%' : ''], ['Short only (bottom 10%)', g('short') ? g('short').cagr.toFixed(1) + '% /yr' : '—', g('short') ? 'worst year ' + g('short').worst_year + '% (' + g('short').worst_year_when + ')' : '']]);
     const num = (td, v) => { td.textContent = v == null ? '—' : v; sgn(td, v); };
     SX.table('fm-stats', 'free_money_proxy_stats', { strategy: (td, v) => { td.textContent = v; td.className = 'wrapc'; td.style.fontWeight = '600'; td.style.minWidth = '13rem'; }, period: (td, v) => { td.textContent = v; td.style.color = 'var(--muted)'; }, cagr: (td, v) => { num(td, v); td.style.fontWeight = '750'; }, max_dd: (td, v) => { td.textContent = v; td.style.color = 'var(--down)'; }, worst_year: (td, v, r) => { td.textContent = v + ' (' + r.worst_year_when + ')'; td.style.color = 'var(--down)'; } });
     const fa = g('fm_all'), ma = g('mkt_all');
-    if (g('fm') && g('us') && fa && ma) document.getElementById('fm-sim-note').textContent = `Honest reading: since 1991 the stand-in made ${g('fm').cagr}% a year, ${g('fm').cagr < g('us').cagr ? 'below' : 'above'} simply holding North America (${g('us').cagr.toFixed(1)}%) and ${g('fm').cagr < g('rule').cagr ? 'below' : 'above'} the rule (${g('rule').cagr.toFixed(1)}%), and it lost ${Math.abs(g('fm').worst_year)}% in ${g('fm').worst_year_when}. Over ${fa.period} it made ${fa.cagr.toFixed(1)}% a year vs ${ma.cagr.toFixed(1)}% for the US market. Momentum long/short has paid something over a century, but with long dry spells and sudden crashes — not free money.`;
+    if (g('fm') && g('us') && fa && ma) document.getElementById('fm-sim-note').textContent = `Honest reading: since 1991 the stand-in made ${g('fm').cagr}% a year, ${g('fm').cagr < g('us').cagr ? 'below' : 'above'} simply holding North America (${g('us').cagr.toFixed(1)}%) and ${g('fm').cagr < g('rule').cagr ? 'below' : 'above'} the rule (${g('rule').cagr.toFixed(1)}%), and it lost ${Math.abs(g('fm').worst_year)}% in ${g('fm').worst_year_when}. Over ${fa.period} it made ${fa.cagr.toFixed(1)}% a year vs ${ma.cagr.toFixed(1)}% for the US market. Momentum long/short has paid something over a century, but with long dry spells and sudden crashes — not free money.` + (g('long') && g('short') ? ` Split by side: the long side alone made ${g('long').cagr.toFixed(1)}% a year and the short side alone ${g('short').cagr.toFixed(1)}%, so the shorts are what drag the combined result down (they lose whenever the market rises). The long-only figure is before costs and assumes hundreds of stocks; 3 stocks swapped weekly cost more and swing far more.` : '');
   };
 
   // ---------- FAQ (text in docs/data/faq.json; {{dataset|key=value|field}} is filled from the data) ----------

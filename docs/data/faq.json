@@ -36,7 +36,7 @@
 },
 {
 "q": "What is Free Money :D?",
-"a": "An optional side bet: buy the 3 strongest and short the 3 weakest stocks of this week's index, held one week. It is not free: a stand-in on US data since 1991 made {{free_money_proxy_stats|key=fm|cagr}}% a year with a {{free_money_proxy_stats|key=fm|worst_year}}% year. Shorts can lose more than their stake.",
+"a": "An optional side bet: buy the 3 strongest and short the 3 weakest stocks of this week's index, and close all six after one week. It is not free: a stand-in on US data since 1991 made {{free_money_proxy_stats|key=fm|cagr}}% a year with a {{free_money_proxy_stats|key=fm|worst_year}}% year. The long side alone made {{free_money_proxy_stats|key=long|cagr}}% and the short side alone {{free_money_proxy_stats|key=short|cagr}}%, so the shorts hurt. Shorts can lose more than their stake.",
 "go": "extra"
 },
 {
