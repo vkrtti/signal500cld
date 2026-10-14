@@ -442,6 +442,12 @@
 .sx .sig .st{font-size:11.5px;font-weight:650;color:var(--up)}.sx .sig .st.dn{color:var(--down)}
 .sx .sig .wt{font-size:11px;font-weight:650;color:var(--color-warn);border:1px solid color-mix(in srgb,var(--color-warn) 45%,var(--line));border-radius:999px;padding:0 6px}
 .sx .mini.ex-list li{align-items:start}
+.sx .sig .sgv{font-size:11.5px;font-weight:750;border-radius:6px;padding:0 6px}
+.sx .sig .sgv.hi{background:color-mix(in srgb,var(--up) 20%,transparent);color:var(--up)}.sx .sig .sgv.mid{background:color-mix(in srgb,var(--color-warn) 20%,transparent);color:var(--color-warn)}.sx .sig .sgv.lo{background:color-mix(in srgb,var(--down) 20%,transparent);color:var(--down)}
+.sx .tm{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}
+.sx .tm .big{font-size:40px;font-weight:750;letter-spacing:-.02em;line-height:1}
+.sx .tm .bar{flex:1;min-width:200px;height:10px;border-radius:999px;background:linear-gradient(90deg,var(--down),var(--color-warn),var(--up));position:relative}
+.sx .tm .bar i{position:absolute;top:-4px;width:4px;height:18px;border-radius:2px;background:var(--color-fg);transform:translateX(-2px)}
 @media (prefers-reduced-motion:reduce){.sx *{transition:none!important}}
 </style>
 
@@ -859,6 +865,16 @@
         <div class="side-l">Holding now</div><ul class="mini ex-list" id="fm-hold-B"></ul></div>
     </div>
 
+    <h2>Signal strength</h2>
+    <div class="card" id="tm-card">
+      <div class="tm"><div><div class="note" style="margin:0">Market timing for stock buys</div><div class="big" id="tm-score">—</div></div><div class="bar" aria-hidden="true"><i id="tm-mark"></i></div></div>
+      <p class="note" id="tm-text" style="margin:10px 0 0"></p>
+      <details class="fm-more"><summary>How it works and how well it has worked</summary>
+        <p class="note">Each stock's <b>signal</b> (0–1) = half <b>market timing</b> + half the stock's <b>own trend</b>. Market timing: every month since 1937 a simple model, using only data known then, estimated the next year for the strongest 10% of US stocks from five market conditions (trend, 2-year rise, market swings, swings of the strongest stocks, and how far they ran ahead of the market); the score is that estimate's rank in history (0 = worst setup, 1 = best). Own trend: the stock's 12-1 month return divided by its volatility, so a stock that only "fell least" scores low. Only the timing half is tested; it mainly separates the chance of a losing year at the extremes.</p>
+        <div class="tbl"><table id="tm-cal" data-source="timing_calib" data-row-key="band"><thead><tr><th data-field="band">Timing score</th><th data-field="months" class="n">Months</th><th data-field="avg_next12" class="n">Next 12 months (avg %)</th><th data-field="loss_share" class="n">Losing years (%)</th></tr></thead><tbody></tbody></table></div>
+        <div class="chart" id="tm-hist" data-source="timing_history" style="min-height:140px;margin-top:10px"></div></details>
+    </div>
+
     <h2>Live record since 9 Oct 2026</h2>
     <div class="card live" id="fm-live-card">
       <div class="lk" id="fm-kpis"></div>
@@ -1226,8 +1242,13 @@ SX.gauge = (box, v, label) => {
 // ---- tabs ----
 SX.RESEARCH = ['history', 'plans', 'gauges'];
 // Strength + warning tags for a stock: the score is its rank in the whole index (0-100); not a tested probability.
+SX.signal = (r, side) => {   // 0-1: half market timing (90-year test), half the stock's own trend (12-1 month return / volatility)
+  const tn = (SX.rows('timing_now') || [])[0]; if (!tn || !r || r.momentum == null || !r.vol) return null;
+  const z = r.momentum / r.vol, tr = 1 / (1 + Math.exp(-2 * z)), own = side === 'Short' ? 1 - tr : tr;
+  return { v: Math.round((0.5 * tn.score + 0.5 * own) * 100) / 100, timing: tn.score, own: Math.round(own * 100) / 100 }; };
 SX.sig = (ticker, side) => {
   const r = (SX.rows('pick_rank') || []).find((x) => x.ticker === ticker); const out = document.createElement('span'); out.className = 'sig'; if (!r || r.score == null) return out;
+  const sg = SX.signal(r, side); if (sg) { const g = document.createElement('span'); g.className = 'sgv ' + (sg.v >= 0.66 ? 'hi' : sg.v >= 0.33 ? 'mid' : 'lo'); g.textContent = 'signal ' + sg.v.toFixed(2); g.title = `Signal ${sg.v.toFixed(2)} of 1 = half market timing (${sg.timing.toFixed(2)}: how good a moment it is, by 90 years of data, to buy top stocks) + half this stock's own trend (${sg.own.toFixed(2)}: is it really rising, relative to its swings). Only the timing half is tested on history.`; out.appendChild(g); }
   const s = Math.round(r.score); const t = document.createElement('span'); t.className = 'st' + (side === 'Short' ? ' dn' : ''); t.textContent = side === 'Short' ? `weaker than ${100 - s}%` : `stronger than ${s}%`; t.title = `Score ${r.score} of 100: its rank among all stocks of this week's index. Not a tested buy probability.`; out.appendChild(t);
   const warn = (txt, tip) => { const w = document.createElement('span'); w.className = 'wt'; w.textContent = txt; w.title = tip; out.appendChild(w); };
   if (r.vol != null && r.vol > 60) warn('very jumpy', `Volatility ${r.vol}% a year: big swings both ways.`);
@@ -1870,8 +1891,14 @@ dash.calc('lr_dec_reg', {
   const holdList = (ul, rows) => { if (!ul) return; if (!rows.length) { const li = document.createElement('li'); li.className = 'note'; li.textContent = 'Starts at the next weekly update'; ul.replaceChildren(li); return; }
     ul.replaceChildren(...rows.map((r) => { const li = document.createElement('li'); const nm = document.createElement('span'); nm.style.minWidth = '0'; const tk = document.createElement('div'); tk.className = 'tk'; tk.textContent = r.ticker; const co = document.createElement('div'); co.className = 'co'; co.textContent = r.company + (r.since ? ' · since ' + r.since : ''); nm.append(tk, co, SX.sig(r.ticker, 'Long'));
       const v = document.createElement('span'); v.textContent = r.return_pct == null ? '' : pct(r.return_pct); if (r.return_pct != null) sgn(v, r.return_pct); const w = document.createElement('span'); w.className = 'pill p-good'; w.textContent = r.weight + '%'; li.append(SX.icon(r.ticker.slice(0, 4)), nm, v, w); return li; })); };
+  SX.timingText = (tn) => tn.score < 0.2 ? `One of the weakest setups since 1937. After readings like this the strongest stocks still rose ${tn.avg_next12}% a year on average, but lost money over the next year ${tn.loss_share}% of the time: not a week to put extra money into stocks.` : tn.score >= 0.8 ? `One of the better setups in history: after readings like this the strongest stocks rose ${tn.avg_next12}% on average over the next year and lost money ${tn.loss_share}% of the time. If you have extra money for stocks, history says this is a better week than most.` : `An ordinary setup: after readings like this the strongest stocks rose ${tn.avg_next12}% on average over the next year and lost money ${tn.loss_share}% of the time.`;
   SX.drawFM = () => {
     const box = document.getElementById('fm-live'); if (!box || !box.offsetParent) return;
+    const tn = (SX.rows('timing_now') || [])[0];
+    if (tn) { document.getElementById('tm-score').textContent = tn.score.toFixed(2); document.getElementById('tm-score').style.color = tn.score >= 0.66 ? 'var(--up)' : tn.score >= 0.33 ? 'var(--color-warn)' : 'var(--down)'; document.getElementById('tm-mark').style.left = tn.score * 100 + '%';
+      const mo = tn.asof.slice(0, 4) + '-' + tn.asof.slice(4); document.getElementById('tm-text').textContent = SX.timingText(tn) + ` (US data to the end of ${d3.utcFormat('%b %Y')(pm(mo))}; updated monthly.)`;
+      const tc = document.getElementById('tm-cal'); tc._f = (r) => r.period === '1937–today'; SX.table('tm-cal', 'timing_calib', { loss_share: (td, v) => { td.textContent = v; td.style.color = v >= 25 ? 'var(--down)' : v <= 16 ? 'var(--up)' : ''; } });
+      const th = SX.rows('timing_history') || []; const hb = document.getElementById('tm-hist'); if (th.length && hb.offsetParent) SX.line(hb, [{ name: 'Timing score', color: 'var(--accent)', w: 1.2, pts: th.map((r) => ({ x: pm(r.month.slice(0, 4) + '-' + r.month.slice(4)), y: r.score })) }], { h: 140, yfmt: (v) => d3.format('.1f')(v), tipfmt: (v) => d3.format('.2f')(v), tipDate: d3.utcFormat('%b %Y'), refs: [{ y: 0.2, label: '0.2' }, { y: 0.8, label: '0.8' }] }); }
     const C = COL(); const F = SX.rows('free_money_live') || []; const last = F[F.length - 1]; const H = SX.rows('free_money_holdings') || [];
     SX.exList('fm-long', 'Long'); SX.exList('fm-short', 'Short');
     holdList(document.getElementById('fm-hold-A'), H.filter((r) => r.strategy === 'A' && r.action !== 'Sell')); holdList(document.getElementById('fm-hold-B'), H.filter((r) => r.strategy === 'B' && r.action !== 'Sell'));
@@ -1922,7 +1949,7 @@ dash.calc('lr_dec_reg', {
       const ul = el('ul', 'mini ex-list'); ul.style.marginTop = '8px';
       H.sort((a, c) => ({ Sell: 0, Buy: 1, Keep: 2 }[a.action] ?? 3) - ({ Sell: 0, Buy: 1, Keep: 2 }[c.action] ?? 3)).forEach((r) => { const li = el('li'); const nm = el('span'); nm.style.minWidth = '0'; const tk = el('div', 'tk'); tk.append(el('span', 'act ' + r.action, r.action), r.ticker); nm.append(tk, el('div', 'co', r.company), r.action === 'Sell' ? el('span') : SX.sig(r.ticker, 'Long')); li.append(SX.icon(r.ticker.slice(0, 4)), nm, el('span', null, ''), el('span', 'pill p-good', r.action === 'Sell' ? 'sell all' : r.weight + '%')); ul.appendChild(li); });
       const t = el('span', 'opt', 'optional');
-      steps.push(step(['3 stocks, if you want them', t], ['The best stock idea on past data (Keepers): hold the 3 strongest stocks of this index and keep each until it weakens. Use only money you can afford to lose, split by the weights below (calmer stocks get more). "Stronger than 98%" means it ranks above 98% of the stocks in the index; it is not a guarantee. Next week: keep them unless the list says Sell.'], ul));
+      steps.push(step(['3 stocks, if you want them', t], ['The best stock idea on past data (Keepers): hold the 3 strongest stocks of this index and keep each until it weakens. Use only money you can afford to lose, split by the weights below (calmer stocks get more). "Signal" is 0–1: half how good a moment it is to buy top stocks, half how strongly the stock itself is rising. Next week: keep them unless the list says Sell.'].concat((SX.rows('timing_now') || []).slice(0, 1).map((tn) => [el('b', null, `Timing this week: ${tn.score.toFixed(2)} of 1. `), SX.timingText(tn)])), ul));
     }
     steps.push(step(`Check back ${D(w.decided_on, 8)}`, ['The site makes a new decision every Saturday morning from Friday\'s close. Then repeat: buy the amount shown, sell only what the list says.']));
     ol.replaceChildren(...steps);

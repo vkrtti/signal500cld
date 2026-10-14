@@ -1,6 +1,7 @@
 # Changelog (newest first)
 
 ## 2026-10-14
+- Signal 0–1 on every stock: half market timing (research.py timing(): expanding-window model 1937–today, no look-ahead; 0–0.2 band: +13.4% avg next year, 29% losing years; 0.8–1: +22.7%, 15%), half own trend. Timing card on Free Money, timing line in Your plan. First reading 0.03 (end Aug 2026).
 - Stock lists (Your plan, Overview, Free Money) show each stock's rank as 'stronger than X%' (shorts: 'weaker than X%') plus 'very jumpy' (volatility > 60%) and 'trend guard on' tags; FAQ entry explains them.
 
 ## 2026-10-13

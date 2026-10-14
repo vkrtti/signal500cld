@@ -317,6 +317,43 @@ def rotation(df):
     save('hist_rotation_decades', dec, 'Index pick by decade', 'Yearly return by decade of the index pick, the previous rule, the developed world and North America.')
 
 
+# ------------------------------------------------------------ timing score for buying top-momentum stocks
+def timing():
+    """0-1 score: how good a moment it is, by history, to buy the strongest (top 10% momentum) US stocks.
+    Each month a small linear model, fitted only on data known at that time, estimates the next 12 months of the
+    top-decile stocks from five market conditions; the score is that estimate's rank among all earlier months
+    (0 = worst setup since 1937, 1 = best). Weak predictor: mainly separates the chance of a losing year at the extremes."""
+    d = MOMD
+    if d is None or len(d) < 400: return
+    lv = (1 + d.mkt).cumprod(); cr = lambda s, n: s.rolling(n).apply(lambda x: (1 + x).prod() - 1, raw=True)
+    F = pd.DataFrame({'trend': lv / lv.rolling(10).mean() - 1, 'r24': lv / lv.shift(24) - 1, 'mvol': d.mkt.rolling(6).std() * np.sqrt(12),
+                      'hvol': d.hi.rolling(6).std() * np.sqrt(12), 'spread': cr(d.hi, 12) - cr(d.mkt, 12)}, index=d.index)
+    y = cr(d.hi[::-1], 12)[::-1].shift(-1).rename('y')   # next 12 months of the top 10%, known 12 months later
+    D = F.join(y).dropna(subset=list(F.columns)); cols = list(F.columns); ix = list(D.index); preds = {}
+    for i in range(ix.index('193701') if '193701' in ix else 120, len(ix)):
+        tr = D.iloc[:max(0, i - 12)].dropna()
+        if len(tr) < 60: continue
+        X = np.c_[np.ones(len(tr)), tr[cols].values]; b = np.linalg.lstsq(X, tr.y.values, rcond=None)[0]
+        preds[ix[i]] = float(np.r_[1, D.loc[ix[i], cols].values] @ b)
+    P = pd.Series(preds); sc = pd.Series({t: float((P.loc[:t] <= P.loc[t]).mean()) for t in P.index})
+    V = pd.DataFrame({'score': sc, 'y': D.y.reindex(sc.index)})
+    cal = []
+    for per, a_, b_ in [('1937–today', '193701', '999999'), ('1937–1979', '193701', '197912'), ('1980–today', '198001', '999999')]:
+        v = V[(V.index >= a_) & (V.index <= b_)].dropna()
+        for lo, hi, lab in [(0, .2, '0.00–0.20'), (.2, .4, '0.20–0.40'), (.4, .6, '0.40–0.60'), (.6, .8, '0.60–0.80'), (.8, 1.01, '0.80–1.00')]:
+            g = v[(v.score >= lo) & (v.score < hi)]
+            cal.append(dict(period=per, band=lab, months=int(len(g)), avg_next12=round(float(g.y.mean()) * 100, 1) if len(g) else None,
+                            loss_share=round(float((g.y < 0).mean()) * 100) if len(g) else None))
+    last = sc.index[-1]; s_ = round(float(sc.iloc[-1]), 2)
+    band = next(c for c in cal if c['period'] == '1937–today' and float(c['band'][:4]) <= s_ < float(c['band'][-4:]) + (0.01 if c['band'].endswith('1.00') else 0))
+    save('timing_now', [dict(asof=last, score=s_, avg_next12=band['avg_next12'], loss_share=band['loss_share'], band=band['band'],
+                             trend=round(float(F.loc[last, 'trend']) * 100, 1), r24=round(float(F.loc[last, 'r24']) * 100, 1), mvol=round(float(F.loc[last, 'mvol']) * 100, 1),
+                             hvol=round(float(F.loc[last, 'hvol']) * 100, 1), spread=round(float(F.loc[last, 'spread']) * 100, 1))],
+         'Timing score for stock buys', 'How good a moment it is, by 90 years of US data, to buy the strongest stocks: 0 = worst setup since 1937, 1 = best. Built only from data known at each month end (Kenneth French data).')
+    save('timing_calib', cal, 'Timing score: what followed', 'For each score band: months in history, average next-12-month return of the top 10% momentum stocks, and how often that year was a loss; all history and both halves.')
+    save('timing_history', [dict(month=t, score=round(float(v), 2)) for t, v in sc.items()], 'Timing score history', 'The timing score at every month end since 1937.')
+
+
 # ------------------------------------------------------------ regional markets
 if not args.offline:
     files = {'US': ('North_America_3_Factors_CSV.zip', 'North America'), 'Developed': ('Developed_3_Factors_CSV.zip', 'Developed world'),
@@ -348,4 +385,6 @@ if not args.offline:
 else:
     rp = os.path.join(args.research, 'regions_monthly.csv')
     if os.path.exists(rp): rotation(pd.read_csv(rp, dtype={'month': str}).set_index('month'))
+try: timing()
+except Exception as e: log('WARN timing', e)
 log('done')

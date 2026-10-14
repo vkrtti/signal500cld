@@ -40,8 +40,8 @@
 "go": "extra"
 },
 {
-"q": "What does \"stronger than 98%\" mean?",
-"a": "Each stock gets a score from 0 to 100 that ranks it against every stock in this week's index (momentum: how much it rose and how close it is to its 52-week high). \"Stronger than 98%\" means it ranks above 98% of them. It is a ranking, not a chance of winning. \"Very jumpy\" means its price swings more than 60% a year; \"trend guard on\" means the world market is in a downtrend.",
+"q": "What do \"signal 0.51\" and \"stronger than 98%\" mean?",
+"a": "\"Signal\" (0–1) is how good a buy a stock is right now: half market timing (today's market ranked against 90 years of history for buying the strongest stocks; 0 = worst setup since 1937, 1 = best) and half the stock's own trend (is it really rising, relative to its swings). \"Stronger than 98%\" ranks it against the other stocks in the index. \"Very jumpy\" means swings over 60% a year. Only the timing half is tested on history, and it works mainly at the extremes; it is not a guarantee.",
 "go": "plan"
 },
 {
