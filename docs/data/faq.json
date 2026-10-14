@@ -40,6 +40,11 @@
 "go": "extra"
 },
 {
+"q": "What does \"stronger than 98%\" mean?",
+"a": "Each stock gets a score from 0 to 100 that ranks it against every stock in this week's index (momentum: how much it rose and how close it is to its 52-week high). \"Stronger than 98%\" means it ranks above 98% of them. It is a ranking, not a chance of winning. \"Very jumpy\" means its price swings more than 60% a year; \"trend guard on\" means the world market is in a downtrend.",
+"go": "plan"
+},
+{
 "q": "What is the demo account?",
 "a": "A pretend account that puts in €1,000 every Friday: 70% in this week's ETF and 30% in its 3 strongest stocks, with 0.2% costs. It's compared with putting the same money into MSCI World, so you can see whether the extras help.",
 "go": "demo"

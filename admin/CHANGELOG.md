@@ -1,5 +1,8 @@
 # Changelog (newest first)
 
+## 2026-10-14
+- Stock lists (Your plan, Overview, Free Money) show each stock's rank as 'stronger than X%' (shorts: 'weaker than X%') plus 'very jumpy' (volatility > 60%) and 'trend guard on' tags; FAQ entry explains them.
+
 ## 2026-10-13
 - Three main tabs (Overview, Your plan, FAQ), the rest under More. New 'Your plan' page: buy amount + ISIN + when, what to sell (nothing unless the list says so), optional Keepers stocks with Buy/Keep/Sell, next check date. Method text moved to docs/data/method.json (page −21 KB). free_money_holdings gains an action field.
 - Simulation: Combinations section (the index pick + 0–100% in a stock strategy, 1991–today, both halves): best return per risk was the rule + 70% Keepers with guard (13.3%/yr, worst year −18.1%, Sharpe 0.72 vs 0.48 for the rule alone), but the best share differs by half (90% vs 40%). Live 70/30 mixes shown from 16 Oct. Page slimmed (dead code, shorter AI guide); tools/dash_page.py also minifies CSS.

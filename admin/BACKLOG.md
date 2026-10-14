@@ -16,6 +16,8 @@ Re-rank every run. Format: [priority] title — benefit / effort / notes. Move d
 - [R0b] The combinations suggest the demo's 30% stock share is low (best 40–90% with the guard). Re-check with the live record before proposing a demo change; it needs owner approval.
 - [R0] After ~26 live weeks compare Free Money current vs A vs B; if A or B leads and the 1991 stand-in agrees, propose switching (pull request).
 
+- [R0c] After ~13 live weeks: do higher stock scores (the 'stronger than X%' tag) or the 'very jumpy' flag predict next-week returns of the picks? Only then turn the tag into a real 0–1 rating.
+
 ## Research questions (one per month, log in EXPERIMENTS.csv before running)
 - [R1] Monthly-only rebalance of the pick vs weekly with 0.25 buffer — fewer trades, maybe same return.
 - [R2] Buffer sensitivity of the risk-adjusted rule (0.15 / 0.25 / 0.35) — only to confirm robustness, NOT to pick the best; adopt nothing unless all data sets agree.

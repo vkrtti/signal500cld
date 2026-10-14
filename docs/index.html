@@ -438,6 +438,10 @@
 .sx .act{font-size:11.5px;font-weight:700;border-radius:6px;padding:2px 7px;margin-right:6px}
 .sx .act.Buy{background:color-mix(in srgb,var(--up) 18%,transparent);color:var(--up)}.sx .act.Sell{background:color-mix(in srgb,var(--down) 18%,transparent);color:var(--down)}.sx .act.Keep{background:color-mix(in srgb,var(--muted) 18%,transparent);color:var(--muted)}
 @media (max-width:640px){.sx .plan>li{padding:18px 16px 18px 56px}.sx .plan>li::before{left:14px}}
+.sx .sig{display:flex;flex-wrap:wrap;gap:4px 6px;margin-top:3px}
+.sx .sig .st{font-size:11.5px;font-weight:650;color:var(--up)}.sx .sig .st.dn{color:var(--down)}
+.sx .sig .wt{font-size:11px;font-weight:650;color:var(--color-warn);border:1px solid color-mix(in srgb,var(--color-warn) 45%,var(--line));border-radius:999px;padding:0 6px}
+.sx .mini.ex-list li{align-items:start}
 @media (prefers-reduced-motion:reduce){.sx *{transition:none!important}}
 </style>
 
@@ -1221,6 +1225,15 @@ SX.gauge = (box, v, label) => {
 
 // ---- tabs ----
 SX.RESEARCH = ['history', 'plans', 'gauges'];
+// Strength + warning tags for a stock: the score is its rank in the whole index (0-100); not a tested probability.
+SX.sig = (ticker, side) => {
+  const r = (SX.rows('pick_rank') || []).find((x) => x.ticker === ticker); const out = document.createElement('span'); out.className = 'sig'; if (!r || r.score == null) return out;
+  const s = Math.round(r.score); const t = document.createElement('span'); t.className = 'st' + (side === 'Short' ? ' dn' : ''); t.textContent = side === 'Short' ? `weaker than ${100 - s}%` : `stronger than ${s}%`; t.title = `Score ${r.score} of 100: its rank among all stocks of this week's index. Not a tested buy probability.`; out.appendChild(t);
+  const warn = (txt, tip) => { const w = document.createElement('span'); w.className = 'wt'; w.textContent = txt; w.title = tip; out.appendChild(w); };
+  if (r.vol != null && r.vol > 60) warn('very jumpy', `Volatility ${r.vol}% a year: big swings both ways.`);
+  const fl = SX.rows('free_money_live') || []; const g = fl.length && fl[fl.length - 1].guard;
+  if (g && side !== 'Short') warn('trend guard on', 'MSCI World is below its 40-week line: Keepers with guard buys nothing new.');
+  return out; };
 SX.MAIN = ['home', 'plan', 'faq'];
 SX.show = (name) => {
   if (name === 'research') name = SX.RESEARCH.includes(SX.active) ? SX.active : 'history';
@@ -1435,7 +1448,7 @@ SX.line = (box, series, o) => {
       if (!sel.length) { const li = document.createElement('li'); li.className = 'note'; li.textContent = 'No picks this week'; ul.replaceChildren(li); return; }
       ul.replaceChildren(...sel.map((r) => {
         const li = document.createElement('li');
-        const nm = document.createElement('span'); nm.style.minWidth = '0'; const tk = document.createElement('div'); tk.className = 'tk'; tk.textContent = r.ticker; const co = document.createElement('div'); co.className = 'co'; co.textContent = r.company + (r.sector ? ' · ' + r.sector : ''); nm.append(tk, co);
+        const nm = document.createElement('span'); nm.style.minWidth = '0'; const tk = document.createElement('div'); tk.className = 'tk'; tk.textContent = r.ticker; const co = document.createElement('div'); co.className = 'co'; co.textContent = r.company; nm.append(tk, co, SX.sig(r.ticker, side));
         const p = document.createElement('span'); p.textContent = SX.money(r.entry_price, r.currency);
         const sc = document.createElement('span'); sc.className = 'pill ' + (side === 'Long' ? 'p-good' : 'p-bad'); sc.textContent = r.weight != null ? r.weight + '%' : '#' + r.rank; sc.title = 'Share of your ' + side.toLowerCase() + ' money';
         li.append(SX.icon(r.ticker), nm, p, sc); return li; }));
@@ -1855,7 +1868,7 @@ dash.calc('lr_dec_reg', {
   SX.fmOn = new Set(['keep', 'keep_trend', 'free_money', 'rule', 'sp500']); SX.fmSOn = new Set(['long_only', 'long_trend', 'free_money', 'us']);
   const chipRow = (id, ser, on, redraw) => document.getElementById(id).replaceChildren(...ser.map((s) => { const b = document.createElement('button'); b.className = 'tg'; b.style.setProperty('--c', s.color); b.setAttribute('aria-pressed', String(on.has(s.k))); const i = document.createElement('i'); b.append(i, s.name); b.addEventListener('click', () => { if (on.has(s.k)) { if (on.size > 1) on.delete(s.k); } else on.add(s.k); redraw(); }); return b; }));
   const holdList = (ul, rows) => { if (!ul) return; if (!rows.length) { const li = document.createElement('li'); li.className = 'note'; li.textContent = 'Starts at the next weekly update'; ul.replaceChildren(li); return; }
-    ul.replaceChildren(...rows.map((r) => { const li = document.createElement('li'); const nm = document.createElement('span'); nm.style.minWidth = '0'; const tk = document.createElement('div'); tk.className = 'tk'; tk.textContent = r.ticker; const co = document.createElement('div'); co.className = 'co'; co.textContent = r.company + (r.since ? ' · since ' + r.since : ''); nm.append(tk, co);
+    ul.replaceChildren(...rows.map((r) => { const li = document.createElement('li'); const nm = document.createElement('span'); nm.style.minWidth = '0'; const tk = document.createElement('div'); tk.className = 'tk'; tk.textContent = r.ticker; const co = document.createElement('div'); co.className = 'co'; co.textContent = r.company + (r.since ? ' · since ' + r.since : ''); nm.append(tk, co, SX.sig(r.ticker, 'Long'));
       const v = document.createElement('span'); v.textContent = r.return_pct == null ? '' : pct(r.return_pct); if (r.return_pct != null) sgn(v, r.return_pct); const w = document.createElement('span'); w.className = 'pill p-good'; w.textContent = r.weight + '%'; li.append(SX.icon(r.ticker.slice(0, 4)), nm, v, w); return li; })); };
   SX.drawFM = () => {
     const box = document.getElementById('fm-live'); if (!box || !box.offsetParent) return;
@@ -1907,9 +1920,9 @@ dash.calc('lr_dec_reg', {
     const H = (SX.rows('free_money_holdings') || []).filter((r) => r.strategy === 'A' && r.ticker !== 'Cash').map((r) => ({ ...r, action: r.action || (r.since === w.decided_on ? 'Buy' : 'Keep') }));
     if (H.length) {
       const ul = el('ul', 'mini ex-list'); ul.style.marginTop = '8px';
-      H.sort((a, c) => ({ Sell: 0, Buy: 1, Keep: 2 }[a.action] ?? 3) - ({ Sell: 0, Buy: 1, Keep: 2 }[c.action] ?? 3)).forEach((r) => { const li = el('li'); const nm = el('span'); nm.style.minWidth = '0'; const tk = el('div', 'tk'); tk.append(el('span', 'act ' + r.action, r.action), r.ticker); nm.append(tk, el('div', 'co', r.company)); li.append(SX.icon(r.ticker.slice(0, 4)), nm, el('span', null, ''), el('span', 'pill p-good', r.action === 'Sell' ? 'sell all' : r.weight + '%')); ul.appendChild(li); });
+      H.sort((a, c) => ({ Sell: 0, Buy: 1, Keep: 2 }[a.action] ?? 3) - ({ Sell: 0, Buy: 1, Keep: 2 }[c.action] ?? 3)).forEach((r) => { const li = el('li'); const nm = el('span'); nm.style.minWidth = '0'; const tk = el('div', 'tk'); tk.append(el('span', 'act ' + r.action, r.action), r.ticker); nm.append(tk, el('div', 'co', r.company), r.action === 'Sell' ? el('span') : SX.sig(r.ticker, 'Long')); li.append(SX.icon(r.ticker.slice(0, 4)), nm, el('span', null, ''), el('span', 'pill p-good', r.action === 'Sell' ? 'sell all' : r.weight + '%')); ul.appendChild(li); });
       const t = el('span', 'opt', 'optional');
-      steps.push(step(['3 stocks, if you want them', t], ['The best stock idea on past data (Keepers): hold the 3 strongest stocks of this index and keep each until it weakens. Use only money you can afford to lose, split by the weights below. Next week: keep them unless the list says Sell.'], ul));
+      steps.push(step(['3 stocks, if you want them', t], ['The best stock idea on past data (Keepers): hold the 3 strongest stocks of this index and keep each until it weakens. Use only money you can afford to lose, split by the weights below (calmer stocks get more). "Stronger than 98%" means it ranks above 98% of the stocks in the index; it is not a guarantee. Next week: keep them unless the list says Sell.'], ul));
     }
     steps.push(step(`Check back ${D(w.decided_on, 8)}`, ['The site makes a new decision every Saturday morning from Friday\'s close. Then repeat: buy the amount shown, sell only what the list says.']));
     ol.replaceChildren(...steps);
