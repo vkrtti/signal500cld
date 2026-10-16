@@ -33,7 +33,7 @@
   "title": "Market gauges",
   "description": "Nine US stress and rate readings from the Federal Reserve (VIX, yield curve, Sahm rule, credit spread, NFCI, Fed funds, 10Y yield, CPI, unemployment).",
   "refresh": "daily",
-  "updated": "2026-10-15T00:44:30Z"
+  "updated": "2026-10-16T00:36:30Z"
  },
  "weekly_tiers": {
   "title": "Weekly amount rule",
@@ -99,7 +99,7 @@
   "title": "Markets today",
   "description": "Major indexes, currencies and commodities from the Federal Reserve (FRED), updated every weekday.",
   "refresh": "daily",
-  "updated": "2026-10-15T00:44:30Z"
+  "updated": "2026-10-16T00:36:30Z"
  },
  "regions": {
   "title": "World stock markets since 1990",
@@ -159,7 +159,7 @@
   "title": "Headlines",
   "description": "Latest headlines from the Fed, ECB, Bank of Japan, CNBC, MarketWatch and Google News on the picked index and stocks (titles and links only).",
   "refresh": "daily",
-  "updated": "2026-10-15T00:44:51Z"
+  "updated": "2026-10-16T00:36:56Z"
  },
  "hist_rotation": {
   "title": "Index pick on 35 years of regional data",
