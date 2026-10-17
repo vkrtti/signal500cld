@@ -75,10 +75,39 @@ def weekly(df):
     return df.resample('W-FRI').last().ffill(limit=2)
 
 
+def recent_closes(log):
+    """Fallback for the latest days: Yahoo's bulk daily download sometimes lacks the last session for the Xetra/Amsterdam
+    ETFs (2026-10-17: Friday empty at 10:00 UTC Saturday). Ask each ETF separately, daily bars first, then the last hourly
+    bar of each day."""
+    import yfinance as yf
+    cols = {}
+    for k in EK:
+        t = E[k]['etf']
+        for kw in (dict(period='10d', interval='1d'), dict(period='5d', interval='60m')):
+            try:
+                h = yf.Ticker(t).history(auto_adjust=True, **kw)['Close'].dropna()
+                if h.empty: continue
+                h.index = pd.to_datetime(h.index).tz_localize(None)
+                s = h.groupby(h.index.normalize()).last()
+                cols[t] = s if t not in cols else cols[t].combine_first(s)
+            except Exception as e: log(f'WARN recent closes {t} {kw}: {e}')
+    return pd.DataFrame(cols)
+
+
 def etf_prices(research, log, offline):
     cache = os.path.join(research, 'etf_daily.csv')
     old = pd.read_csv(cache, index_col=0, parse_dates=True) if os.path.exists(cache) else pd.DataFrame()
     new = download([E[k]['etf'] for k in EK], '2009-09-01', log, offline)
+    if not offline and not new.empty:
+        last_real = new.dropna(how='all').index.max()
+        today = pd.Timestamp(dt.datetime.now(dt.timezone.utc).date())
+        last_weekday = today - pd.Timedelta(days=1)
+        while last_weekday.weekday() > 4: last_weekday -= pd.Timedelta(days=1)
+        if last_real < last_weekday:
+            rc = recent_closes(log)
+            if not rc.empty:
+                rc = rc[rc.index > last_real]
+                if not rc.empty: log('ETF closes added from the per-ticker fallback:', [d.date().isoformat() for d in rc.index]); new = rc.reindex(columns=new.columns).combine_first(new)
     if not new.empty:
         new = new.rename(columns={E[k]['etf']: k for k in EK})
         df = new.combine_first(old) if not old.empty else new
