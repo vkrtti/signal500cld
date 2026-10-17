@@ -27,8 +27,16 @@ def load(name, default=None):
     p = os.path.join(D, name + '.json')
     return json.load(open(p)) if os.path.exists(p) else default
 
+def _clean(o, path, bad):
+    if isinstance(o, float) and (o != o or o in (float('inf'), float('-inf'))): bad.append(path); return None
+    if isinstance(o, dict): return {k: _clean(v, f'{path}.{k}', bad) for k, v in o.items()}
+    if isinstance(o, list): return [_clean(v, f'{path}[{i}]', bad) for i, v in enumerate(o)]
+    return o
+
 def save(name, obj):
-    json.dump(obj, open(os.path.join(D, name + '.json'), 'w'), separators=(',', ':'))
+    bad = []; obj = _clean(obj, name, bad)   # NaN is not valid JSON and breaks the page: write null and warn
+    if bad: print(f'::warning::{name}: {len(bad)} NaN/inf values written as null (first: {bad[0]})')
+    json.dump(obj, open(os.path.join(D, name + '.json'), 'w'), separators=(',', ':'), allow_nan=False)
     meta = load('meta', {})
     if name in meta: meta[name]['updated'] = NOW
     json.dump(meta, open(os.path.join(D, 'meta.json'), 'w'), indent=1)
