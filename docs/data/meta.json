@@ -33,7 +33,7 @@
   "title": "Market gauges",
   "description": "Nine US stress and rate readings from the Federal Reserve (VIX, yield curve, Sahm rule, credit spread, NFCI, Fed funds, 10Y yield, CPI, unemployment).",
   "refresh": "daily",
-  "updated": "2026-10-17T09:48:24Z"
+  "updated": "2026-10-17T09:54:37Z"
  },
  "weekly_tiers": {
   "title": "Weekly amount rule",
@@ -63,55 +63,55 @@
   "title": "Plans over 100 years",
   "description": "The 10/20/30% plans simulated 1927\u20132026 on Kenneth French US market total returns (monthly), with daily-reset drag, fees and cash at the T-bill rate.",
   "refresh": "weekly",
-  "updated": "2026-10-17T09:49:54Z"
+  "updated": "2026-10-17T09:54:59Z"
  },
  "hist_plans_growth": {
   "title": "Plan growth since 1927",
   "description": "Value of 1 unit invested in Jan 1927, at each year end.",
   "refresh": "weekly",
-  "updated": "2026-10-17T09:49:54Z"
+  "updated": "2026-10-17T09:54:59Z"
  },
  "hist_weekly_rule": {
   "title": "Weekly rule over 100 years",
   "description": "Money-weighted yearly return of the EUR 40-200 drawdown tiers vs a flat amount, US market total returns (French).",
   "refresh": "weekly",
-  "updated": "2026-10-17T09:49:54Z"
+  "updated": "2026-10-17T09:54:59Z"
  },
  "hist_factors": {
   "title": "Value and momentum since 1927",
   "description": "Long/short factor returns 1927\u20132026 (Kenneth French data library), premium over cash, before costs.",
   "refresh": "weekly",
-  "updated": "2026-10-17T09:49:54Z"
+  "updated": "2026-10-17T09:54:59Z"
  },
  "hist_factor_growth": {
   "title": "Factor growth since 1927",
   "description": "Value of 1 unit in each long/short factor, year-end.",
   "refresh": "weekly",
-  "updated": "2026-10-17T09:49:54Z"
+  "updated": "2026-10-17T09:54:59Z"
  },
  "hist_decades": {
   "title": "Returns by decade",
   "description": "Yearly returns by decade 1927\u20132026: US market, 20%/30% plans, value, momentum, their mix and cash.",
   "refresh": "weekly",
-  "updated": "2026-10-17T09:49:54Z"
+  "updated": "2026-10-17T09:54:59Z"
  },
  "markets": {
   "title": "Markets today",
   "description": "Major indexes, currencies and commodities from the Federal Reserve (FRED), updated every weekday.",
   "refresh": "daily",
-  "updated": "2026-10-17T09:48:24Z"
+  "updated": "2026-10-17T09:54:37Z"
  },
  "regions": {
   "title": "World stock markets since 1990",
   "description": "Total returns in US dollars by region, Jul 1990 to the latest month (Kenneth French data library).",
   "refresh": "weekly",
-  "updated": "2026-10-17T09:49:54Z"
+  "updated": "2026-10-17T09:54:59Z"
  },
  "regions_years": {
   "title": "World markets by year",
   "description": "Calendar-year total returns by region in US dollars.",
   "refresh": "weekly",
-  "updated": "2026-10-17T09:49:54Z"
+  "updated": "2026-10-17T09:54:59Z"
  },
  "index_rank": {
   "title": "This week's index ranking",
@@ -159,19 +159,19 @@
   "title": "Headlines",
   "description": "Latest headlines from the Fed, ECB, Bank of Japan, CNBC, MarketWatch and Google News on the picked index and stocks (titles and links only).",
   "refresh": "daily",
-  "updated": "2026-10-17T09:49:54Z"
+  "updated": "2026-10-17T09:54:59Z"
  },
  "hist_rotation": {
   "title": "Index pick on 35 years of regional data",
   "description": "Monthly test of the index pick across North America, Europe, Japan, Asia Pacific ex-Japan and emerging markets (US dollars, Kenneth French data library).",
   "refresh": "weekly",
-  "updated": "2026-10-17T09:49:54Z"
+  "updated": "2026-10-17T09:54:59Z"
  },
  "hist_rotation_decades": {
   "title": "Index pick by decade",
   "description": "Yearly return by decade of the index pick, the previous rule, the developed world and North America.",
   "refresh": "weekly",
-  "updated": "2026-10-17T09:49:54Z"
+  "updated": "2026-10-17T09:54:59Z"
  },
  "extra_positions": {
   "title": "Free Money :D: this week's picks",
@@ -195,7 +195,7 @@
   "title": "Momentum stocks since 1927",
   "description": "Yearly return and worst fall of the US market, the demo account mix (70% market + 30% top-decile momentum stocks), all-momentum and a long/short version, by period (Kenneth French data library, before costs).",
   "refresh": "weekly",
-  "updated": "2026-10-17T09:49:54Z"
+  "updated": "2026-10-17T09:54:59Z"
  },
  "meter_test": {
   "title": "Market meter vs the next year",
@@ -213,7 +213,7 @@
   "title": "Index-pick variants on regional data",
   "description": "Each rule variant tested monthly 1991-today on regional data, with results for 1991-2008 and 2009-today.",
   "refresh": "weekly",
-  "updated": "2026-10-17T09:49:54Z"
+  "updated": "2026-10-17T09:54:59Z"
  },
  "sim_strategies": {
   "refresh": "weekly",
@@ -243,13 +243,13 @@
   "refresh": "weekly",
   "title": "Index pick vs North America, monthly",
   "description": "Growth of 1 US dollar from 1991: the index pick on regional data vs North America (the S&P 500 region), with the rolling 3-year difference in points a year (Kenneth French data library).",
-  "updated": "2026-10-17T09:49:54Z"
+  "updated": "2026-10-17T09:54:59Z"
  },
  "hist_regional_years": {
   "refresh": "weekly",
   "title": "Index pick vs North America by year",
   "description": "Calendar-year return of the index pick on regional data and of North America, US dollars (Kenneth French data library).",
-  "updated": "2026-10-17T09:49:54Z"
+  "updated": "2026-10-17T09:54:59Z"
  },
  "free_money_live": {
   "refresh": "weekly",
@@ -261,13 +261,13 @@
   "refresh": "weekly",
   "title": "Free Money stand-in since 1991",
   "description": "Growth of 1: US momentum long/short (top 10% minus bottom 10% of US stocks, half the money each side, Kenneth French data) vs the index pick on regional data and North America. A stand-in, not the real picks.",
-  "updated": "2026-10-17T09:49:54Z"
+  "updated": "2026-10-17T09:54:59Z"
  },
  "free_money_proxy_stats": {
   "refresh": "weekly",
   "title": "Free Money stand-in: statistics",
   "description": "Return per year, volatility, worst fall and worst year of the US momentum long/short stand-in, the US market, the index pick on regional data and North America (Kenneth French data, before costs).",
-  "updated": "2026-10-17T09:49:54Z"
+  "updated": "2026-10-17T09:54:59Z"
  },
  "faq": {
   "title": "FAQ",
@@ -284,13 +284,13 @@
   "title": "Index pick + stocks: every mix",
   "description": "The index pick (regional data) mixed with a stock strategy (US momentum stand-in: keepers = top 10%, keepers + guard, long/short), 0-100% in stocks, rebalanced monthly, 1991-today and both halves, before costs.",
   "refresh": "weekly",
-  "updated": "2026-10-17T09:49:54Z"
+  "updated": "2026-10-17T09:54:59Z"
  },
  "combo_growth": {
   "title": "Index pick + stocks: growth since 1991",
   "description": "Growth of 1 US dollar: the index pick alone, North America, and the pick with 30% (or 50%) in a stock strategy, rebalanced monthly (stand-in data, before costs).",
   "refresh": "weekly",
-  "updated": "2026-10-17T09:49:54Z"
+  "updated": "2026-10-17T09:54:59Z"
  },
  "method": {
   "title": "Method",
@@ -301,18 +301,18 @@
   "title": "Timing score for stock buys",
   "description": "How good a moment it is, by 90 years of US data, to buy the strongest stocks: 0 = worst setup since 1937, 1 = best. Built only from data known at each month end (Kenneth French data).",
   "refresh": "weekly",
-  "updated": "2026-10-17T09:49:54Z"
+  "updated": "2026-10-17T09:54:59Z"
  },
  "timing_calib": {
   "title": "Timing score: what followed",
   "description": "For each score band: months in history, average next-12-month return of the top 10% momentum stocks, and how often that year was a loss; all history and both halves.",
   "refresh": "weekly",
-  "updated": "2026-10-17T09:49:54Z"
+  "updated": "2026-10-17T09:54:59Z"
  },
  "timing_history": {
   "title": "Timing score history",
   "description": "The timing score at every month end since 1937.",
   "refresh": "weekly",
-  "updated": "2026-10-17T09:49:54Z"
+  "updated": "2026-10-17T09:54:59Z"
  }
 }
