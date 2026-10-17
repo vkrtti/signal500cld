@@ -1019,7 +1019,7 @@
   <!-- ================= DEMO ================= -->
   <section id="demo" data-page hidden>
     <h1 class="ttl">Demo account: €1,000 a week, run by the rules</h1>
-    <p class="lede">A simulated portfolio, no broker and no real money. Started <b data-source="demo_summary" data-field="value" data-where="metric=Since">—</b>; €1,000 is deposited at every Friday close and profits stay in. The money is kept at <b>70%</b> in this week's main-index ETF and <b>30%</b> in the 3 strongest stocks of that index, split by the same weights as Free Money :D. No shorts, no leverage. Prices from Yahoo Finance, converted to euros; 0.2% cost on every trade.</p>
+    <p class="lede">A simulated portfolio, no broker and no real money. Started <b data-source="demo_summary" data-field="value" data-where="metric=Since">—</b>; €1,000 is deposited at every Friday close and profits stay in. The money is kept at <b>70%</b> in this week's main-index ETF and <b>30%</b> in the 3 strongest stocks of that index, split by inverse volatility (calmer stocks get more). No shorts, no leverage. Prices from Yahoo Finance, converted to euros; 0.2% cost on every trade.</p>
     <div class="kpis">
       <div class="card kpi"><div class="lab">Account value (€)</div><div class="num" data-source="demo_summary" data-field="value" data-where="metric=Account value (€)">—</div><div class="note">Return <span data-source="demo_summary" data-field="value" data-where="metric=Return (%25)">—</span>%</div></div>
       <div class="card kpi"><div class="lab">Deposited (€)</div><div class="num" data-source="demo_summary" data-field="value" data-where="metric=Deposited (€)">—</div><div class="note">€1,000 a week</div></div>
@@ -1338,8 +1338,14 @@ SX.line = (box, series, o) => {
   g.selectAll('text.yt').data(yt).join('text').attr('x', m.l - 6).attr('y', (d) => y(d)).attr('dy', '0.32em').attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(yfmt);
   const xa = d3.axisBottom(x).ticks(Math.max(2, Math.floor(W / 110))).tickSizeOuter(0);
   if (o.xfmt) xa.tickFormat(o.xfmt);
+  const xd = x.domain();
+  if (xd[1] - xd[0] < 120 * 864e5) {   // short live records: tick only on the data dates (no hourly ticks)
+    const xs = [...new Set(series[0].pts.map((p) => +p.x))].sort((a, b) => a - b).map((v) => new Date(v));
+    const step = Math.ceil(xs.length / Math.max(2, Math.floor(W / 90)));
+    xa.tickValues(xs.filter((_, i) => i % step === 0)).tickFormat(o.xfmt || d3.utcFormat('%-d %b'));
+  }
   svg.append('g').attr('transform', `translate(0,${H - m.b + (o.strip ? 14 : 0)})`).call(xa).attr('font-size', null).attr('font-family', null)
-    .call((s) => { s.select('.domain').attr('stroke', 'var(--cds-chart-axis)'); s.selectAll('line').attr('stroke', 'var(--cds-chart-axis)'); s.selectAll('text').attr('fill', 'var(--color-fg-muted)').attr('font-size', 12); });
+    .call((s) => { s.select('.domain').attr('stroke', 'var(--cds-chart-axis)'); s.selectAll('line').attr('stroke', 'var(--cds-chart-axis)'); s.selectAll('text').attr('fill', 'var(--color-fg-muted)').attr('font-size', 12); s.selectAll('.tick').filter((d) => x(d) > W - m.r - 24).select('text').attr('text-anchor', 'end'); });
   (o.refs || []).forEach((r) => {
     svg.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y(r.y)).attr('y2', y(r.y)).attr('stroke', r.color || 'var(--cds-chart-reference)').attr('stroke-dasharray', '4 4');
     if (r.label) svg.append('text').attr('x', W - m.r + 4).attr('y', y(r.y)).attr('dy', r.dy || '0.32em').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(r.label);

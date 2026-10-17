@@ -590,7 +590,8 @@ def run(S, D, research, fin, cons, log, offline=None):
     positions.sort(key=lambda p: (p['leg'] != 'Index', -p['euros']))
     val_rows = [r for r in val_rows if r['date'] != dstr] + [dict(date=dstr, value=round(eq, 2), invested=round(state['invested'], 2), benchmark=round(bench, 2),
                 cash=round(state['cash'], 2), core=round(sum(p['euros'] for p in positions if p['leg'] == 'Index'), 2),
-                stocks=round(sum(p['euros'] for p in positions if p['leg'] == 'Stocks'), 2), pick=pick)]
+                stocks=round(sum(p['euros'] for p in positions if p['leg'] == 'Stocks'), 2), pick=pick,
+                core_etf=next((p['ticker'] for p in positions if p['leg'] == 'Index'), None))]   # what the core actually holds (pick = this week's decision)
     out['demo_state'], out['demo_positions'], out['demo_ledger'], out['demo_value'] = state, positions, led, val_rows
     ledger = led
     # ---- backtest 2012-today on the ETF prices (weekly, in euros)
