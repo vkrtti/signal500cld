@@ -1,5 +1,14 @@
 # Changelog (newest first)
 
+## 2026-10-17
+- Weekly roll: the Saturday 06:00 UTC scheduled run never fired; dispatched by hand. Yahoo's bulk download returned an empty Friday row for all six euro ETFs, so the first roll decided on Thursday's close and the demo wrote NaN (cash, benchmark, IEMA sale). Fixes: empty rows dropped, per-ticker fallback (daily, then hourly bars) for missing latest sessions, the Saturday roll stops (Sunday retry) if Friday is still missing, NaN-safe demo prices, and the data writer never writes NaN (null + warning).
+- Demo files (demo_state, demo_ledger, demo_value) restored to the last good version (9 Oct, committed by the bot at 00:42 UTC) to undo the NaN write, then the week was rerun on Friday's close. No valid row changed. Demo reruns on the same day now restart from a saved 'prev' state (tested: second rerun left the ledger identical).
+- Stock ranking skips stale/reused tickers (USD price under 1 or −95% in a year). PARA (Paramount became PSKY in 2025; Yahoo still quotes PARA at 0.54) had been shorted 9–16 Oct (+18%, stays in extra_ledger); this week's short is BSX instead.
+- Demo core switched from MSCI Emerging Markets (IEMA, −5.6%) to MSCI World at this roll as the rule says; demo_value rows gain core_etf.
+- Workflow: weekly crons at 06:17 UTC (off the hour), runner pinned to ubuntu-24.04 (ubuntu-latest moves to 26 on 19 Oct), checkout v5 / setup-python v6.
+- Live charts with few weeks tick on data dates (were hourly ticks); last x label no longer clipped. 'Extra profit' renamed Free Money :D everywhere left (bot answers, Method, dataset titles).
+- Checked: Free Money A −19.53% matches a hand calculation from the holdings; Overview and Free Money live charts draw from week 2.
+
 ## 2026-10-14
 - Signal 0–1 on every stock: half market timing (research.py timing(): expanding-window model 1937–today, no look-ahead; 0–0.2 band: +13.4% avg next year, 29% losing years; 0.8–1: +22.7%, 15%), half own trend. Timing card on Free Money, timing line in Your plan. First reading 0.03 (end Aug 2026).
 - Stock lists (Your plan, Overview, Free Money) show each stock's rank as 'stronger than X%' (shorts: 'weaker than X%') plus 'very jumpy' (volatility > 60%) and 'trend guard on' tags; FAQ entry explains them.
