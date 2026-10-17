@@ -82,7 +82,7 @@ def etf_prices(research, log, offline):
     if not new.empty:
         new = new.rename(columns={E[k]['etf']: k for k in EK})
         df = new.combine_first(old) if not old.empty else new
-        df = df[[k for k in EK if k in df]].sort_index()
+        df = df[[k for k in EK if k in df]].sort_index().dropna(how='all')   # Yahoo sometimes returns an empty row for a day not yet published
         if all(k in df for k in EK):
             df.round(4).to_csv(cache)
             return df
@@ -194,6 +194,9 @@ def price_rank(members, px, date):
         y = s[s.index > cut - pd.Timedelta(days=365)]
         hi, lo = float(y.max()), float(y.min())
         if hi <= lo or p52 <= 0: continue
+        # stale or reused ticker (e.g. PARA after Paramount became PSKY: 0.54 USD, -99% in a year): a big-index member below
+        # 1 USD, or down over 95% in a year, is almost always broken data, not a real price
+        if (ccy(t) == 'USD' and p < 1) or p / p52 - 1 < -0.95: continue
         dr = np.log(y / y.shift(1)).dropna()
         rows.append(dict(ticker=t, company=m['company'], country=m.get('country', ''), sector=m.get('sector', ''),
                          mom=p4 / p52 - 1, r1y=p / p52 - 1, range=(p - lo) / (hi - lo), off=p / hi - 1, price=p,
@@ -226,6 +229,10 @@ def run(S, D, research, fin, cons, log, offline=None):
         log('latest week not finished yet; deciding on the previous Friday close'); W = W.iloc[:-1]
     date = W.index[-1]
     last_trading = daily.index[daily.index <= date][-1]
+    # Friday's ETF closes not published yet (seen 2026-10-17: an all-empty Friday row at 09:48 UTC Saturday): don't decide on
+    # Thursday's close under Friday's date. On Sunday (or later) a still-missing Friday is treated as an exchange holiday.
+    if not offline and last_trading < date and dt.datetime.now(dt.timezone.utc).date() <= (date + pd.Timedelta(days=1)).date():
+        raise RuntimeError(f"Friday {date.date()} ETF closes not published yet (latest {last_trading.date()}); retry later")
     dstr = last_trading.strftime('%Y-%m-%d')
     week_of = (last_trading.date() + dt.timedelta(days=(7 - last_trading.weekday()) % 7 or 7)).isoformat()
     log('IndexPilot week', dstr, '->', week_of)
@@ -309,6 +316,8 @@ def run(S, D, research, fin, cons, log, offline=None):
         L_extra_led = L('extra_ledger', []) or []
     state = L('demo_state', {}) or {}
     if state.get('v') != 3: state = {}
+    demo_rerun = bool(state.get('last_date') == dstr and state.get('prev'))
+    if demo_rerun: state = state['prev']   # same-day rerun: redo this week from last week's state
     held_t = [h['ticker'] for h in state.get('holdings', []) if h['leg'] == 'Stocks']
     # Free Money paper variants (long only), state kept between runs; a same-day rerun starts again from last week's state
     VS = L('free_money_variants_state', None) or {}
@@ -335,7 +344,7 @@ def run(S, D, research, fin, cons, log, offline=None):
     log(f'ranked {len(rows)} stocks in {uname}')
 
     # ---- prices for booking
-    etf_px = {E[k]['etf']: float(daily[k][daily.index <= last_trading].iloc[-1]) for k in EK}
+    etf_px = {E[k]['etf']: float(daily[k][daily.index <= last_trading].dropna().iloc[-1]) for k in EK}
     fin_px = {r['ticker']: r['price'] for r in sp_rows}
     rank_of = {r['ticker']: r for r in rows}
     def last_px(t):
@@ -381,6 +390,9 @@ def run(S, D, research, fin, cons, log, offline=None):
     if extra_pos and extra_pos[0]['entry_date'] == dstr and not all(f"in {E[pick]['index']} " in p.get('reason', '') for p in extra_pos):
         log('extra profit: same-day picks were for another index; rebuilding them for', E[pick]['index'])
         extra_pos = []   # nothing was closed yet: this week's picks are simply re-chosen
+    if extra_pos and extra_pos[0]['entry_date'] == dstr and any(p['ticker'] not in rank_of for p in extra_pos):
+        log('extra profit: a same-day pick is no longer ranked (bad data filtered); re-choosing this week\'s picks')
+        extra_pos = []
     if not (extra_pos and extra_pos[0]['entry_date'] == dstr):
         for p in extra_pos:
             xp = last_px(p['ticker']); n = ''
@@ -457,7 +469,7 @@ def run(S, D, research, fin, cons, log, offline=None):
     CORE, STOCKS, NSLOT, BAND, KEEP, TRAIL, DEPOSIT = 0.70, 0.30, 3, 0.10, 0.20, 0.25, 1000.0
     bench_px = etf_px[E['world']['etf']]
     led = (L('demo_ledger', []) or []) if state else []
-    led = [l for l in led if l.get('v') == 3]
+    led = [l for l in led if l.get('v') == 3 and not (demo_rerun and l.get('date') == dstr)]
     val_rows = (L('demo_value', []) or []) if state else []
     opening = not state
     if opening:
@@ -472,7 +484,7 @@ def run(S, D, research, fin, cons, log, offline=None):
     H_ = state['holdings']
     def value_of(h):
         p_ = last_px(h['ticker']); f_ = fx(h['currency'])
-        if p_ is None or f_ is None: p_, f_ = h.get('last_price', h['entry_price']), h.get('last_fx', h['entry_fx'])
+        if p_ is None or f_ is None or not (p_ > 0 and f_ > 0): p_, f_ = h.get('last_price', h['entry_price']), h.get('last_fx', h['entry_fx'])
         h['last_price'], h['last_fx'] = p_, f_
         return h['shares'] * p_ / f_
     def book(action, h, shares, note, p_=None, f_=None):
@@ -487,7 +499,7 @@ def run(S, D, research, fin, cons, log, offline=None):
     def buy(leg, ticker, company, ccy_, euros, note):
         p_ = last_px(ticker); f_ = fx(ccy_)
         euros = min(euros, state['cash'] / (1 + COST))
-        if not p_ or not f_ or euros < 1: return
+        if not p_ or not f_ or not (p_ > 0 and f_ > 0 and euros >= 1): return   # also rejects NaN
         sh = euros / (p_ / f_)
         h = next((x for x in H_ if x['ticker'] == ticker), None)
         if h is None:
@@ -500,6 +512,7 @@ def run(S, D, research, fin, cons, log, offline=None):
         h['entry_fx'] = h['shares'] * h['entry_price'] / (cost_old + euros)
         state['cash'] -= euros * (1 + COST)
     if state.get('last_date') != dstr:
+        state['prev'] = None if opening else json.loads(json.dumps({k: v for k, v in state.items() if k != 'prev'}))
         for h in H_: value_of(h)
         if not opening:
             state['cash'] += DEPOSIT; state['invested'] += DEPOSIT; state['bench_units'] += DEPOSIT / bench_px

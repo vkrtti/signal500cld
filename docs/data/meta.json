@@ -174,13 +174,13 @@
   "updated": "2026-10-17T09:49:54Z"
  },
  "extra_positions": {
-  "title": "Extra profit: this week's picks",
+  "title": "Free Money :D: this week's picks",
   "description": "The weekly 3 longs and 3 shorts of the main index, with weights (% of your money on each side, inverse volatility).",
   "refresh": "weekly",
   "updated": "2026-10-17T09:48:24Z"
  },
  "extra_ledger": {
-  "title": "Extra profit: closed picks",
+  "title": "Free Money :D: closed picks",
   "description": "Every closed weekly pick with its return and profit/loss.",
   "refresh": "weekly",
   "updated": "2026-10-17T09:48:24Z"
