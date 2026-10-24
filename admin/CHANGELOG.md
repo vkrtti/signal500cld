@@ -1,5 +1,12 @@
 # Changelog (newest first)
 
+## 2026-10-24
+- Weekly roll: the Saturday 06:17 UTC scheduled run had not fired by 09:48 UTC; dispatched by hand, succeeded, decided on Friday 23 Oct (pick MSCI World unchanged, €60). Added a second Saturday cron at 09:47 UTC.
+- S&P 500 member list: the stock universe now comes from the current constituents file; the fundamentals file (which still listed PARA, WBD, HES, ANSS, K and ~40 other former members, and missed ~44 new ones such as APP, HOOD, DDOG) is only used for current members. Tested on today's files: 503 members, 457 with fundamentals, no PARA/WBD.
+- Markets: FRED's SP500 lagged (last value 21 Oct on 24 Oct); update.py now tops it up with Yahoo ^GSPC closes for finished sessions after FRED's last date (keyless). Method data table updated.
+- Checked: the one-time rule-change note is gone from the Overview (rule_change_from null).
+- Dashboard: synced the 25 data files changed since each dataset's last sync (the 07:57 UTC weekly-pick task had synced before the roll).
+
 ## 2026-10-17
 - Weekly roll: the Saturday 06:00 UTC scheduled run never fired; dispatched by hand. Yahoo's bulk download returned an empty Friday row for all six euro ETFs, so the first roll decided on Thursday's close and the demo wrote NaN (cash, benchmark, IEMA sale). Fixes: empty rows dropped, per-ticker fallback (daily, then hourly bars) for missing latest sessions, the Saturday roll stops (Sunday retry) if Friday is still missing, NaN-safe demo prices, and the data writer never writes NaN (null + warning).
 - Demo files (demo_state, demo_ledger, demo_value) restored to the last good version (9 Oct, committed by the bot at 00:42 UTC) to undo the NaN write, then the week was rerun on Friday's close. No valid row changed. Demo reruns on the same day now restart from a saved 'prev' state (tested: second rerun left the ledger identical).

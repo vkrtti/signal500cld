@@ -4,6 +4,7 @@ on:
   schedule:
     - cron: '30 22 * * 1-5'   # every weekday after the US close (22:30 UTC)
     - cron: '17 6 * * 6'       # Saturday 06:17 UTC (off the hour: GitHub drops on-the-hour runs under load): weekly roll (main index pick, buy amount, meter, stock picks, demo account)
+    - cron: '47 9 * * 6'       # Saturday 09:47 UTC: second try (the 06:17 run did not fire on 2026-10-24 and 06:00 not on 2026-10-17; a same-day rerun is safe)
     - cron: '17 6 * * 0'       # Sunday 06:17 UTC: retry of the weekly roll (does nothing new if Saturday worked)
   workflow_dispatch:
     inputs:
@@ -30,7 +31,7 @@ jobs:
       - run: pip install pandas numpy yfinance || (sleep 20 && pip install pandas numpy yfinance)
       - name: Update data
         run: |
-          if [ "${{ github.event.schedule }}" = "17 6 * * 6" ] || [ "${{ github.event.schedule }}" = "17 6 * * 0" ] || [ "${{ inputs.weekly }}" = "true" ]; then
+          if [ "${{ github.event.schedule }}" = "17 6 * * 6" ] || [ "${{ github.event.schedule }}" = "47 9 * * 6" ] || [ "${{ github.event.schedule }}" = "17 6 * * 0" ] || [ "${{ inputs.weekly }}" = "true" ]; then
             python scripts/update.py --weekly
           else
             python scripts/update.py
@@ -39,7 +40,7 @@ jobs:
         continue-on-error: true
         run: python scripts/news.py docs/data
       - name: Long-history research (Saturday / manual weekly runs)
-        if: github.event.schedule == '17 6 * * 6' || github.event.schedule == '17 6 * * 0' || inputs.weekly == true
+        if: github.event.schedule == '17 6 * * 6' || github.event.schedule == '47 9 * * 6' || github.event.schedule == '17 6 * * 0' || inputs.weekly == true
         continue-on-error: true
         run: python scripts/research.py
       - name: Write run summary

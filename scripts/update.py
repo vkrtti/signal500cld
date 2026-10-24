@@ -72,6 +72,20 @@ for sid in ['SP500', 'VIXCLS', 'NFCI', 'SAHMREALTIME', 'T10Y3M', 'BAMLH0A0HYM2',
             'NASDAQCOM', 'NASDAQ100', 'DJIA', 'NIKKEI225', 'DEXUSEU', 'DCOILBRENTEU', 'DTWEXBGS', 'CBBTCUSD']:
     try: S[sid] = fred(sid); log(sid, 'ok', S[sid].index[-1].date(), S[sid].iloc[-1])
     except Exception as e: log('WARN', sid, e)
+# FRED's SP500 series often lags 1-2 sessions (seen 2026-10-24: last value 21 Oct). Top it up with Yahoo's ^GSPC closes
+# (yfinance, keyless) for the days after FRED's last date, so the markets table and the weekly roll use Friday's close.
+if 'SP500' in S and not args.offline:
+    try:
+        import yfinance as yf
+        g = yf.download('^GSPC', start=(S['SP500'].index[-1] - pd.Timedelta(days=7)).strftime('%Y-%m-%d'), interval='1d', auto_adjust=False, progress=False)['Close']
+        g = (g.iloc[:, 0] if isinstance(g, pd.DataFrame) else g).dropna()
+        g.index = pd.to_datetime(g.index).tz_localize(None).normalize()
+        today = pd.Timestamp(dt.datetime.now(dt.timezone.utc).date())
+        add = g[(g.index > S['SP500'].index[-1]) & (g.index < today)]   # finished sessions only
+        if len(add):
+            S['SP500'] = pd.concat([S['SP500'], add.astype(float)]).sort_index(); log('SP500 topped up from ^GSPC', [d.date().isoformat() for d in add.index])
+    except Exception as e:
+        log('WARN ^GSPC top-up', e)
 GH = 'https://raw.githubusercontent.com/datasets/'
 os.makedirs('work', exist_ok=True)
 fund_ok = True

@@ -188,7 +188,7 @@ def irr(flows, values_end):
 
 # ------------------------------------------------------------------ stock ranking
 def sp500_rank(fin, cons):
-    f = pd.read_csv(fin).merge(pd.read_csv(cons)[['Symbol', 'GICS Sector']], on='Symbol', how='left')
+    f = pd.read_csv(fin).merge(pd.read_csv(cons)[['Symbol', 'GICS Sector']], on='Symbol', how='inner')   # current members only
     f = f.dropna(subset=['Price', 'Market Cap', '52 Week High', '52 Week Low'])
     f = f[f['52 Week High'] > f['52 Week Low']].copy()
     f['sector'] = f['GICS Sector'].fillna('Unclassified')
@@ -325,8 +325,12 @@ def run(S, D, research, fin, cons, log, offline=None):
     out['index_rank'] = idx_rows
 
     # ---- stocks of the picked index
+    # Member list from the constituents file (kept current); the financials file lags index changes by months (it still listed
+    # PARA, WBD, HES, ... in Oct 2026), so its rows are only used for current members.
+    cdf = pd.read_csv(cons)
+    sp_members = [dict(ticker=str(x.Symbol), company=str(x.Security), sector=str(x['GICS Sector']), country='US') for _, x in cdf.iterrows()]
     sp_rows = sp500_rank(fin, cons)
-    sp_members = [dict(ticker=r['ticker'], company=r['company'], sector=r['sector'], country='US') for r in sp_rows]
+    log(f'S&P 500: {len(sp_members)} members, {len(sp_rows)} with fundamentals')
     U = E[pick]['universe']
     members = {'sp500': sp_members, 'nasdaq100': uni['nasdaq100']['members'], 'europe': uni['europe']['members'],
                'japan': uni['japan']['members'], 'emerging': uni['emerging']['members']}

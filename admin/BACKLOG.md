@@ -2,12 +2,13 @@
 Re-rank every run. Format: [priority] title — benefit / effort / notes. Move done items to CHANGELOG.md.
 
 ## Fixes and small wins
-- [P1] Confirm the 06:17 UTC Saturday cron fires on 2026-10-24 (06:00 never fired; weekday 22:30 runs fire ~2 h late). If it doesn't, keep dispatching from this task and consider a second Saturday cron (e.g. 09:17) — reliability / small.
-- [P1] S&P 500 member list (datasets/s-and-p-500-companies) is stale: it still lists PARA a year after the rename. Try Wikipedia's "List of S&P 500 companies" (keyless HTML; parse with pandas.read_html, needs lxml on the runner) as primary with the datasets CSV as fallback; compare symbol sets before switching — accuracy / medium.
+- [P1] Saturday crons: 06:17 had not fired by 10:30 UTC on 2026-10-24; a 09:47 cron was added. Next run: list runs and check which Saturday crons fired (and when); keep dispatching if none did — reliability / small.
+- [P1] Check next roll's log for "S&P 500: N members, M with fundamentals" (should be ~503 / ~457) and that no stock outside the current list appears in pick_rank — correctness / small.
+- [P1] The "IndexPilot weekly pick" task (Saturday 07:57 UTC) ran before this week's roll existed (roll dispatched 09:48 UTC), so its message used last week's data. Proposed to the owner: move it to ~13:00 Helsinki or have it dispatch the roll when weekly_now.decided_on is not the latest Friday — needs owner / small.
+- [P2] markets.json: check next week that spx is dated the latest session (Yahoo ^GSPC top-up added 2026-10-24 for the FRED lag) — correctness / small.
 - [P1] Page size: dashboard document 248 KB of 256 KiB. Unused CSS is only ~6 classes; the real wins are moving the AI-bot answer texts and the More pages' static prose to docs/data/*.json — reliability / medium.
-- [P2] Yahoo's Friday closes for the .DE/.AS ETFs were missing at 09:48 UTC Saturday. Check the fallback log line ("ETF closes added from the per-ticker fallback") in next week's run summary; if hourly bars are used, compare them with the official close the following week — correctness / small.
+- [P3] Hourly-bar fallback closes differed from Yahoo's official Friday close by ~0.1% (16 Oct EUNL 130.445 vs 130.54); the Sunday retry fixes the data. Consider deciding only on daily bars and letting Sunday retry instead — correctness / small.
 - [P3] Demo page "Why this mix" table: show when each worst fall happened (e.g. −50% (2007–09)) and name the columns "Worst fall from peak" — clarity / small.
-- [P2] Overview step 2: confirm the one-time rule-change note is gone (rule_change_from is null since 16 Oct) — small.
 - [P3] sim_growth + sim_buying are ~300 KB together; if page load gets slow, thin them to every 2nd week before 2020 — speed / small.
 
 ## Watch (live record, no tuning)
