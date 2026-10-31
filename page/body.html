@@ -708,10 +708,13 @@
       <p class="note" style="margin-top:8px">Green up, red down. No region wins every year; the US led most of the last 15, other regions led 2000–2007, 2025 and 2026.</p></div>
   </section>
 
+  <template id="rsh-t">
+    <div class="tabs subtabs" role="tablist" aria-label="Research"><button role="tab" data-go="history" aria-selected="false">100 years of data</button><button role="tab" data-go="plans" aria-selected="false">10/20/30% plans</button><button role="tab" data-go="gauges" aria-selected="false">Market gauges</button></div>
+    <details class="whyus"><summary>Why is the research based on US data?</summary><p>IndexPilot itself works on six indexes worldwide. This research section is background: it uses US data because the US is the only market with free, reliable monthly data back to 1927 (Kenneth French data library), and because 2x/3x leveraged funds that a euro investor can buy exist mainly for US indexes. The gauges are American because US recessions, credit stress and the VIX move every stock market in the world. None of it decides which index you buy; it explains why the rules are built the way they are.</p></details>
+  </template>
   <!-- ================= 100-YEAR HISTORY ================= -->
   <section id="history" data-page hidden>
-    <div class="tabs subtabs" role="tablist" aria-label="Research"><button role="tab" data-go="history" aria-selected="true">100 years of data</button><button role="tab" data-go="plans" aria-selected="false">10/20/30% plans</button><button role="tab" data-go="gauges" aria-selected="false">Market gauges</button></div>
-    <details class="whyus"><summary>Why is the research based on US data?</summary><p>IndexPilot itself works on six indexes worldwide. This research section is background: it uses US data because the US is the only market with free, reliable monthly data back to 1927 (Kenneth French data library), and because 2x/3x leveraged funds that a euro investor can buy exist mainly for US indexes. The gauges are American because US recessions, credit stress and the VIX move every stock market in the world. None of it decides which index you buy; it explains why the rules are built the way they are.</p></details>
+    <div class="rsh"></div>
     <h1 class="ttl">100 years of evidence</h1>
     <p class="lede">IndexPilot's ideas (buy more after falls, avoid leverage, favour momentum) tested on US stock market returns since January 1927: the 1929 crash, the 1930s, WWII, 1970s inflation, 2000, 2008, 2020 and 2022. Monthly total returns from the Kenneth French data library, the standard dataset of academic finance.</p>
 
@@ -889,8 +892,7 @@
 
   <!-- ================= RETURN PLANS ================= -->
   <section id="plans" data-page hidden>
-    <div class="tabs subtabs" role="tablist" aria-label="Research"><button role="tab" data-go="history" aria-selected="false">100 years of data</button><button role="tab" data-go="plans" aria-selected="true">10/20/30% plans</button><button role="tab" data-go="gauges" aria-selected="false">Market gauges</button></div>
-    <details class="whyus"><summary>Why is the research based on US data?</summary><p>IndexPilot itself works on six indexes worldwide. This research section is background: it uses US data because the US is the only market with free, reliable monthly data back to 1927 (Kenneth French data library), and because 2x/3x leveraged funds that a euro investor can buy exist mainly for US indexes. The gauges are American because US recessions, credit stress and the VIX move every stock market in the world. None of it decides which index you buy; it explains why the rules are built the way they are.</p></details>
+    <div class="rsh"></div>
     <h1 class="ttl">10/20/30% return plans</h1>
     <div class="warnbox">You can't order a return, only choose a risk level. The US stock market has returned about 10–11% a year; reaching for 20–30% means leverage (2x or 3x daily-leveraged funds), which multiplies crashes too. Each plan below uses the same risk control: leveraged money is only held while the index is above its 200-day average, checked every Friday. Tested on the US market (the S&amp;P 500), the only index with both long data and euro-listed 2x/3x funds. Results are backtests, before tax, and in dollars (euro/dollar moves not included).</div>
     <div class="warnbox" style="border-color:var(--color-bad)"><b style="color:var(--color-fg)">100-year check:</b> over 1927–2026 the 20% plan (2x + trend rule) made <b data-source="hist_plans" data-field="cagr" data-where="plan=20%25">—</b>% a year but fell <b data-source="hist_plans" data-field="max_dd" data-where="plan=20%25">—</b>% at its worst; the 30% plan made <b data-source="hist_plans" data-field="cagr" data-where="plan=30%25">—</b>% a year and fell <b data-source="hist_plans" data-field="max_dd" data-where="plan=30%25">—</b>%. Plain buying made <b data-source="hist_plans" data-field="cagr" data-where="plan=10%25">—</b>%. The 1990–2026 figures below are much kinder than the full century. <button class="chip" data-go="history" style="margin-left:6px">See 100 years</button></div>
@@ -959,8 +961,7 @@
 
   <!-- ================= GAUGES ================= -->
   <section id="gauges" data-page hidden>
-    <div class="tabs subtabs" role="tablist" aria-label="Research"><button role="tab" data-go="history" aria-selected="false">100 years of data</button><button role="tab" data-go="plans" aria-selected="false">10/20/30% plans</button><button role="tab" data-go="gauges" aria-selected="true">Market gauges</button></div>
-    <details class="whyus"><summary>Why is the research based on US data?</summary><p>IndexPilot itself works on six indexes worldwide. This research section is background: it uses US data because the US is the only market with free, reliable monthly data back to 1927 (Kenneth French data library), and because 2x/3x leveraged funds that a euro investor can buy exist mainly for US indexes. The gauges are American because US recessions, credit stress and the VIX move every stock market in the world. None of it decides which index you buy; it explains why the rules are built the way they are.</p></details>
+    <div class="rsh"></div>
     <h1 class="ttl">Market gauges</h1>
     <p class="lede">The stress readings behind the weekly amount and the market meter. Updated every weekday from the Federal Reserve. They are US measures because US recessions and credit stress spread to every stock market.</p>
     <div class="kpis">
@@ -1097,6 +1098,7 @@
 </div>
 
 <script>
+document.querySelectorAll('.sx .rsh').forEach((d) => d.replaceWith(document.getElementById('rsh-t').content.cloneNode(true)));
 window.SX = window.SX || {};
 const SX = window.SX;
 SX.rows = (id) => { const d = dash.data(id); return d.status === 'ok' ? (Array.isArray(d.data) ? d.data : []) : null; };

@@ -1,5 +1,13 @@
 # Changelog (newest first)
 
+## 2026-10-31
+- Weekly roll: neither Saturday cron had fired by 10:48 UTC (the 09:47 one fired at 11:04 last week); dispatched by hand, succeeded, decided on Friday 30 Oct (pick MSCI World unchanged, €60, meter +39). Friday closes present, no NaN.
+- Workflow: the Friday 22:30 UTC cron always fires ~01:45 UTC Saturday (after Friday's close), so a scheduled run on a Saturday/Sunday (UTC) now does the weekly roll. The roll should exist before the 07:57 UTC "IndexPilot weekly pick" task; a missing Friday close still stops the roll and a later run retries.
+- FX: ECB euro reference rates (keyless) as fallback when a Yahoo exchange rate is missing (Method and PLAYBOOK updated).
+- Page: the research sub-tab header + "Why US data?" note was repeated on three pages; now one template cloned at load (−1.6 KB on the 256 KiB dashboard document).
+- Checked: markets.json S&P 500 dated the latest session (30 Oct); stock universe has only current S&P 500 members (NU, PDD are from the emerging-market list).
+- Dashboard: synced every data file changed since the weekly-pick task's 09:00 UTC sync (it ran before the roll again) plus the page.
+
 ## 2026-10-24
 - Weekly roll: the Saturday 06:17 UTC scheduled run had not fired by 09:48 UTC; dispatched by hand, succeeded, decided on Friday 23 Oct (pick MSCI World unchanged, €60). Added a second Saturday cron at 09:47 UTC.
 - S&P 500 member list: the stock universe now comes from the current constituents file; the fundamentals file (which still listed PARA, WBD, HES, ANSS, K and ~40 other former members, and missed ~44 new ones such as APP, HOOD, DDOG) is only used for current members. Tested on today's files: 503 members, 457 with fundamentals, no PARA/WBD.

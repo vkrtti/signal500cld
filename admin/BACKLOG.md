@@ -2,16 +2,16 @@
 Re-rank every run. Format: [priority] title — benefit / effort / notes. Move done items to CHANGELOG.md.
 
 ## Fixes and small wins
-- [P1] Saturday crons: 06:17 had not fired by 10:30 UTC on 2026-10-24; a 09:47 cron was added. Next run: list runs and check which Saturday crons fired (and when); keep dispatching if none did — reliability / small.
-- [P1] Check next roll's log for "S&P 500: N members, M with fundamentals" (should be ~503 / ~457) and that no stock outside the current list appears in pick_rank — correctness / small.
-- [P1] The "IndexPilot weekly pick" task (Saturday 07:57 UTC) ran before this week's roll existed (roll dispatched 09:48 UTC), so its message used last week's data. Proposed to the owner: move it to ~13:00 Helsinki or have it dispatch the roll when weekly_now.decided_on is not the latest Friday — needs owner / small.
-- [P2] markets.json: check next week that spx is dated the latest session (Yahoo ^GSPC top-up added 2026-10-24 for the FRED lag) — correctness / small.
-- [P1] Page size: dashboard document 248 KB of 256 KiB. Unused CSS is only ~6 classes; the real wins are moving the AI-bot answer texts and the More pages' static prose to docs/data/*.json — reliability / medium.
+- [P1] Next run: confirm the Friday 22:30 cron (fires ~01:45 UTC Saturday) now does the weekly roll (run summary 'weekly=true', commit before 07:57 UTC), and whether the 06:17/09:47 Saturday crons fire at all; drop the dead crons after 2–3 good weeks — reliability / small.
+- [P1] The "IndexPilot weekly pick" task (Saturday 07:57 UTC) ran before this week's roll existed (roll dispatched 09:48 UTC), so its message used last week's data. Should be fixed by the early Saturday roll (2026-10-31); if not, the owner proposal stands: move it to ~13:00 Helsinki or have it dispatch the roll when weekly_now.decided_on is not the latest Friday — needs owner / small.
+- [P1] Page size: dashboard document ~246 KB of 256 KiB (research sub-tab header deduplicated 2026-10-31, −1.6 KB). Next wins: the 10/20/30% plans page prose (~8.8 KB section) and Index pick details prose into method.json-style rows, injected once — reliability / medium.
+- [P3] FX: ECB fallback has no TWD (Taiwan stocks in the demo); if 'WARN no FX for TWD' appears, find a keyless TWD source — reliability / small.
 - [P3] Hourly-bar fallback closes differed from Yahoo's official Friday close by ~0.1% (16 Oct EUNL 130.445 vs 130.54); the Sunday retry fixes the data. Consider deciding only on daily bars and letting Sunday retry instead — correctness / small.
 - [P3] Demo page "Why this mix" table: show when each worst fall happened (e.g. −50% (2007–09)) and name the columns "Worst fall from peak" — clarity / small.
 - [P3] sim_growth + sim_buying are ~300 KB together; if page load gets slow, thin them to every 2nd week before 2020 — speed / small.
 
 ## Watch (live record, no tuning)
+- [R0e] Keepers A/B: −28% in 3 weeks (HPE, DELL, FTNT all hit hard). 3-stock momentum is very concentrated; at the 26-week review, compare with the 1991 stand-in's worst 3-week spells before judging.
 - [R0b] Combinations suggest the demo's 30% stock share is low (best 40–90% with the guard). Re-check with the live record before proposing a demo change; needs owner approval.
 - [R0] After ~26 live weeks compare Free Money current vs A vs B; if A or B leads and the 1991 stand-in agrees, propose switching (pull request).
 - [R0d] Signal (0–1) = 0.5 timing + 0.5 own trend (untested part). After ~13 live weeks check whether it predicts next-week returns of the picks.

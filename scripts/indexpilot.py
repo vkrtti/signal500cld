@@ -393,11 +393,25 @@ def run(S, D, research, fin, cons, log, offline=None):
     # FX: units of each currency per euro (yfinance EURxxx=X), for valuing stocks in euros
     ccys = sorted({ccy(t) for t in held_t + [r['ticker'] for r in rows[:10]]} - {'EUR'})
     fxd = download([f"EUR{ {'GBp': 'GBP', 'ZAc': 'ZAR'}.get(c, c) }=X" for c in ccys], (last_trading - pd.Timedelta(days=20)).strftime('%Y-%m-%d'), log, offline) if ccys else pd.DataFrame()
+    _ecb = {}
+    def ecb_fx():
+        # fallback: ECB euro reference rates (free, keyless, units per euro; no TWD)
+        if not _ecb:
+            _ecb['ok'] = 1
+            try:
+                import re, urllib.request
+                x = urllib.request.urlopen('https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml', timeout=20).read().decode()
+                _ecb.update({k: float(v) for k, v in re.findall(r"currency='([A-Z]{3})' rate='([0-9.]+)'", x)})
+                log('FX fallback: ECB reference rates for', len(_ecb) - 1, 'currencies')
+            except Exception as e:
+                log('WARN ECB FX fallback failed:', e)
+        return _ecb
     def fx(c):
         if c == 'EUR': return 1.0
         base = {'GBp': 'GBP', 'ZAc': 'ZAR'}.get(c, c)
         col = f'EUR{base}=X'
         v = float(fxd[col].dropna().iloc[-1]) if col in fxd and fxd[col].dropna().size else None
+        if v is None and not offline: v = ecb_fx().get(base)
         if v is None: log('WARN no FX for', c); return None
         return v * (100 if c in ('GBp', 'ZAc') else 1)
     COST = 0.002   # 0.2% per trade: spread + currency exchange (commission-free broker assumed)

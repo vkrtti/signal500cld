@@ -29,9 +29,20 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install pandas numpy yfinance || (sleep 20 && pip install pandas numpy yfinance)
+      - name: Weekly roll or daily update?
+        id: mode
+        # Weekly when: a Saturday/Sunday cron, a manual run with weekly=true, or the Friday 22:30 cron firing after
+        # midnight UTC (GitHub starts it ~3 h late, so it lands on Saturday ~01:45 UTC, after Friday's close; the
+        # Saturday crons often do not fire at all). A roll without Friday's closes stops itself and a later run retries.
+        run: |
+          W=false
+          case "${{ github.event.schedule }}" in "17 6 * * 6"|"47 9 * * 6"|"17 6 * * 0") W=true ;; esac
+          [ "${{ inputs.weekly }}" = "true" ] && W=true
+          [ "${{ github.event_name }}" = "schedule" ] && [ "$(date -u +%u)" -ge 6 ] && W=true
+          echo "weekly=$W" >> "$GITHUB_OUTPUT"; echo "weekly=$W (UTC weekday $(date -u +%u))"
       - name: Update data
         run: |
-          if [ "${{ github.event.schedule }}" = "17 6 * * 6" ] || [ "${{ github.event.schedule }}" = "47 9 * * 6" ] || [ "${{ github.event.schedule }}" = "17 6 * * 0" ] || [ "${{ inputs.weekly }}" = "true" ]; then
+          if [ "${{ steps.mode.outputs.weekly }}" = "true" ]; then
             python scripts/update.py --weekly
           else
             python scripts/update.py
@@ -40,7 +51,7 @@ jobs:
         continue-on-error: true
         run: python scripts/news.py docs/data
       - name: Long-history research (Saturday / manual weekly runs)
-        if: github.event.schedule == '17 6 * * 6' || github.event.schedule == '47 9 * * 6' || github.event.schedule == '17 6 * * 0' || inputs.weekly == true
+        if: steps.mode.outputs.weekly == 'true'
         continue-on-error: true
         run: python scripts/research.py
       - name: Write run summary
