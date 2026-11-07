@@ -129,11 +129,14 @@ def scores(W, look=52):
     return r, r / vol, vol
 
 
-def buffered(score, buf):
-    """Hold the current pick until another index's score beats it by more than buf."""
+def buffered(score, buf, month_end_only=False):
+    """Hold the current pick until another index's score beats it by more than buf.
+    month_end_only (research variant, EXPERIMENTS E015): only look for a switch on the last Friday of each month."""
     score = score.dropna()
     held, path = None, []
     for d, row in score.iterrows():
+        if held is not None and month_end_only and (d + pd.Timedelta(days=7)).month == d.month:
+            path.append(held); continue
         lead = row.idxmax()
         if held is None or row[lead] - row[held] > buf: held = lead
         path.append(held)
@@ -680,7 +683,8 @@ def run(S, D, research, fin, cons, log, offline=None):
     vrows = [('riskadj', 'Return per unit of risk, 0.25 buffer (current rule)', picks, None), ('old', '52-week return, 5-point buffer (previous rule)', old, None),
              ('ret_nobuf', '52-week return, no buffer', on_h(buffered(r52, 0.0)), None), ('ret26', '26-week return, 5-point buffer', on_h(buffered(r26.dropna(), OLD_BUFFER)), None),
              ('ret_buf10', '52-week return, 10-point buffer', on_h(buffered(r52, 0.10)), None), ('riskadj_nobuf', 'Return per unit of risk, no buffer', nobuf, None),
-             ('trend', '52-week return, 5-point buffer, MSCI World when below its 40-week line', old, 'world')]
+             ('trend', '52-week return, 5-point buffer, MSCI World when below its 40-week line', old, 'world'),
+             ('riskadj_monthly', 'Return per unit of risk, 0.25 buffer, switch only on the last Friday of a month', on_h(buffered(sc52, BUFFER, True)), None)]
     out['ip_variants'] = [dict(key=k, rule=nm, **var_stats(sq.ffill().bfill(), fb)) for k, nm, sq, fb in vrows]
     out['ip_buying'] = mwrows
     step = max(1, len(H) // 300)

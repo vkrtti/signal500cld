@@ -209,12 +209,13 @@ def rotation(df):
     r6 = lvl[regs] / lvl[regs].shift(6) - 1
     sc = r12 / (d[regs].rolling(12).std() * np.sqrt(12))
     ma10 = lvl.rolling(10).mean()
-    def path(score, buf, trend=False):
+    def path(score, buf, trend=False, quarterly=False):
         held, out, picks = None, [], []
         for i in range(12, len(d) - 1):
             row = score.iloc[i]
             if row.isna().any(): continue
             lead = row.idxmax()
+            if quarterly and held is not None and d.index[i][4:] not in ('03', '06', '09', '12'): lead = held   # E016: decide in Mar/Jun/Sep/Dec only
             if held is None or row[lead] - row[held] > buf: held = lead
             hold = held
             if trend and lvl[held].iloc[i] < ma10[held].iloc[i] and 'Developed' in d: hold = 'Developed'
@@ -230,9 +231,10 @@ def rotation(df):
     variants = [('pick', 'Return per unit of risk, 0.25 buffer (current rule)', sc, 0.25, False), ('old', '12-month return, 5-point buffer (previous rule)', r12, 0.05, False),
                 ('ret_nobuf', '12-month return, no buffer', r12, 0.0, False), ('ret26', '6-month return, 5-point buffer', r6, 0.05, False),
                 ('ret_buf10', '12-month return, 10-point buffer', r12, 0.10, False), ('riskadj_nobuf', 'Return per unit of risk, no buffer', sc, 0.0, False),
-                ('trend', '12-month return, 5-point buffer, developed world when below its 10-month line', r12, 0.05, True)]
+                ('trend', '12-month return, 5-point buffer, developed world when below its 10-month line', r12, 0.05, True),
+                ('pick_quarterly', 'Return per unit of risk, 0.25 buffer, switch only in Mar/Jun/Sep/Dec', sc, 0.25, False, True)]
     res = {}
-    for k, nm, score, buf, tr in variants: res[k] = (nm,) + path(score, buf, tr)
+    for k, nm, score, buf, tr, *q in variants: res[k] = (nm,) + path(score, buf, tr, bool(q and q[0]))
     ix = res['pick'][1].index
     rows = []
     labels = {'US': 'Hold North America', 'Europe': 'Hold Europe', 'Japan': 'Hold Japan', 'AsiaPac': 'Hold Asia Pacific ex-Japan', 'Emerging': 'Hold Emerging markets', 'Developed': 'Hold Developed world'}

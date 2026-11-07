@@ -620,7 +620,7 @@
   <section id="indexes" data-page hidden>
     <h1 class="ttl">The weekly index pick</h1>
     <p class="lede">Every Friday close, six index ETFs that a euro investor can buy get a score: their 52-week return in euros divided by their volatility, i.e. return per unit of risk. The best score becomes the main index, but only if it beats the current pick by more than 0.25; otherwise the pick stays. That buffer keeps switching to about 1–2 times a year.</p>
-    <div class="warnbox">Rule updated on 11 Oct 2026. The previous rule ranked by 52-week return alone (with a 5-point buffer) and picked MSCI Emerging Markets this week. The new rule did better on both test sets below: <b data-source="ip_variants" data-field="cagr" data-where="key=riskadj">—</b>% vs <b data-source="ip_variants" data-field="cagr" data-where="key=old">—</b>% a year on 2012–today ETF prices, and <b data-source="hist_rotation_variants" data-field="cagr" data-where="key=pick">—</b>% vs <b data-source="hist_rotation_variants" data-field="cagr" data-where="key=old">—</b>% on 1991–today regional data. It picks calmer markets when returns are similar.</div>
+    <div class="warnbox">Rule updated on 11 Oct 2026. The previous rule ranked by 52-week return alone (with a 5-point buffer) and had picked MSCI Emerging Markets for the week of 12 Oct 2026. The new rule did better on both test sets below: <b data-source="ip_variants" data-field="cagr" data-where="key=riskadj">—</b>% vs <b data-source="ip_variants" data-field="cagr" data-where="key=old">—</b>% a year on 2012–today ETF prices, and <b data-source="hist_rotation_variants" data-field="cagr" data-where="key=pick">—</b>% vs <b data-source="hist_rotation_variants" data-field="cagr" data-where="key=old">—</b>% on 1991–today regional data. It picks calmer markets when returns are similar.</div>
     <div class="card tbl">
       <table id="idx-table" data-source="index_rank" data-row-key="key">
         <thead><tr><th data-field="rank" class="n">#</th><th data-field="index">Index</th><th data-field="fund">ETF</th><th data-field="isin">ISIN</th><th data-field="price" class="n">Price (€)</th><th data-field="r13" class="n">3 months (%)</th><th data-field="r26" class="n">6 months (%)</th><th data-field="r52" class="n">52 weeks (%)</th><th data-field="vol" class="n">Volatility (%)</th><th data-field="score" class="n">Score</th><th data-field="from_high_52w" class="n">From 52w high (%)</th><th data-field="status">Status</th></tr></thead>
@@ -894,8 +894,7 @@
   <section id="plans" data-page hidden>
     <div class="rsh"></div>
     <h1 class="ttl">10/20/30% return plans</h1>
-    <div class="warnbox">You can't order a return, only choose a risk level. The US stock market has returned about 10–11% a year; reaching for 20–30% means leverage (2x or 3x daily-leveraged funds), which multiplies crashes too. Each plan below uses the same risk control: leveraged money is only held while the index is above its 200-day average, checked every Friday. Tested on the US market (the S&amp;P 500), the only index with both long data and euro-listed 2x/3x funds. Results are backtests, before tax, and in dollars (euro/dollar moves not included).</div>
-    <div class="warnbox" style="border-color:var(--color-bad)"><b style="color:var(--color-fg)">100-year check:</b> over 1927–2026 the 20% plan (2x + trend rule) made <b data-source="hist_plans" data-field="cagr" data-where="plan=20%25">—</b>% a year but fell <b data-source="hist_plans" data-field="max_dd" data-where="plan=20%25">—</b>% at its worst; the 30% plan made <b data-source="hist_plans" data-field="cagr" data-where="plan=30%25">—</b>% a year and fell <b data-source="hist_plans" data-field="max_dd" data-where="plan=30%25">—</b>%. Plain buying made <b data-source="hist_plans" data-field="cagr" data-where="plan=10%25">—</b>%. The 1990–2026 figures below are much kinder than the full century. <button class="chip" data-go="history" style="margin-left:6px">See 100 years</button></div>
+    <div data-mhtml="plans_intro"></div>
     <div class="tabs" role="tablist" id="plan-tabs" style="margin-top:0">
       <button role="tab" data-plan="10%" aria-selected="false">10% plan · Steady</button>
       <button role="tab" data-plan="20%" aria-selected="true">20% plan · Growth</button>
@@ -942,21 +941,7 @@
       </table>
     </div>
 
-    <h2 id="plan-risk-h">How the risk is managed</h2>
-    <div class="grid">
-      <div class="card"><h3>Built into the plans</h3><ul class="m">
-        <li><b>Trend exit:</b> leverage only while the index is above its 200-day average. Over 1990–2026 this cut the 3x fund's worst fall from −99% to −58%.</li>
-        <li><b>Weekly check:</b> fewer false switches than daily (about 3 a year), but a crash inside one week is not avoided.</li>
-        <li><b>Cash when out:</b> money waits in cash or a money-market fund, earning the short-term rate.</li></ul></div>
-      <div class="card"><h3>Limits to set yourself</h3><ul class="m">
-        <li><b>Size:</b> professionals cap leveraged positions at a slice of the portfolio. Only put in a 2x/3x plan money you could watch fall by half (20%) or by two-thirds (30%).</li>
-        <li><b>Stick to the rule:</b> the results assume every exit and re-entry is followed, including buying back right after a scary drop.</li>
-        <li><b>Product risk:</b> leveraged funds reset daily, lose value in choppy sideways markets, and carry the highest risk ratings (check the fund's KID).</li></ul></div>
-      <div class="card"><h3>Not in the numbers</h3><ul class="m">
-        <li><b>Tax:</b> every exit sells at a gain or loss; capital-gains tax on the gains lowers compounding in a normal account.</li>
-        <li><b>Currency:</b> results are in dollars; euro/dollar swings of 10% a year are common.</li>
-        <li><b>Spreads and data:</b> monthly averages smooth the 1990–2026 test, so real falls were somewhat deeper. The daily 2017–2026 check is closer to reality.</li></ul></div>
-    </div>
+    <div data-mhtml="plans_risk"></div>
   </section>
 
   <!-- ================= GAUGES ================= -->
@@ -1921,7 +1906,9 @@ dash.calc('lr_dec_reg', {
   };
 
   // ---------- Method (text in docs/data/method.json, injected once; numbers inside are filled by the normal draw) ----------
-  SX.loadMethod = () => { const box = document.getElementById('method-body'); const M = SX.rows('method'); if (!box || !M || !M[0] || box.dataset.ok) return false; box.innerHTML = M[0].html; box.dataset.ok = '1'; return true; };
+  SX.loadMethod = () => { const M = SX.rows('method'); if (!M || !M[0]) return false; let did = false;
+    document.querySelectorAll('[data-mhtml]:not([data-ok])').forEach((e) => { const r = M.find((x) => x.key === e.dataset.mhtml); if (r) { e.innerHTML = r.html; e.dataset.ok = '1'; did = true; } });   // long static prose lives in method.json too
+    const box = document.getElementById('method-body'); if (box && !box.dataset.ok) { box.innerHTML = M[0].html; box.dataset.ok = '1'; did = true; } return did; };
   // ---------- Your plan ----------
   SX.drawPlan = () => {
     const ol = document.getElementById('plan-steps'); const w = (SX.rows('weekly_now') || [])[0]; if (!ol || !w) return;
