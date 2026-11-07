@@ -398,7 +398,7 @@ def run(S, D, research, fin, cons, log, offline=None):
     fxd = download([f"EUR{ {'GBp': 'GBP', 'ZAc': 'ZAR'}.get(c, c) }=X" for c in ccys], (last_trading - pd.Timedelta(days=20)).strftime('%Y-%m-%d'), log, offline) if ccys else pd.DataFrame()
     _ecb = {}
     def ecb_fx():
-        # fallback: ECB euro reference rates (free, keyless, units per euro; no TWD)
+        # fallback: ECB euro reference rates (free, keyless, units per euro; TWD from FRED)
         if not _ecb:
             _ecb['ok'] = 1
             try:
@@ -408,6 +408,13 @@ def run(S, D, research, fin, cons, log, offline=None):
                 log('FX fallback: ECB reference rates for', len(_ecb) - 1, 'currencies')
             except Exception as e:
                 log('WARN ECB FX fallback failed:', e)
+            if 'TWD' not in _ecb:   # ECB has no TWD: Federal Reserve H.10 via FRED (keyless; ~1 week lag): TWD per $ x $ per EUR
+                try:
+                    import urllib.request
+                    last = lambda sid: float([l.split(',')[1] for l in urllib.request.urlopen(f'https://fred.stlouisfed.org/graph/fredgraph.csv?id={sid}&cosd={(last_trading - pd.Timedelta(days=40)).strftime("%Y-%m-%d")}', timeout=20).read().decode().splitlines()[1:] if l.split(',')[1] not in ('', '.')][-1])
+                    _ecb['TWD'] = last('DEXTAUS') * last('DEXUSEU'); log('FX fallback: TWD from FRED DEXTAUS x DEXUSEU', round(_ecb['TWD'], 3))
+                except Exception as e:
+                    log('WARN FRED TWD fallback failed:', e)
         return _ecb
     def fx(c):
         if c == 'EUR': return 1.0

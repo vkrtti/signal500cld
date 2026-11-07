@@ -1,5 +1,14 @@
 # Changelog (newest first)
 
+## 2026-11-07
+- Health: the Friday 22:30 UTC cron fired at 02:12 UTC Saturday and did the weekly roll (decided 6 Nov, MSCI World unchanged, €60, meter +45); the 08:57 UTC weekly-pick task then synced this week's files (blob = repo file checked). The Saturday 06:17/09:47 crons again did not fire. No NaN values; daily data dated 6 Nov.
+- Research R1 (first Saturday): deciding less often, pre-registered as E015/E016. ETF 2012–today: last Friday of the month only 15.5%/yr, Sharpe 0.93 vs weekly 16.3%, 0.98 (halves 12.3/18.5 vs 13.9/18.5), switches 1.3 vs 1.4 a year. Regional 1991–today, quarterly vs monthly: 9.9% vs 9.8%, Sharpe 0.62 both, 2009–today half worse (10.2 vs 10.7). Rejected; the weekly check stays. Variants are now part of the pipeline (ip_variants riskadj_monthly, hist_rotation_variants pick_quarterly) and the result is on the Method page with numbers bound to those files. Script: tools/research/r1_decision_frequency.py.
+- Weekly rerun dispatched (10:55 UTC) to produce the new variant rows; Yahoo had revised the 6 Nov closes (EUNL 127.24 → 127.315), so the demo, live and Free Money figures moved slightly (same-day rerun from 'prev').
+- FX: Taiwan dollar fallback from FRED DEXTAUS × DEXUSEU when Yahoo has no EURTWD=X (ECB does not publish TWD). Method and PLAYBOOK updated.
+- Page: 10/20/30% plans intro and risk prose moved to method.json rows (injected via data-mhtml), dashboard document 246.3 → ~243.7 KB. Index pick page: the rule-change note no longer says EM was picked "this week".
+- Checked: the AppLovin short's −55.8% week (228.50 → 356.10) matches news of a 20%+ jump on its 4 Nov results.
+- Dashboard: re-synced every file the rerun changed, plus method and the page.
+
 ## 2026-10-31
 - Weekly roll: neither Saturday cron had fired by 10:48 UTC (the 09:47 one fired at 11:04 last week); dispatched by hand, succeeded, decided on Friday 30 Oct (pick MSCI World unchanged, €60, meter +39). Friday closes present, no NaN.
 - Workflow: the Friday 22:30 UTC cron always fires ~01:45 UTC Saturday (after Friday's close), so a scheduled run on a Saturday/Sunday (UTC) now does the weekly roll. The roll should exist before the 07:57 UTC "IndexPilot weekly pick" task; a missing Friday close still stops the roll and a later run retries.
