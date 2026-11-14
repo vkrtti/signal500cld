@@ -11,25 +11,26 @@ Update every weekly run from docs/data (weekly_history, live_vs_sp500, demo_valu
 | 2026-10-23 | MSCI World (unchanged) | −0.54 | −0.54 | −0.37 | 2,924.38 | 3,000 | 2,980.96 |
 | 2026-10-30 | MSCI World (unchanged) | −0.12 | −0.12 | −0.46 | 3,851.32 | 4,000 | 3,977.41 |
 | 2026-11-06 | MSCI World (unchanged) | −1.83 | −1.83 | −2.10 | 4,634.69 | 5,000 | 4,904.72 |
+| 2026-11-13 | MSCI World (unchanged) | +2.46 | +2.46 | +2.47 | 5,792.21 | 6,000 | 6,025.49 |
 
-Weekly % are next-week returns of the euro ETFs, Friday close to Friday close, from research_data/etf_daily.csv (EUNL 131.64 → 130.54 → 129.84 → 129.685 → 127.315; SXR8 751.32 → 740.78 → 738.04 → 734.62 → 719.16). The 6 Nov closes were revised by the 10:55 UTC rerun (EUNL 127.24 → 127.315, SXR8 718.60 → 719.16). Each row's 1w % is the week that ENDED on that date (decided the Friday before).
-Since live start (4 weeks of returns): pick (MSCI World) −3.29%, S&P 500 ETF −4.28%; pick vs MSCI World 0.0 points (the pick has been MSCI World every week), +0.99 points vs the S&P 500 ETF.
+Weekly % are next-week returns of the euro ETFs, Friday close to Friday close, from research_data/etf_daily.csv (EUNL 131.64 → 130.54 → 129.84 → 129.685 → 127.315 → 130.45; SXR8 751.32 → 740.78 → 738.04 → 734.62 → 719.16 → 736.90). Each row's 1w % is the week that ENDED on that date (decided the Friday before).
+Since live start (5 weeks of returns): pick (MSCI World) −0.90%, S&P 500 ETF −1.92%; pick vs MSCI World 0.0 points (the pick has been MSCI World every week), +1.02 points vs the S&P 500 ETF.
 
 ## Plan vs benchmarks (live_vs_sp500: weekly amount into the pick, 0.2% per buy)
-- Put in €300 → plan €293.69 (−2.10%), S&P 500 ETF €292.30 (−2.57%): plan +€1.39.
+- Put in €360 → plan €360.81 (+0.22%), S&P 500 ETF €359.39 (−0.17%): plan +€1.42.
 
 ## Demo (EUR 1,000 a week)
-- €4,634.69 vs €5,000 deposited vs €4,904.72 in MSCI World: −€270.03 (was −€126.09). The stock leg (30%) is the drag: MediaTek sold on its 25% trailing stop (−22.3%, −€56.51), Petrobras −22.1%, TSMC −12.2%; the EUNL core is −1.8%. Viatris bought this week.
+- €5,792.21 vs €6,000 deposited vs €6,025.49 in MSCI World: −€233.28 (was −€270.03). EUNL core +0.5%; Petrobras sold this week (fell to rank 209, −22.8%); bought Nippon Express (rank 1), added to Viatris (+5.2%) and TSMC (−1.3%).
 
 ## Free Money (% of a one-off stake since 9 Oct, after 0.2% per trade)
 | Line | Since 9 Oct | Last week |
 |---|---|---|
-| Weekly long/short (current) | −16.68% (long −27.38%, short −6.90%) | −14.82% |
-| Keepers (A) | −38.85% | about −14.7% |
-| Keepers + trend guard (B) | −38.85% (guard off, same as A) | about −14.7% |
-| The rule (index pick) | −3.48% | −1.83% |
-| S&P 500 | −4.47% | −2.10% |
-Week to 6 Nov: longs Recruit −11.5%, APA −15.5%, Targa −16.0%; the short in AppLovin lost 55.8% (228.50 → 356.10 USD; news confirms a jump of 20%+ on its 4 Nov results), BSX −1.8%, COIN +4.7%. A and B hold the same three longs (Keep). Four weeks: noise, no conclusions, but the 3-stock concentration risk noted in BACKLOG R0e is visible.
+| Weekly long/short (current) | −14.87% (long −25.42%, short −5.38%) | +2.17% |
+| Keepers (A) | −33.39% | about +8.9% |
+| Keepers + trend guard (B) | −33.39% (guard off, same as A) | about +8.9% |
+| The rule (index pick) | −1.10% | +2.46% |
+| S&P 500 | −2.12% | +2.47% |
+Week to 13 Nov: A and B kept Recruit, APA, Targa (since 30 Oct −8.5/−8.3/−5.6%). This week's long/short: long Nippon Express, Humana, Viatris; short Aptiv, Coinbase, Boston Scientific. Five weeks: noise, no conclusions.
 
 ## Alert rule
 If the pick trails MSCI World by more than 5 points over 26 live weeks, put it first in the report and investigate.

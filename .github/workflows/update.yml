@@ -39,6 +39,13 @@ jobs:
           case "${{ github.event.schedule }}" in "17 6 * * 6"|"47 9 * * 6"|"17 6 * * 0") W=true ;; esac
           [ "${{ inputs.weekly }}" = "true" ] && W=true
           [ "${{ github.event_name }}" = "schedule" ] && [ "$(date -u +%u)" -ge 6 ] && W=true
+          # A scheduled weekend run that finds this week's roll already done only refreshes the daily data:
+          # late-firing Saturday/Sunday crons used to redo the roll hours after the dashboard sync. Manual weekly=true always rolls.
+          if [ "$W" = "true" ] && [ "${{ github.event_name }}" = "schedule" ]; then
+            FRI=$(date -u -d "$(( ($(date -u +%u) + 2) % 7 )) days ago" +%F)
+            DONE=$(python3 -c "import json;print(json.load(open('docs/data/weekly_now.json'))[-1].get('decided_on',''))" 2>/dev/null || true)
+            if [ "$DONE" = "$FRI" ]; then W=false; echo "weekly roll for $FRI already done; daily update only"; fi
+          fi
           echo "weekly=$W" >> "$GITHUB_OUTPUT"; echo "weekly=$W (UTC weekday $(date -u +%u))"
       - name: Update data
         run: |

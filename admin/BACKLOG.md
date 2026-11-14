@@ -2,8 +2,8 @@
 Re-rank every run. Format: [priority] title — benefit / effort / notes. Move done items to CHANGELOG.md.
 
 ## Fixes and small wins
-- [P1] Crons: 7 Nov the Friday 22:30 cron fired 02:12 UTC Saturday and did the weekly roll; the weekly-pick task (08:57 UTC) then synced this week's data (checked: blobs equal the repo files). The Saturday 06:17/09:47 crons again did not fire. If 14 Nov is also good, remove the two Saturday crons (keep the Sunday retry) — reliability / small.
-- [P1] Check the next weekly run log for 'FX fallback: TWD from FRED' only if Yahoo misses EURTWD=X; the code path is untested live (FRED blocked from this sandbox) — reliability / small.
+- [P2] Check next Saturday that the late Saturday/Sunday crons log 'weekly roll for <Friday> already done; daily update only' (guard added 14 Nov) and do not touch demo_ledger/pick_rank after the 08:57 sync — reliability / tiny.
+- [P3] Check a weekly run log for 'FX fallback: TWD from FRED' only if Yahoo misses EURTWD=X; the code path is untested live (FRED blocked from this sandbox) — reliability / small.
 - [P2] Page size: dashboard document 243.7 KB of 256 KiB (plans prose moved to method.json 2026-11-07). Next: Index pick details prose (s-pick-like text on the indexes page) into method.json rows via data-mhtml — reliability / small.
 - [P3] Hourly-bar fallback closes differed from Yahoo's official Friday close by ~0.1% (16 Oct EUNL 130.445 vs 130.54); the Sunday retry fixes the data. Consider deciding only on daily bars and letting Sunday retry instead — correctness / small.
 - [P3] Demo page "Why this mix" table: show when each worst fall happened (e.g. −50% (2007–09)) and name the columns "Worst fall from peak" — clarity / small.

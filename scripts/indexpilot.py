@@ -358,7 +358,7 @@ def run(S, D, research, fin, cons, log, offline=None):
     # Free Money paper variants (long only), state kept between runs; a same-day rerun starts again from last week's state
     VS = L('free_money_variants_state', None) or {}
     if VS.get('asof') == dstr and 'prev' in VS: VS = VS['prev']
-    VS_prev = json.loads(json.dumps(VS))
+    VS_prev = json.loads(json.dumps({k: v for k, v in VS.items() if k != 'prev'}))   # one level only (the chain used to nest a full copy every week)
     var_t = [p_['ticker'] for k_ in ('A', 'B') for p_ in (VS.get(k_) or {}).get('pos', [])]
     need = [m['ticker'] for m in members[U]] + [p['ticker'] for p in L_extra_pos] + held_t + var_t
     px = download(need, (last_trading - pd.Timedelta(days=430)).strftime('%Y-%m-%d'), log, offline)

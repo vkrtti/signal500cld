@@ -1,5 +1,11 @@
 # Changelog (newest first)
 
+## 2026-11-14
+- Health: the Friday 22:30 UTC cron fired 02:36 UTC Saturday and did the weekly roll (decided 13 Nov: MSCI World unchanged, €60, meter +38); all runs this week succeeded, no error annotations; no NaN; markets dated 13 Nov. The 08:57 UTC weekly-pick task had already synced every data file (blob = repo file checked), so no dashboard sync was needed beyond this run's changes. Page test NO ERRORS, shots NO PROBLEMS.
+- Workflow: the Saturday 06:17/09:47 and Sunday crons fire hours late (7 Nov at 13:05 and 15:56, 8 Nov at 13:35) and each redid the roll after the dashboard sync (rewrote demo_ledger rank notes and pick_rank). Scheduled weekend runs now only roll when weekly_now.decided_on is not yet the latest Friday; otherwise they do the daily update. Manual weekly=true dispatches always roll.
+- Bug: free_money_variants_state nested a full copy of itself in 'prev' every week (5 levels, 9.8 KB and growing quadratically). 'prev' now keeps one level only; the existing file is not edited by hand and shrinks at the next roll.
+- Checked: Moderna's +800% 1-year move (rank 35, note "verify") is real (news: $263 high after its results). S&P 500 member list still current (503 rows incl. APP, HOOD, DDOG).
+
 ## 2026-11-07
 - Health: the Friday 22:30 UTC cron fired at 02:12 UTC Saturday and did the weekly roll (decided 6 Nov, MSCI World unchanged, €60, meter +45); the 08:57 UTC weekly-pick task then synced this week's files (blob = repo file checked). The Saturday 06:17/09:47 crons again did not fire. No NaN values; daily data dated 6 Nov.
 - Research R1 (first Saturday): deciding less often, pre-registered as E015/E016. ETF 2012–today: last Friday of the month only 15.5%/yr, Sharpe 0.93 vs weekly 16.3%, 0.98 (halves 12.3/18.5 vs 13.9/18.5), switches 1.3 vs 1.4 a year. Regional 1991–today, quarterly vs monthly: 9.9% vs 9.8%, Sharpe 0.62 both, 2009–today half worse (10.2 vs 10.7). Rejected; the weekly check stays. Variants are now part of the pipeline (ip_variants riskadj_monthly, hist_rotation_variants pick_quarterly) and the result is on the Method page with numbers bound to those files. Script: tools/research/r1_decision_frequency.py.
