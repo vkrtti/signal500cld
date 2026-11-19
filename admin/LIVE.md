@@ -11,7 +11,7 @@ Update every weekly run from docs/data (weekly_history, live_vs_sp500, demo_valu
 | 2026-10-23 | MSCI World (unchanged) | −0.54 | −0.54 | −0.37 | 2,924.38 | 3,000 | 2,980.96 |
 | 2026-10-30 | MSCI World (unchanged) | −0.12 | −0.12 | −0.46 | 3,851.32 | 4,000 | 3,977.41 |
 | 2026-11-06 | MSCI World (unchanged) | −1.83 | −1.83 | −2.10 | 4,634.69 | 5,000 | 4,904.72 |
-| 2026-11-13 | MSCI World (unchanged) | +2.46 | +2.46 | +2.47 | 5,792.21 | 6,000 | 6,025.49 |
+| 2026-11-13 | MSCI World (unchanged) | +2.45 | +2.45 | +2.46 | 5,791.95 | 6,000 | 6,025.11 |
 
 Weekly % are next-week returns of the euro ETFs, Friday close to Friday close, from research_data/etf_daily.csv (EUNL 131.64 → 130.54 → 129.84 → 129.685 → 127.315 → 130.45; SXR8 751.32 → 740.78 → 738.04 → 734.62 → 719.16 → 736.90). Each row's 1w % is the week that ENDED on that date (decided the Friday before).
 Since live start (5 weeks of returns): pick (MSCI World) −0.90%, S&P 500 ETF −1.92%; pick vs MSCI World 0.0 points (the pick has been MSCI World every week), +1.02 points vs the S&P 500 ETF.
