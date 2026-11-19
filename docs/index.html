@@ -797,7 +797,7 @@
       </div>
       <div class="card" id="meter-card">
         <h3 id="meter-h">Market meter</h3>
-        <p class="note">−100 very weak … +100 very strong market. + means a calm, rising market. A description, not a signal: readings have not predicted the next year's return (table below), so nothing is bought or sold on it.</p>
+        <p class="note">−100 very weak … +100 very strong market. + means a calm, rising market. A description, not a signal: since 2012 high readings were followed by lower, not higher, returns (table below), and on 100 years of US data there was no link, so nothing is bought or sold on it.</p>
         <div class="gauge-box" id="gauge-week" data-source="meter_now"></div>
       </div>
     </div>
@@ -828,7 +828,7 @@
 
     <h2 id="meter-hist-h">Market meter since 2012</h2>
     <div class="card" style="overflow-x:auto">
-      <p class="note">Weekly meter reading. Lines: weak below −10, very strong above +40.</p>
+      <p class="note">Weekly meter reading. Lines: weak below 0, very strong from +60.</p>
       <div class="chart" id="meter-chart" data-source="weekly_history" style="min-height:220px"></div>
       <table id="mb-table" data-source="meter_test" data-row-key="bucket" style="margin-top:var(--cds-gap-md)">
         <thead><tr><th data-field="bucket">Meter reading (weekly, 2012–today)</th><th data-field="weeks" class="n">Weeks</th><th data-field="next_4w" class="n">MSCI World next 4 weeks, avg (%)</th><th data-field="next_52w" class="n">Next 52 weeks, avg (%)</th><th data-field="up_52w" class="n">Up after 52 weeks (% of weeks)</th></tr></thead>
@@ -1224,7 +1224,7 @@ SX.gauge = (box, v, label) => {
   const cx = W / 2, cy = H - Math.max(34, W / 7.5), r = W / 2 - 14;
   const svg = d3.select(box).insert('svg', ':first-child').attr('width', W).attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
   const a = (x) => (Math.max(-100, Math.min(100, x)) / 100) * (Math.PI / 2);
-  const zones = [[-100, -25, 'var(--color-bad)', 1], [-25, -10, 'var(--color-warn)', 1], [-10, 15, 'var(--cds-chart-muted)', 1], [15, 40, 'var(--color-ok)', 0.55], [40, 100, 'var(--color-ok)', 1]];
+  const zones = [[-100, -30, 'var(--color-bad)', 1], [-30, 0, 'var(--color-warn)', 1], [0, 30, 'var(--cds-chart-muted)', 1], [30, 60, 'var(--color-ok)', 0.55], [60, 100, 'var(--color-ok)', 1]];
   const arc = d3.arc().innerRadius(r * 0.72).outerRadius(r);
   zones.forEach(([lo, hi, c, op]) => svg.append('path').attr('transform', `translate(${cx},${cy})`).attr('d', arc({ startAngle: a(lo), endAngle: a(hi) })).attr('fill', c).attr('opacity', op));
   [-100, 0, 100].forEach((t) => { const ang = a(t) - Math.PI / 2; svg.append('text').attr('x', cx + Math.cos(ang) * (r + 2)).attr('y', cy + Math.sin(ang) * (r + 2) + (t === 0 ? -4 : 14)).attr('text-anchor', t < 0 ? 'start' : t > 0 ? 'end' : 'middle').attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text(t > 0 ? '+' + t : t); });
@@ -1551,7 +1551,7 @@ SX.line = (box, series, o) => {
       const mh = SX.rows('weekly_history'); const mbox = document.getElementById('meter-chart');
       if (!SX.fail(mbox, 'weekly_history') && mh && mbox.clientWidth) {
         SX.line(mbox, [{ name: 'Meter', color: dash.colors[0], w: 1.5, pts: mh.filter((r) => r.meter != null).map((r) => ({ x: pm(r.week), y: +r.meter })) }],
-          { h: 220, yMin: -30, yfmt: d3.format('+d'), tipDate: d3.utcFormat('Week of %b %-d, %Y'), refs: [{ y: -10, label: 'Weak below', color: 'var(--color-bad)' }, { y: 40, label: 'Very strong', color: 'var(--color-ok)' }] });
+          { h: 220, yMin: -30, yfmt: d3.format('+d'), tipDate: d3.utcFormat('Week of %b %-d, %Y'), refs: [{ y: 0, label: 'Weak below', color: 'var(--color-bad)' }, { y: 60, label: 'Very strong', color: 'var(--color-ok)' }] });
       }
       const wn = SX.rows('weekly_now'); const cur = wn && wn[0] ? wn[0].tier : null;
       SX.table('tier-table', 'weekly_tiers', { tier: (td, v) => { td.textContent = v; td.style.fontWeight = '600'; }, condition: (td, v) => { td.textContent = v; td.className = 'wrapc'; } });

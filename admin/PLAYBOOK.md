@@ -47,3 +47,5 @@ Your memory between runs. Keep under two pages; merge or delete outdated lines.
 - Yahoo revises Friday closes after the early roll (16 Oct EUNL 130.445 → 130.54; 6 Nov 127.24 → 127.315); any later rerun or the Sunday retry picks up the official close. LIVE.md uses the current etf_daily.csv values.
 - Quick sync check (5 min): list datasets with out_dir, run the git rev-list/diff loop per doc, then cmp one blob; when NEED is 0 skip the sync entirely.
 - State files that keep a 'prev' for same-day reruns must store prev without its own prev (free_money_variants_state nested itself until 14 Nov).
+- page/body.html has long one-line JS statements: never append a // comment to a line of code (it silently comments out the rest of the line; 19 Nov broke every script). Use /* */ or a line of its own.
+- Any 0–1 score shown per stock must spread across stocks: check its distribution on the current data before shipping (the old signal sat at 0.51 for weeks).

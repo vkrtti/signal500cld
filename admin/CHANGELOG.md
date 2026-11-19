@@ -1,5 +1,13 @@
 # Changelog (newest first)
 
+## 2026-11-19 (owner's request: full UI/UX, strategy and indicator review)
+- Bug: the per-stock "signal" read ~0.51 on nearly every pick. It averaged one market-wide timing number (0.03) with sigmoid(2 × momentum% ÷ volatility%), which is ~1.0 for any top-momentum stock. Replaced by "trend" (0–1): percentile of 12-1 month return ÷ volatility among all stocks of the index (pipeline field trend_q in pick_rank; page falls back to ranking the listed stocks). Market timing is shown separately (monthly, with its data month). Shorts' trend chips are red. FAQ and Method text updated.
+- Market meter: VIX and distance from the record were contrarian (+ when falling/fearful) while the label said "strong market"; all six parts now score + for a calm, rising market (VIX: clip((20 − VIX)/10); record: clip(1 + drawdown/10%)). Descriptive only, no rule uses it; meter_test recomputes.
+- Research E017 (pre-registered): two best indexes 50/50. ETF 14.2%/yr Sharpe 0.92 vs 16.5%/0.99; regional 11.0%/0.71 vs 9.8%/0.62 but 2009–today half 10.5 vs 10.7. Rejected (data sets disagree). In ip_variants/hist_rotation_variants as key top2; Method updated. 17 variants tried.
+- UI: phone tables show only key columns (index, demo holdings, stocks, ledger, simulation, meter); ETF badges WLD/US/NDX/EU/JP/EM and company initials for number tickers; live plan chart shows gain or loss vs break-even (the value lines overlapped); Your plan folds the optional stocks step away with its live record; Why this plan adds the regional result vs North America; Free Money dates short; combo chart x label no longer overlaps on phones; tier table fits 390px; balanced headings.
+- Headlines: news.py drops reader-letter advice columns and quote pages.
+- Weekly rerun dispatched to produce trend_q, the new meter and the top2 rows.
+
 ## 2026-11-14
 - Health: the Friday 22:30 UTC cron fired 02:36 UTC Saturday and did the weekly roll (decided 13 Nov: MSCI World unchanged, €60, meter +38); all runs this week succeeded, no error annotations; no NaN; markets dated 13 Nov. The 08:57 UTC weekly-pick task had already synced every data file (blob = repo file checked), so no dashboard sync was needed beyond this run's changes. Page test NO ERRORS, shots NO PROBLEMS.
 - Workflow: the Saturday 06:17/09:47 and Sunday crons fire hours late (7 Nov at 13:05 and 15:56, 8 Nov at 13:35) and each redid the roll after the dashboard sync (rewrote demo_ledger rank notes and pick_rank). Scheduled weekend runs now only roll when weekly_now.decided_on is not yet the latest Friday; otherwise they do the daily update. Manual weekly=true dispatches always roll.

@@ -7,8 +7,10 @@ Re-rank every run. Format: [priority] title — benefit / effort / notes. Move d
 - [P2] Page size: dashboard document 243.7 KB of 256 KiB (plans prose moved to method.json 2026-11-07). Next: Index pick details prose (s-pick-like text on the indexes page) into method.json rows via data-mhtml — reliability / small.
 - [P3] Hourly-bar fallback closes differed from Yahoo's official Friday close by ~0.1% (16 Oct EUNL 130.445 vs 130.54); the Sunday retry fixes the data. Consider deciding only on daily bars and letting Sunday retry instead — correctness / small.
 - [P3] Demo page "Why this mix" table: show when each worst fall happened (e.g. −50% (2007–09)) and name the columns "Worst fall from peak" — clarity / small.
-- [P3] Market meter reads +45 "very strong" while MSCI World is −3.3% over 4 weeks and VIX 28: the trend part dominates. Descriptive only (E008), but consider wording like "strong trend, nervous week" when VIX > 25 — clarity / small.
 - [P3] sim_growth + sim_buying are ~300 KB together; if page load gets slow, thin them to every 2nd week before 2020 — speed / small.
+
+- [P2] After the next roll check the meter distribution under the new scoring (share of weeks per label) and the meter_test buckets; adjust label cut-offs only if almost all weeks land in one label — clarity / small.
+- [P3] Free Money proposal for Q1 2027 (one strategy change per quarter; Q4 used on 11 Oct): make Keepers (A) the official Free Money line (weekly long/short pays ~19%/yr in trading costs, E014; shorts drag, E010). Needs a PR with before/after — strategy / medium.
 
 ## Watch (live record, no tuning)
 - [R0e] Keepers A/B: −38.9% in 4 weeks (HPE, DELL, FTNT, then Recruit, APA, Targa all fell hard). 3-stock momentum is very concentrated; at the 26-week review, compare with the 1991 stand-in's worst 3-week spells before judging.

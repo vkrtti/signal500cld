@@ -188,7 +188,8 @@ def meter_parts(w, trend, dd, vix, nfci, sahm, curve):
     ]
 
 
-meter_label = lambda m: 'Very strong market' if m >= 40 else 'Strong market' if m >= 15 else 'Mixed' if m > -10 else 'Weak market' if m > -25 else 'Very weak market'
+# cut-offs since 2026-11-19 (the one-way meter reads higher in calm markets): about 30/42/15/9/5% of weeks since 2012
+meter_label = lambda m: 'Very strong market' if m >= 60 else 'Strong market' if m >= 30 else 'Mixed' if m >= 0 else 'Weak market' if m >= -30 else 'Very weak market'
 
 
 def irr(flows, values_end):
@@ -824,9 +825,8 @@ def run(S, D, research, fin, cons, log, offline=None):
     wv_ = H['world'].astype(float); m_ = H['meter'].astype(float)
     f4 = wv_.shift(-4) / wv_ - 1; f52 = wv_.shift(-52) / wv_ - 1
     mrows = []
-    for lab, lo_, hi_ in [('Weak (−10 or lower)', -999, -10), ('Mixed (−10 to +15)', -10, 15), ('Strong (+15 to +40)', 15, 40), ('Very strong (+40 or higher)', 40, 999)]:
-        sel = (m_ > lo_) & (m_ <= hi_) if lo_ > -999 else (m_ <= hi_)
-        if hi_ == 999: sel = m_ > lo_
+    for lab, lo_, hi_ in [('Weak (below 0)', -999, 0), ('Mixed (0 to +30)', 0, 30), ('Strong (+30 to +60)', 30, 60), ('Very strong (+60 or higher)', 60, 999)]:
+        sel = (m_ >= lo_) & (m_ < hi_)   # same cut-offs as meter_label (lower bound included)
         mrows.append(dict(bucket=lab, weeks=int(sel.sum()), next_4w=round(float(f4[sel].mean()) * 100, 2) if f4[sel].notna().any() else None,
                           next_52w=round(float(f52[sel].mean()) * 100, 1) if f52[sel].notna().any() else None,
                           up_52w=round(float((f52[sel] > 0).mean()) * 100) if f52[sel].notna().any() else None))
