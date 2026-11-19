@@ -33,6 +33,11 @@ for p in [p for p in (L('demo_positions') or []) if p.get('leg') == 'Stocks' and
     feeds.append(('Stock picks', None, gnews(f'"{name}" stock'), 4))
 
 
+# Reader-letter advice columns ("My husband ...", "Should I sell ...?") and quote/profile pages are not market news.
+NOISE = re.compile(r"\bmy (husband|wife|mother|father|mom|dad|brother|sister|son|daughter|parents|kids|boyfriend|girlfriend|partner|family)\b"
+                   r"|\bshould (i|we)\b|^[‘'\"]?i[’']?(m|ve) |^[‘'\"]i |stock price, news, quote", re.I)
+
+
 def parse_date(s):
     if not s: return None
     try: return email.utils.parsedate_to_datetime(s).astimezone(dt.timezone.utc)
@@ -64,7 +69,7 @@ for group, source, url, n in feeds:
             src = source or (it.findtext('source') or '').strip() or 'Google News'
             if source is None and title.endswith(' - ' + src): title = title[: -len(src) - 3]
             when = parse_date(g('pubDate') or g('published') or g('updated') or it.findtext('{http://purl.org/dc/elements/1.1/}date'))
-            if not title or not link: continue
+            if not title or not link or NOISE.search(title): continue
             rows.append(dict(group=group, source=src, title=title[:220], link=link, published=when.strftime('%Y-%m-%dT%H:%M:%SZ') if when else None,
                              topic=now.get('pick_index') if group == "This week's index" else None))
             got += 1

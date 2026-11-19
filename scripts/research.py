@@ -244,7 +244,22 @@ def rotation(df):
     for k in regs + (['Developed'] if 'Developed' in d else []):
         rows.append(dict(key=k, strategy=labels[k], **st(d[k].loc[ix])))
     save('hist_rotation', rows, 'Index pick on 35 years of regional data', 'Monthly test of the index pick across North America, Europe, Japan, Asia Pacific ex-Japan and emerging markets (US dollars, Kenneth French data library).')
-    save('hist_rotation_variants', [dict(key=k, rule=v[0], **{kk: vv for kk, vv in st(v[1], v[2]).items() if kk not in ('start', 'end', 'vol')}) for k, v in res.items()],
+    # E017 (rejected 2026-11-19): the two best regions 50/50; the best region not held replaces the weaker holding only past the buffer
+    held, t2 = None, []
+    for i in range(12, len(d) - 1):
+        row = sc.iloc[i]
+        if row.isna().any(): continue
+        if held is None: held = list(row.sort_values(ascending=False).index[:2])
+        else:
+            weak = min(held, key=lambda k: row[k]); ch = row.drop(held).idxmax()
+            if row[ch] - row[weak] > 0.25: held = [k for k in held if k != weak] + [ch]
+        t2.append((d.index[i + 1], float(d[held].iloc[i + 1].mean()), '+'.join(sorted(held))))
+    t2r = pd.Series([x[1] for x in t2], index=[x[0] for x in t2]); t2s = st(t2r, [x[2] for x in t2])
+    t2s['switches_per_year'] = round(t2s['switches_per_year'] / 2, 1)   # a swap moves half the money
+    res['top2'] = ('Return per unit of risk, 0.25 buffer, two best regions 50/50', t2r, None)
+    vrows_ = [dict(key=k, rule=v[0], **{kk: vv for kk, vv in st(v[1], v[2]).items() if kk not in ('start', 'end', 'vol')}) for k, v in res.items() if k != 'top2']
+    vrows_.append(dict(key='top2', rule=res['top2'][0], **{kk: vv for kk, vv in t2s.items() if kk not in ('start', 'end', 'vol')}))
+    save('hist_rotation_variants', vrows_,
          'Index-pick variants on regional data', 'Each rule variant tested monthly 1991-today on regional data, with results for 1991-2008 and 2009-today.')
     dec = []
     for dd_, g in pd.Series(ix, index=ix).groupby(ix.str[:3]):

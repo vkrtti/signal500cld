@@ -40,8 +40,8 @@
 "go": "extra"
 },
 {
-"q": "What do \"signal 0.51\" and \"stronger than 98%\" mean?",
-"a": "\"Signal\" (0–1) is how good a buy a stock is right now: half market timing (today's market ranked against 90 years of history for buying the strongest stocks; 0 = worst setup since 1937, 1 = best) and half the stock's own trend (is it really rising, relative to its swings). \"Stronger than 98%\" ranks it against the other stocks in the index. \"Very jumpy\" means swings over 60% a year. Only the timing half is tested on history, and it works mainly at the extremes; it is not a guarantee.",
+"q": "What do \"trend 0.85\" and \"stronger than 98%\" mean?",
+"a": "\"Trend\" (0–1) is how steadily a stock is rising: its 12-1 month return divided by its volatility, ranked against every stock of the index (1 = the steadiest riser, 0 = the weakest). \"Stronger than 98%\" is its overall rank in the index (half 12-1 month return, half position in its 52-week range). \"Very jumpy\" means swings over 60% a year. Market timing is a separate number, the same for every stock, shown in Your plan and Free Money :D. None of these is a tested buy probability.",
 "go": "plan"
 },
 {

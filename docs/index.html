@@ -269,6 +269,9 @@
 .sx .stats .l{font-size:12px;color:var(--muted);font-weight:550}
 .sx .stats .v{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-top:4px}
 @media (max-width:520px){.sx .stats{grid-template-columns:1fr}}
+.sx h1,.sx h2,.sx h3,.sx .ttl{text-wrap:balance}.sx p,.sx .note{text-wrap:pretty}
+/* phones: keep the columns that matter, the rest is one tap away on a wider screen (no sideways scrolling) */
+@media (max-width:560px){.sx #idx-home tr>:nth-child(1),.sx #idx-home tr>:nth-child(3),.sx #idx-home tr>:nth-child(5),.sx #idx-home tr>:nth-child(7),.sx #idx-home tr>:nth-child(8){display:none}.sx #pos-table tr>:nth-child(2),.sx #pos-table tr>:nth-child(3),.sx #pos-table tr>:nth-child(5),.sx #pos-table tr>:nth-child(7),.sx #pos-table tr>:nth-child(8),.sx #pos-table tr>:nth-child(9),.sx #pos-table tr>:nth-child(10){display:none}.sx #meter-table tr>:nth-child(3){display:none}.sx #home-table tr>:nth-child(1),.sx #home-table tr>:nth-child(3),.sx #home-table tr>:nth-child(5),.sx #home-table tr>:nth-child(7),.sx #home-table tr>:nth-child(8){display:none}.sx #ledger-table tr>:nth-child(4),.sx #ledger-table tr>:nth-child(6),.sx #ledger-table tr>:nth-child(7),.sx #ledger-table tr>:nth-child(9){display:none}.sx #sim-table tr>:nth-child(2),.sx #sim-table tr>:nth-child(4),.sx #sim-table tr>:nth-child(7),.sx #sim-table tr>:nth-child(8),.sx #sim-table tr>:nth-child(9){display:none}.sx #idx-home .tk,.sx #pos-table .tk{display:none}.sx #pos-table .co,.sx #home-table .co{white-space:normal;overflow-wrap:anywhere}}
 .sx .hero-pick .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
 .sx .amount-num{font-size:44px;font-weight:750;letter-spacing:-.04em;line-height:1;margin:10px 0 2px;color:var(--color-fg)}
 .sx .amount-num small{font-size:15px;font-weight:550;color:var(--muted);letter-spacing:0;margin-left:6px}
@@ -344,7 +347,7 @@
 .sx .hero-pick .why{margin-bottom:22px}
 .sx #gauge-home{width:100%;max-width:270px;margin:0 auto;min-height:150px}
 .sx .amount-num small{display:inline-block}
-.sx .card table{min-width:0} .sx #tier-table td.wrapc,.sx #meter-table td{white-space:normal}
+.sx .card table{min-width:0} .sx #tier-table td.wrapc,.sx #meter-table td{white-space:normal} .sx #tier-table td.wrapc{min-width:12rem} @media (max-width:560px){.sx #tier-table td.wrapc{min-width:0}}
 .sx .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .sx .hero-spark{position:relative;height:120px;margin:4px -6px 18px}
 .sx .hero-spark svg{display:block;overflow:visible}
@@ -794,7 +797,7 @@
       </div>
       <div class="card" id="meter-card">
         <h3 id="meter-h">Market meter</h3>
-        <p class="note">−100 very weak … +100 very strong market. A description, not a signal: high readings were not followed by better returns (table below), so nothing is bought or sold on it.</p>
+        <p class="note">−100 very weak … +100 very strong market. + means a calm, rising market. A description, not a signal: readings have not predicted the next year's return (table below), so nothing is bought or sold on it.</p>
         <div class="gauge-box" id="gauge-week" data-source="meter_now"></div>
       </div>
     </div>
@@ -868,12 +871,13 @@
         <div class="side-l">Holding now</div><ul class="mini ex-list" id="fm-hold-B"></ul></div>
     </div>
 
-    <h2>Signal strength</h2>
+    <h2>Timing and trend</h2>
     <div class="card" id="tm-card">
       <div class="tm"><div><div class="note" style="margin:0">Market timing for stock buys</div><div class="big" id="tm-score">—</div></div><div class="bar" aria-hidden="true"><i id="tm-mark"></i></div></div>
       <p class="note" id="tm-text" style="margin:10px 0 0"></p>
       <details class="fm-more"><summary>How it works and how well it has worked</summary>
-        <p class="note">Each stock's <b>signal</b> (0–1) = half <b>market timing</b> + half the stock's <b>own trend</b>. Market timing: every month since 1937 a simple model, using only data known then, estimated the next year for the strongest 10% of US stocks from five market conditions (trend, 2-year rise, market swings, swings of the strongest stocks, and how far they ran ahead of the market); the score is that estimate's rank in history (0 = worst setup, 1 = best). Own trend: the stock's 12-1 month return divided by its volatility, so a stock that only "fell least" scores low. Only the timing half is tested; it mainly separates the chance of a losing year at the extremes.</p>
+        <p class="note"><b>Market timing</b> (one number for the whole market, updated monthly): every month since 1937 a simple model, using only data known then, estimated the next year for the strongest 10% of US stocks from five market conditions (trend, 2-year rise, market swings, swings of the strongest stocks, and how far they ran ahead of the market); the score is that estimate's rank in history (0 = worst setup, 1 = best). It is a weak predictor: the table shows a higher chance of a losing year at the low end, but the months overlap (each 12-month window shares 11 months with the next), so it rests on far fewer independent years than the month counts suggest.</p>
+        <p class="note"><b>Trend</b> (each stock, 0–1): the stock's 12-1 month return divided by its volatility, ranked against every stock of the index. 1 = the steadiest riser; a stock that only jumped on one big move, or swings wildly, scores lower. Shorts show the mirror image (1 = steadiest faller). Steady trends have held up better than jumpy ones in published momentum studies, but this site has not tested it on its own data.</p>
         <div class="tbl"><table id="tm-cal" data-source="timing_calib" data-row-key="band"><thead><tr><th data-field="band">Timing score</th><th data-field="months" class="n">Months</th><th data-field="avg_next12" class="n">Next 12 months (avg %)</th><th data-field="loss_share" class="n">Losing years (%)</th></tr></thead><tbody></tbody></table></div>
         <div class="chart" id="tm-hist" data-source="timing_history" style="min-height:140px;margin-top:10px"></div></details>
     </div>
@@ -1104,7 +1108,11 @@ const SX = window.SX;
 SX.rows = (id) => { const d = dash.data(id); return d.status === 'ok' ? (Array.isArray(d.data) ? d.data : []) : null; };
 SX.fail = (el, id) => { const s = dash.data(id).status; if (s === 'error' || s === 'connect' || s === 'declined' || s === 'missing') { el.innerHTML = ''; const f = document.createElement('div'); f.className = 'fail'; f.textContent = 'Failed to load'; el.appendChild(f); return true; } return false; };
 SX.fmt = d3.format(',');
-SX.icon = (t) => { const i = document.createElement('span'); i.className = 'ic'; let h = 0; for (const ch of String(t)) h = (h * 31 + ch.charCodeAt(0)) >>> 0; i.style.background = dash.colors[h % dash.colors.length]; i.textContent = String(t).slice(0, 3); return i; };
+SX.ETFTAG = { EUNL: 'WLD', SXR8: 'US', SXRV: 'NDX', EUNK: 'EU', EUNN: 'JP', IEMA: 'EM' };
+SX.icon = (t, name) => {   // short, meaningful badge: index code for the ETFs, company initials for number tickers (9147.T -> NE)
+  const i = document.createElement('span'); i.className = 'ic'; const s = String(t); const root = s.split('.')[0];
+  const lab = SX.ETFTAG[root.slice(0, 4)] || (/^\d/.test(root) && name ? ((ws) => ws.length > 1 ? ws.slice(0, 2).map((w) => w[0]).join('') : (ws[0] || root).slice(0, 3))(String(name).split(/[\s-]+/).filter((w) => /^[A-Za-z]/.test(w))).toUpperCase() : root.slice(0, 3));
+  let h = 0; for (const ch of lab) h = (h * 31 + ch.charCodeAt(0)) >>> 0; i.style.background = dash.colors[h % dash.colors.length]; i.textContent = lab; i.title = s; i.setAttribute('aria-hidden', 'true'); return i; };
 SX.fmtField = { pick_score: (v) => d3.format('.2f')(v), world_close: (v) => '€' + d3.format(',.2f')(v), pick_r52: (v) => (v > 0 ? '+' : '') + v + '%', from_ath_pct: (v) => (v > 0 ? '+' : '') + Number(v).toFixed(2) + '%', meter: (v) => (v > 0 ? '+' : '') + v };
 SX.money = (v, c) => { if (v == null) return '—'; const sym = { USD: '$', EUR: '€', GBp: '', JPY: '¥', CHF: 'CHF ', HKD: 'HK$', INR: '₹', KRW: '₩', TWD: 'NT$' }[c || 'USD']; const f = d3.format(v >= 1000 ? ',.0f' : ',.2f')(v); return sym == null ? f + ' ' + c : c === 'GBp' ? f + 'p' : sym + f; };
 SX.cur = (v) => '€' + (v >= 1e6 ? (v / 1e6).toFixed(2) + 'M' : d3.format(',.0f')(v));
@@ -1229,13 +1237,15 @@ SX.gauge = (box, v, label) => {
 // ---- tabs ----
 SX.RESEARCH = ['history', 'plans', 'gauges'];
 // Strength + warning tags for a stock: the score is its rank in the whole index (0-100); not a tested probability.
-SX.signal = (r, side) => {   // 0-1: half market timing (90-year test), half the stock's own trend (12-1 month return / volatility)
-  const tn = (SX.rows('timing_now') || [])[0]; if (!tn || !r || r.momentum == null || !r.vol) return null;
-  const z = r.momentum / r.vol, tr = 1 / (1 + Math.exp(-2 * z)), own = side === 'Short' ? 1 - tr : tr;
-  return { v: Math.round((0.5 * tn.score + 0.5 * own) * 100) / 100, timing: tn.score, own: Math.round(own * 100) / 100 }; };
+SX.signal = (r, side) => {   // 0-1 trend quality: percentile of risk-adjusted momentum (12-1 month return / volatility) among all ranked stocks of the index
+  if (!r) return null; let q = r.trend_q;
+  if (q == null) {   // older data files: rank among the listed stocks
+    const ok = (x) => x.momentum != null && x.vol; const z = (x) => x.momentum / x.vol; const all = (SX.rows('pick_rank') || []).filter(ok);
+    if (!ok(r) || all.length < 10) return null; q = all.filter((x) => z(x) <= z(r)).length / all.length; }
+  const v = side === 'Short' ? 1 - q : q; return { v: Math.round(v * 100) / 100 }; };
 SX.sig = (ticker, side) => {
   const r = (SX.rows('pick_rank') || []).find((x) => x.ticker === ticker); const out = document.createElement('span'); out.className = 'sig'; if (!r || r.score == null) return out;
-  const sg = SX.signal(r, side); if (sg) { const g = document.createElement('span'); g.className = 'sgv ' + (sg.v >= 0.66 ? 'hi' : sg.v >= 0.33 ? 'mid' : 'lo'); g.textContent = 'signal ' + sg.v.toFixed(2); g.title = `Signal ${sg.v.toFixed(2)} of 1 = half market timing (${sg.timing.toFixed(2)}: how good a moment it is, by 90 years of data, to buy top stocks) + half this stock's own trend (${sg.own.toFixed(2)}: is it really rising, relative to its swings). Only the timing half is tested on history.`; out.appendChild(g); }
+  const sg = SX.signal(r, side); if (sg) { const g = document.createElement('span'); g.className = 'sgv ' + (sg.v >= 0.66 ? (side === 'Short' ? 'lo' : 'hi') : sg.v >= 0.33 ? 'mid' : (side === 'Short' ? 'hi' : 'lo')); g.textContent = 'trend ' + sg.v.toFixed(2); g.title = side === 'Short' ? `Trend ${sg.v.toFixed(2)} of 1: how steadily this stock is falling. Its 12-1 month return divided by its volatility, ranked against every stock of the index (1 = the steadiest faller). Not a tested buy or sell probability.` : `Trend ${sg.v.toFixed(2)} of 1: how steadily this stock is rising. Its 12-1 month return divided by its volatility, ranked against every stock of the index (1 = the steadiest riser; a stock that only jumped on one big move scores lower). Not a tested buy probability.`; out.appendChild(g); }
   const s = Math.round(r.score); const t = document.createElement('span'); t.className = 'st' + (side === 'Short' ? ' dn' : ''); t.textContent = side === 'Short' ? `weaker than ${100 - s}%` : `stronger than ${s}%`; t.title = `Score ${r.score} of 100: its rank among all stocks of this week's index. Not a tested buy probability.`; out.appendChild(t);
   const warn = (txt, tip) => { const w = document.createElement('span'); w.className = 'wt'; w.textContent = txt; w.title = tip; out.appendChild(w); };
   if (r.vol != null && r.vol > 60) warn('very jumpy', `Volatility ${r.vol}% a year: big swings both ways.`);
@@ -1465,7 +1475,7 @@ SX.line = (box, series, o) => {
         const nm = document.createElement('span'); nm.style.minWidth = '0'; const tk = document.createElement('div'); tk.className = 'tk'; tk.textContent = r.ticker; const co = document.createElement('div'); co.className = 'co'; co.textContent = r.company; nm.append(tk, co, SX.sig(r.ticker, side));
         const p = document.createElement('span'); p.textContent = SX.money(r.entry_price, r.currency);
         const sc = document.createElement('span'); sc.className = 'pill ' + (side === 'Long' ? 'p-good' : 'p-bad'); sc.textContent = r.weight != null ? r.weight + '%' : '#' + r.rank; sc.title = 'Share of your ' + side.toLowerCase() + ' money';
-        li.append(SX.icon(r.ticker), nm, p, sc); return li; }));
+        li.append(SX.icon(r.ticker, r.company), nm, p, sc); return li; }));
     };
     if (SX.active === 'home') { SX.exList('ex-long-home', 'Long'); SX.exList('ex-short-home', 'Short'); }
     SX.idxFmt = {
@@ -1544,7 +1554,7 @@ SX.line = (box, series, o) => {
           { h: 220, yMin: -30, yfmt: d3.format('+d'), tipDate: d3.utcFormat('Week of %b %-d, %Y'), refs: [{ y: -10, label: 'Weak below', color: 'var(--color-bad)' }, { y: 40, label: 'Very strong', color: 'var(--color-ok)' }] });
       }
       const wn = SX.rows('weekly_now'); const cur = wn && wn[0] ? wn[0].tier : null;
-      SX.table('tier-table', 'weekly_tiers', { tier: (td, v) => { td.textContent = v; td.style.fontWeight = '600'; }, condition: (td, v) => { td.textContent = v; td.className = 'wrapc'; td.style.minWidth = '12rem'; } });
+      SX.table('tier-table', 'weekly_tiers', { tier: (td, v) => { td.textContent = v; td.style.fontWeight = '600'; }, condition: (td, v) => { td.textContent = v; td.className = 'wrapc'; } });
       document.querySelectorAll('#tier-table tbody tr').forEach((tr) => { const on = tr.dataset.key === cur; tr.style.background = on ? 'var(--color-bg)' : ''; tr.style.outline = on ? '2px solid var(--color-ok)' : ''; });
       SX.table('wk-test', 'ip_buying', { plan: (td, v) => { td.textContent = v; td.className = 'wrapc'; td.style.fontWeight = '600'; }, invested: (td, v) => { td.textContent = SX.fmt(v); }, value: (td, v) => { td.textContent = SX.fmt(v); }, irr: num });
       const box = document.getElementById('wk-chart'); const wh = SX.rows('weekly_history');
@@ -1630,7 +1640,7 @@ SX.line = (box, series, o) => {
       ht._f = (r) => (SX.hList === 'all' || r.side === SX.hList) && (!SX.hSector || r.group === SX.hSector);
       SX.table('home-table', 'pick_list', {
         rank: (td, v) => { td.textContent = v; td.style.color = 'var(--muted)'; },
-        company: (td, v, r) => { const d = document.createElement('div'); d.className = 'nm'; const c = document.createElement('span'); c.className = 'co'; c.textContent = v; const t = document.createElement('span'); t.className = 'tk'; t.textContent = r.ticker; d.append(SX.icon(r.ticker), c, t); td.appendChild(d); },
+        company: (td, v, r) => { const d = document.createElement('div'); d.className = 'nm'; const c = document.createElement('span'); c.className = 'co'; c.textContent = v; const t = document.createElement('span'); t.className = 'tk'; t.textContent = r.ticker; d.append(SX.icon(r.ticker, r.company), c, t); td.appendChild(d); },
         price: (td, v, r) => { td.textContent = SX.money(v, r.currency); },
         score: (td, v, r) => { const b = document.createElement('span'); b.className = 'rbar'; b.style.marginRight = '8px'; const i = document.createElement('i'); i.style.width = v + '%'; i.style.background = r.side === 'Top' ? 'var(--up)' : 'var(--down)'; b.appendChild(i); td.append(b, document.createTextNode(v)); },
         momentum: pc, r1y: pc,
@@ -1643,7 +1653,7 @@ SX.line = (box, series, o) => {
       const eur = (td, v) => { td.textContent = v == null ? '—' : d3.format(',.2f')(v); };
       const sg = (td, v) => { td.textContent = v == null ? '—' : (v > 0 ? '+' : '') + d3.format(',.2f')(v); td.style.color = v > 0 ? 'var(--up)' : v < 0 ? 'var(--down)' : ''; };
       SX.table('pos-table', 'demo_positions', {
-        ticker: (td, v, r) => { const d = document.createElement('div'); d.className = 'nm'; const c = document.createElement('span'); c.className = 'co'; c.textContent = r.company; const t = document.createElement('span'); t.className = 'tk'; t.textContent = v; d.append(SX.icon(v), c, t); td.appendChild(d); },
+        ticker: (td, v, r) => { const d = document.createElement('div'); d.className = 'nm'; const c = document.createElement('span'); c.className = 'co'; c.textContent = r.company; const t = document.createElement('span'); t.className = 'tk'; t.textContent = v; d.append(SX.icon(v, r.company), c, t); td.appendChild(d); },
         leg: (td, v) => { const p = document.createElement('span'); p.className = 'lst ' + (v === 'Index' ? 'top' : 'bot'); p.style.color = v === 'Index' ? '' : 'var(--accent)'; p.textContent = v === 'Index' ? 'Core' : 'Stock'; td.appendChild(p); },
         euros: eur, pnl_eur: sg, return_pct: (td, v) => { pc(td, v); },
         entry_price: (td, v, r) => { td.textContent = SX.money(v, r.currency); }, price: (td, v, r) => { td.textContent = SX.money(v, r.currency); },
@@ -1743,7 +1753,7 @@ dash.calc('lr_dec_reg', {
     const dv = SX.rows('demo_value'), pos = SX.rows('demo_positions'); const last = dv && dv[dv.length - 1];
     if (last) { k.innerHTML = ''; [['Worth', last.value], ['Put in', last.invested], ['MSCI World, same deposits', last.benchmark]].forEach(([l, v], i) => { const sp = document.createElement('span'); const b = document.createElement('b'); b.textContent = eur(v); if (i === 0) sgn(b, last.value - last.invested); sp.append(b, l); k.appendChild(sp); }); }
     if (pos) ul.replaceChildren(...pos.map((p) => { const li = document.createElement('li'); const nm = document.createElement('span'); nm.style.minWidth = '0'; const tk = document.createElement('div'); tk.className = 'tk'; tk.textContent = p.leg === 'Index' ? p.ticker.split('.')[0] + ' · core ETF' : p.ticker; const co = document.createElement('div'); co.className = 'co'; co.textContent = p.company; nm.append(tk, co);
-      const v = document.createElement('span'); v.textContent = eur(p.euros); const w = document.createElement('span'); w.className = 'pill'; w.textContent = p.weight + '%'; w.title = 'Share of the demo account'; li.append(SX.icon(p.ticker.slice(0, 4)), nm, v, w); return li; }));
+      const v = document.createElement('span'); v.textContent = eur(p.euros); const w = document.createElement('span'); w.className = 'pill'; w.textContent = p.weight + '%'; w.title = 'Share of the demo account'; li.append(SX.icon(p.ticker, p.company), nm, v, w); return li; }));
   };
 
   // ---------- Overview: live chart ----------
@@ -1757,10 +1767,11 @@ dash.calc('lr_dec_reg', {
       const L = SX.rows('live_vs_sp500'); if (!L) return;
       const last = L[L.length - 1];
       if (last) kpis(kb, [['Put in', eur2(last.invested), `${L.length} live week${L.length === 1 ? '' : 's'}`], ['IndexPilot plan', eur2(last.plan), pct(last.plan_pct, 2), last.plan_pct], ['S&P 500 ETF', eur2(last.sp500), pct(last.sp500_pct, 2), last.sp500_pct], ['Difference', (last.plan - last.sp500 >= 0 ? '+' : '−') + eur2(Math.abs(last.plan - last.sp500)).slice(0), 'plan minus S&P 500', last.plan - last.sp500]]);
-      const ser = [{ name: 'IndexPilot plan', color: C.pick, w: 2.6 }, { name: 'S&P 500 ETF, same euros', color: C.us, w: 2 }, { name: 'Money put in', color: 'var(--cds-chart-muted)', w: 1.3, dash: '4 4' }];
+      // gain or loss on the money put in: two lines that would sit on top of each other as account values become readable
+      const ser = [{ name: 'IndexPilot plan: gain or loss', color: C.pick, w: 2.6 }, { name: 'S&P 500 ETF, same euros', color: C.us, w: 2 }];
       legend(lg, ser);
       if (L.length < 2) { const e = document.createElement('div'); e.className = 'empty'; e.textContent = last ? `First live week: €${last.amount} bought into ${last.pick === 'us' ? 'the S&P 500' : (SX.rows('weekly_now') || [{}])[0].pick_index || 'the pick'} at the close of ${last.date}. The line starts after the second week.` : 'The live record starts with the first weekly decision.'; box.appendChild(e); box.style.minHeight = '0'; }
-      else { box.style.minHeight = '220px'; SX.line(box, ser.map((s, i) => ({ ...s, pts: L.map((r) => ({ x: pm(r.date), y: [r.plan, r.sp500, r.invested][i] })) })), { h: 220, yfmt: (v) => eur(v), tipfmt: eur2 }); }
+      else { box.style.minHeight = '220px'; SX.line(box, ser.map((s, i) => ({ ...s, pts: L.map((r) => ({ x: pm(r.date), y: [r.plan, r.sp500][i] - r.invested })) })), { h: 220, yfmt: (v) => (v > 0 ? '+' : v < 0 ? '−' : '') + eur(Math.abs(v)), tipfmt: (v) => (v > 0 ? '+' : v < 0 ? '−' : '') + eur2(Math.abs(v)), refs: [{ y: 0, label: 'break-even' }] }); }
       note.textContent = `Live record since ${LS}, ${L.length} week${L.length === 1 ? '' : 's'} so far. 0.2% cost on every buy for both. ${L.length < 8 ? 'Far too short to judge: give it at least a few months, and even a year is mostly luck.' : L.length < 52 ? 'Still short: under a year is mostly luck.' : ''}`;
     } else {
       const B = SX.rows('sim_buying'); if (!B || !B.length) return; const last = B[B.length - 1];
@@ -1882,8 +1893,8 @@ dash.calc('lr_dec_reg', {
   SX.fmOn = new Set(['keep', 'keep_trend', 'free_money', 'rule', 'sp500']); SX.fmSOn = new Set(['long_only', 'long_trend', 'free_money', 'us']);
   const chipRow = (id, ser, on, redraw) => document.getElementById(id).replaceChildren(...ser.map((s) => { const b = document.createElement('button'); b.className = 'tg'; b.style.setProperty('--c', s.color); b.setAttribute('aria-pressed', String(on.has(s.k))); const i = document.createElement('i'); b.append(i, s.name); b.addEventListener('click', () => { if (on.has(s.k)) { if (on.size > 1) on.delete(s.k); } else on.add(s.k); redraw(); }); return b; }));
   const holdList = (ul, rows) => { if (!ul) return; if (!rows.length) { const li = document.createElement('li'); li.className = 'note'; li.textContent = 'Starts at the next weekly update'; ul.replaceChildren(li); return; }
-    ul.replaceChildren(...rows.map((r) => { const li = document.createElement('li'); const nm = document.createElement('span'); nm.style.minWidth = '0'; const tk = document.createElement('div'); tk.className = 'tk'; tk.textContent = r.ticker; const co = document.createElement('div'); co.className = 'co'; co.textContent = r.company + (r.since ? ' · since ' + r.since : ''); nm.append(tk, co, SX.sig(r.ticker, 'Long'));
-      const v = document.createElement('span'); v.textContent = r.return_pct == null ? '' : pct(r.return_pct); if (r.return_pct != null) sgn(v, r.return_pct); const w = document.createElement('span'); w.className = 'pill p-good'; w.textContent = r.weight + '%'; li.append(SX.icon(r.ticker.slice(0, 4)), nm, v, w); return li; })); };
+    ul.replaceChildren(...rows.map((r) => { const li = document.createElement('li'); const nm = document.createElement('span'); nm.style.minWidth = '0'; const tk = document.createElement('div'); tk.className = 'tk'; tk.textContent = r.ticker; const co = document.createElement('div'); co.className = 'co'; co.textContent = r.company + (r.since ? ' · since ' + d3.utcFormat('%-d %b')(pm(r.since)) : ''); nm.append(tk, co, SX.sig(r.ticker, 'Long'));
+      const v = document.createElement('span'); v.textContent = r.return_pct == null ? '' : pct(r.return_pct); if (r.return_pct != null) sgn(v, r.return_pct); const w = document.createElement('span'); w.className = 'pill p-good'; w.textContent = r.weight + '%'; li.append(SX.icon(r.ticker, r.company), nm, v, w); return li; })); };
   SX.timingText = (tn) => tn.score < 0.2 ? `One of the weakest setups since 1937. After readings like this the strongest stocks still rose ${tn.avg_next12}% a year on average, but lost money over the next year ${tn.loss_share}% of the time: not a week to put extra money into stocks.` : tn.score >= 0.8 ? `One of the better setups in history: after readings like this the strongest stocks rose ${tn.avg_next12}% on average over the next year and lost money ${tn.loss_share}% of the time. If you have extra money for stocks, history says this is a better week than most.` : `An ordinary setup: after readings like this the strongest stocks rose ${tn.avg_next12}% on average over the next year and lost money ${tn.loss_share}% of the time.`;
   SX.drawFM = () => {
     const box = document.getElementById('fm-live'); if (!box || !box.offsetParent) return;
@@ -1942,14 +1953,19 @@ dash.calc('lr_dec_reg', {
     const H = (SX.rows('free_money_holdings') || []).filter((r) => r.strategy === 'A' && r.ticker !== 'Cash').map((r) => ({ ...r, action: r.action || (r.since === w.decided_on ? 'Buy' : 'Keep') }));
     if (H.length) {
       const ul = el('ul', 'mini ex-list'); ul.style.marginTop = '8px';
-      H.sort((a, c) => ({ Sell: 0, Buy: 1, Keep: 2 }[a.action] ?? 3) - ({ Sell: 0, Buy: 1, Keep: 2 }[c.action] ?? 3)).forEach((r) => { const li = el('li'); const nm = el('span'); nm.style.minWidth = '0'; const tk = el('div', 'tk'); tk.append(el('span', 'act ' + r.action, r.action), r.ticker); nm.append(tk, el('div', 'co', r.company), r.action === 'Sell' ? el('span') : SX.sig(r.ticker, 'Long')); li.append(SX.icon(r.ticker.slice(0, 4)), nm, el('span', null, ''), el('span', 'pill p-good', r.action === 'Sell' ? 'sell all' : r.weight + '%')); ul.appendChild(li); });
+      H.sort((a, c) => ({ Sell: 0, Buy: 1, Keep: 2 }[a.action] ?? 3) - ({ Sell: 0, Buy: 1, Keep: 2 }[c.action] ?? 3)).forEach((r) => { const li = el('li'); const nm = el('span'); nm.style.minWidth = '0'; const tk = el('div', 'tk'); tk.append(el('span', 'act ' + r.action, r.action), r.ticker); nm.append(tk, el('div', 'co', r.company), r.action === 'Sell' ? el('span') : SX.sig(r.ticker, 'Long')); li.append(SX.icon(r.ticker, r.company), nm, el('span', null, ''), el('span', 'pill p-good', r.action === 'Sell' ? 'sell all' : r.weight + '%')); ul.appendChild(li); });
       const t = el('span', 'opt', 'optional');
-      steps.push(step(['3 stocks, if you want them', t], ['The best stock idea on past data (Keepers): hold the 3 strongest stocks of this index and keep each until it weakens. Use only money you can afford to lose, split by the weights below (calmer stocks get more). "Signal" is 0–1: half how good a moment it is to buy top stocks, half how strongly the stock itself is rising. Next week: keep them unless the list says Sell.'].concat((SX.rows('timing_now') || []).slice(0, 1).map((tn) => [el('b', null, `Timing this week: ${tn.score.toFixed(2)} of 1. `), SX.timingText(tn)])), ul));
+      const fl = (SX.rows('free_money_live') || []).slice(-1)[0]; const tn = (SX.rows('timing_now') || [])[0];
+      const more = el('details', 'fm-more'); more.append(el('summary', null, 'Show the 3 stocks and how they are chosen'));
+      [['The best stock idea on past data (Keepers): hold the 3 strongest stocks of this index and keep each until it weakens. Split by the weights below (calmer stocks get more). "Trend" is 0–1: how steadily the stock is rising compared with every other stock of the index (1 = steadiest). Next week: keep them unless the list says Sell.'],
+       tn ? [el('b', null, `Market timing: ${tn.score.toFixed(2)} of 1 (US data to ${d3.utcFormat('%b %Y')(d3.utcParse('%Y%m')(tn.asof))}). `), SX.timingText(tn)] : null].filter(Boolean).forEach((p_) => { const q = el('p'); q.append(...p_); more.appendChild(q); });
+      more.appendChild(ul);
+      steps.push(step(['3 stocks, if you want them', t], ['Skip this if you are new: the index fund above is the whole plan. Three single stocks swing far more than an index' + (fl && fl.keep != null ? ` (live since 9 Oct: these Keepers ${pct(fl.keep, 1)}, the index pick ${pct(fl.rule, 1)})` : '') + '. Only use money you can afford to lose.'], more));
     }
     steps.push(step(`Check back ${D(w.decided_on, 8)}`, ['The site makes a new decision every Saturday morning from Friday\'s close. Then repeat: buy the amount shown, sell only what the list says.']));
     ol.replaceChildren(...steps);
     const bu = SX.rows('ip_buying') || [], st = SX.rows('sim_strategies') || []; const g = (k) => bu.find((r) => r.key === k), q = (k) => st.find((r) => r.key === k);
-    if (g('rule_pick') && g('rule_us')) document.getElementById('plan-why').textContent = `It's the best plan we found on the data we have. Buying weekly like this into the pick made ${g('rule_pick').irr}% a year from 2012 to today, against ${g('rule_us').irr}% into the S&P 500 and ${g('rule_world').irr}% into MSCI World (backtest, before costs).` + (q('ndx') ? ` Holding only the Nasdaq-100 did even better (${q('ndx').cagr}% a year as a one-off), but that is only clear in hindsight; the plan moves to whichever market leads.` : '') + ' Results can be worse in the future, and you can lose money. Not financial advice.';
+    if (g('rule_pick') && g('rule_us')) document.getElementById('plan-why').textContent = `It's the best plan we found on the data we have. Buying weekly like this into the pick made ${g('rule_pick').irr}% a year from 2012 to today, against ${g('rule_us').irr}% into the S&P 500 and ${g('rule_world').irr}% into MSCI World (backtest, before costs).` + (q('ndx') ? ` Holding only the Nasdaq-100 did even better (${q('ndx').cagr}% a year as a one-off), but that is only clear in hindsight; the plan moves to whichever market leads.` : '') + (() => { const hr = SX.rows('hist_rotation') || []; const a = hr.find((r) => r.key === 'pick'), b_ = hr.find((r) => r.key === 'US'); return a && b_ ? ` On 35 years of regional data the same rule made ${a.cagr}% a year against ${b_.cagr}% for simply holding North America, so the edge is not a sure thing.` : ''; })() + ' Results can be worse in the future, and you can lose money. Not financial advice.';
   };
 
   // ---------- FAQ (text in docs/data/faq.json; {{dataset|key=value|field}} is filled from the data) ----------
@@ -1971,7 +1987,7 @@ dash.calc('lr_dec_reg', {
     const svg = d3.select(box).insert('svg', ':first-child').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
     svg.selectAll('line.g').data(y.ticks(4)).join('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y).attr('y2', y).attr('stroke', 'var(--cds-chart-grid)');
     svg.selectAll('text.y').data(y.ticks(4)).join('text').attr('x', m.l - 6).attr('y', y).attr('dy', '0.32em').attr('text-anchor', 'end').attr('font-size', 11.5).attr('fill', 'var(--color-fg-muted)').text(o.yfmt);
-    svg.selectAll('text.x').data([0, 20, 40, 60, 80, 100]).join('text').attr('x', x).attr('y', H - 10).attr('text-anchor', 'middle').attr('font-size', 11.5).attr('fill', 'var(--color-fg-muted)').attr('text-anchor', (v) => (v === 0 ? 'start' : v === 100 ? 'end' : 'middle')).text((v) => v + '%' + (v === 0 ? ' in stocks' : ''));
+    svg.selectAll('text.x').data([0, 20, 40, 60, 80, 100]).join('text').attr('x', x).attr('y', H - 10).attr('text-anchor', 'middle').attr('font-size', 11.5).attr('fill', 'var(--color-fg-muted)').attr('text-anchor', (v) => (v === 0 ? 'start' : v === 100 ? 'end' : 'middle')).text((v) => v + '%' + (v === 0 && W > 520 ? ' in stocks' : ''));
     if (o.mark != null) svg.append('line').attr('x1', x(o.mark)).attr('x2', x(o.mark)).attr('y1', m.t).attr('y2', H - m.b).attr('stroke', 'var(--cds-chart-axis)').attr('stroke-dasharray', '3 3');
     const tip = SX.tip(box);
     series.forEach((s) => { svg.append('path').attr('d', d3.line().x((p) => x(p.x)).y((p) => y(p.y))(s.pts)).attr('fill', 'none').attr('stroke', s.color).attr('stroke-width', s.w || 2.2);

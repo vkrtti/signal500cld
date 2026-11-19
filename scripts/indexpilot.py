@@ -143,6 +143,19 @@ def buffered(score, buf, month_end_only=False):
     return pd.Series(path, index=score.index)
 
 
+def buffered2(score, buf):
+    """Research variant E017 (rejected 2026-11-19): hold the two best scores 50/50; the best index not held replaces the
+    weaker holding only if its score beats that holding's by more than buf. Returns a series of 'a+b' keys."""
+    score = score.dropna(); held, path = None, []
+    for d, row in score.iterrows():
+        if held is None: held = list(row.sort_values(ascending=False).index[:2])
+        else:
+            weak = min(held, key=lambda k: row[k]); ch = row.drop(held).idxmax()
+            if row[ch] - row[weak] > buf: held = [k for k in held if k != weak] + [ch]
+        path.append('+'.join(sorted(held)))
+    return pd.Series(path, index=score.index)
+
+
 def pick_path(W):
     """Week-by-week main index (current rule). Returns (52-week return, score, volatility, picks)."""
     r52, sc, vol = scores(W)
@@ -165,8 +178,10 @@ clip = lambda x, a, b: max(a, min(b, x))
 def meter_parts(w, trend, dd, vix, nfci, sahm, curve):
     return [
         ('World trend', 0.25, clip((w / trend - 1) / 0.05, -1, 1), f'MSCI World {(w / trend - 1) * 100:+.1f}% vs its 40-week line'),
-        ('Discount from record', 0.20, clip(-dd / 0.15, 0, 1), f'MSCI World {dd * 100:.1f}% from its record (in euros)'),
-        ('Fear (VIX)', 0.15, 1 if vix >= 30 else 0.5 if vix >= 20 else -0.5 if vix < 13 else 0, f'VIX {vix:.1f}'),
+        # Since 2026-11-19 every part is scored the same way round (+ = healthy, calm market), so the label 'strong/weak market'
+        # matches the sum. Before, a deep fall and a VIX spike added points (contrarian), so a crash could read 'mixed'.
+        ('Distance from record', 0.20, clip(1 + dd / 0.10, -1, 1), f'MSCI World {dd * 100:.1f}% from its record (in euros)'),
+        ('Calm (VIX)', 0.15, clip((20 - vix) / 10, -1, 1), f'VIX {vix:.1f}'),
         ('Credit conditions (NFCI)', 0.15, -1 if nfci > 0 else -0.3 if nfci > -0.3 else 0.3, f'NFCI {nfci:.2f}'),
         ('Recession risk (Sahm)', 0.15, -1 if sahm >= 0.5 else -0.5 if sahm >= 0.3 else 0.3, f'Sahm {sahm:.2f}'),
         ('Yield curve', 0.10, -0.5 if curve < 0 else 0.2, f'10Y−3M {curve:+.2f}'),
@@ -236,6 +251,10 @@ def price_rank(members, px, date):
     if not rows: return []
     df = pd.DataFrame(rows)
     df['score'] = 50 * df.mom.rank(pct=True) + 50 * df.range.rank(pct=True)
+    # Trend quality (the per-stock 'signal', 0-1): percentile of risk-adjusted momentum (12-1 month return / annual volatility)
+    # among all ranked stocks of the universe. Before 2026-11-19 the page squashed the raw ratio through a sigmoid, which put
+    # every top stock at ~1.0 (and its signal at ~0.51).
+    df['tq'] = (df.mom / pd.to_numeric(df.vol, errors='coerce')).rank(pct=True)
     df = df.sort_values('score', ascending=False).reset_index(drop=True)
     out = []
     for i, x in df.iterrows():
@@ -243,7 +262,7 @@ def price_rank(members, px, date):
         out.append(dict(rank=i + 1, ticker=x.ticker, company=x.company, country=x.country, sector=x.sector, score=round(float(x.score), 1),
                         value=None, momentum=round(float(x.mom) * 100, 1), r1y=round(float(x.r1y) * 100, 1),
                         off_52w_high=round(float(x.off) * 100, 1), price=round(float(x.price), 2), currency=ccy(x.ticker), note=note,
-                        vol=round(float(x.vol) * 100, 1) if pd.notna(x.vol) else None))
+                        vol=round(float(x.vol) * 100, 1) if pd.notna(x.vol) else None, trend_q=round(float(x.tq), 2) if pd.notna(x.tq) else None))
     return out
 
 
@@ -368,7 +387,7 @@ def run(S, D, research, fin, cons, log, offline=None):
         for r in sp_rows:
             p = pr.get(r['ticker'], {})
             rows.append(dict(rank=r['rank'], ticker=r['ticker'], company=r['company'], country='US', sector=r['sector'], score=r['score'], value=r['value'],
-                             momentum=p.get('momentum'), r1y=p.get('r1y'), off_52w_high=r['off_52w_high'], price=p.get('price', r['price']), currency='USD', note=r['note'], vol=p.get('vol')))
+                             momentum=p.get('momentum'), r1y=p.get('r1y'), off_52w_high=r['off_52w_high'], price=p.get('price', r['price']), currency='USD', note=r['note'], vol=p.get('vol'), trend_q=p.get('trend_q')))
         method = 'Value + momentum (S&P 500 fundamentals): 50% cheapness vs sector on earnings, sales and book, 50% position in the 52-week range'
     else:
         rows = price_rank(members[U], px, dstr)
@@ -693,6 +712,10 @@ def run(S, D, research, fin, cons, log, offline=None):
              ('trend', '52-week return, 5-point buffer, MSCI World when below its 40-week line', old, 'world'),
              ('riskadj_monthly', 'Return per unit of risk, 0.25 buffer, switch only on the last Friday of a month', on_h(buffered(sc52, BUFFER, True)), None)]
     out['ip_variants'] = [dict(key=k, rule=nm, **var_stats(sq.ffill().bfill(), fb)) for k, nm, sq, fb in vrows]
+    t2 = on_h(buffered2(sc52, BUFFER)).ffill().bfill()   # E017: two best indexes 50/50
+    t2r = pd.Series([float(np.mean([R.loc[d, k] for k in pr_.split('+')])) for d, pr_ in t2.items()], index=H.index)
+    t2s = var_stats(t2, r=t2r); t2s['switches_per_year'] = round(t2s['switches_per_year'] / 2, 1)   # a swap moves half the money
+    out['ip_variants'].append(dict(key='top2', rule='Return per unit of risk, 0.25 buffer, two best indexes 50/50', **t2s))
     out['ip_buying'] = mwrows
     step = max(1, len(H) // 300)
     out['ip_growth'] = [dict(date=d, **{k: round(float(curves[k].get(d, np.nan)), 4) for k in ['pick', 'world', 'us', 'ndx', 'europe', 'equal']})
