@@ -382,6 +382,9 @@ def run(S, D, research, fin, cons, log, offline=None):
     var_t = [p_['ticker'] for k_ in ('A', 'B') for p_ in (VS.get(k_) or {}).get('pos', [])]
     need = [m['ticker'] for m in members[U]] + [p['ticker'] for p in L_extra_pos] + held_t + var_t
     px = download(need, (last_trading - pd.Timedelta(days=430)).strftime('%Y-%m-%d'), log, offline)
+    # a mid-week rerun must book at the decision Friday's close, not at today's prices (19 Nov 2026: a Thursday rerun valued
+    # the demo and Keepers at Wednesday's stock prices under Friday's date)
+    if not px.empty: px = px[px.index <= last_trading]
     if U == 'sp500':
         pr = {r['ticker']: r for r in price_rank(members[U], px, dstr)}
         rows = []
@@ -416,6 +419,7 @@ def run(S, D, research, fin, cons, log, offline=None):
     # FX: units of each currency per euro (yfinance EURxxx=X), for valuing stocks in euros
     ccys = sorted({ccy(t) for t in held_t + [r['ticker'] for r in rows[:10]]} - {'EUR'})
     fxd = download([f"EUR{ {'GBp': 'GBP', 'ZAc': 'ZAR'}.get(c, c) }=X" for c in ccys], (last_trading - pd.Timedelta(days=20)).strftime('%Y-%m-%d'), log, offline) if ccys else pd.DataFrame()
+    if not fxd.empty: fxd = fxd[fxd.index <= last_trading]
     _ecb = {}
     def ecb_fx():
         # fallback: ECB euro reference rates (free, keyless, units per euro; TWD from FRED)

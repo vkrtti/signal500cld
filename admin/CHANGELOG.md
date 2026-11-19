@@ -6,7 +6,9 @@
 - Research E017 (pre-registered): two best indexes 50/50. ETF 14.2%/yr Sharpe 0.92 vs 16.5%/0.99; regional 11.0%/0.71 vs 9.8%/0.62 but 2009–today half 10.5 vs 10.7. Rejected (data sets disagree). In ip_variants/hist_rotation_variants as key top2; Method updated. 17 variants tried.
 - UI: phone tables show only key columns (index, demo holdings, stocks, ledger, simulation, meter); ETF badges WLD/US/NDX/EU/JP/EM and company initials for number tickers; live plan chart shows gain or loss vs break-even (the value lines overlapped); Your plan folds the optional stocks step away with its live record; Why this plan adds the regional result vs North America; Free Money dates short; combo chart x label no longer overlaps on phones; tier table fits 390px; balanced headings.
 - Headlines: news.py drops reader-letter advice columns and quote pages.
-- Weekly rerun dispatched to produce trend_q, the new meter and the top2 rows.
+- Weekly rerun dispatched to produce trend_q, the new meter and the top2 rows. It exposed a bug: a mid-week rerun valued the demo and Keepers at Wednesday's stock prices and FX under Friday's date (demo 5,792 → 5,702, Keepers −33.4% → −35.1%). Fixed (prices cut at the decision Friday) and rerun again, which restarts from last week's saved state.
+- Meter label cut-offs moved to +60/+30/0/−30 (the one-way meter reads higher; 62% of weeks were 'very strong'); meter_test buckets use the same cut-offs. Since 2012 low readings were followed by higher 52-week returns (weak 21%, very strong 9%); the page says so.
+- Dashboard: synced the 26 changed data files and the page (247.5 KB of 256 KiB).
 
 ## 2026-11-14
 - Health: the Friday 22:30 UTC cron fired 02:36 UTC Saturday and did the weekly roll (decided 13 Nov: MSCI World unchanged, €60, meter +38); all runs this week succeeded, no error annotations; no NaN; markets dated 13 Nov. The 08:57 UTC weekly-pick task had already synced every data file (blob = repo file checked), so no dashboard sync was needed beyond this run's changes. Page test NO ERRORS, shots NO PROBLEMS.
