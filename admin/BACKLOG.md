@@ -10,13 +10,12 @@ Re-rank every run. Format: [priority] title — benefit / effort / notes. Move d
 - [P3] sim_growth + sim_buying are ~300 KB together; if page load gets slow, thin them to every 2nd week before 2020 — speed / small.
 
 - [P2] After the next roll check the meter distribution under the new scoring (share of weeks per label) and the meter_test buckets; adjust label cut-offs only if almost all weeks land in one label — clarity / small.
-- [P3] Free Money proposal for Q1 2027 (one strategy change per quarter; Q4 used on 11 Oct): make Keepers (A) the official Free Money line (weekly long/short pays ~19%/yr in trading costs, E014; shorts drag, E010). Needs a PR with before/after — strategy / medium.
 
 ## Watch (live record, no tuning)
 - [R0e] Keepers A/B: −38.9% in 4 weeks (HPE, DELL, FTNT, then Recruit, APA, Targa all fell hard). 3-stock momentum is very concentrated; at the 26-week review, compare with the 1991 stand-in's worst 3-week spells before judging.
 - [R0b] Combinations suggest the demo's 30% stock share is low (best 40–90% with the guard). Re-check with the live record before proposing a demo change; needs owner approval.
 - [R0f] Weekly long/short short side: AppLovin short lost 55.8% in its results week (4 Nov). Weakest-momentum shorts are exposed to earnings squeezes; at the 26-week review count how much of the short-side loss came from results weeks (no free earnings calendar yet).
-- [R0] After ~26 live weeks compare Free Money current vs A vs B; if A or B leads and the 1991 stand-in agrees, propose switching (pull request).
+- [R0] After ~26 live weeks compare Keepers (A, official since 19 Nov) vs B (guard) vs the previous long/short; if B leads and the 1991 stand-in agrees, propose B (pull request). Next strategy change: not before Q1 2027.
 - [R0d] Signal (0–1) = 0.5 timing + 0.5 own trend (untested part). After ~13 live weeks check whether it predicts next-week returns of the picks.
 - [R0c] After ~13 live weeks: do higher stock scores or the 'very jumpy' flag predict next-week returns of the picks?
 

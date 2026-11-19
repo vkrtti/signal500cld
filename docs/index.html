@@ -542,10 +542,9 @@
     </div>
 
     <div class="hl hl3">
-      <div class="card"><h3><button data-go="extra">Free Money picks this week</button></h3>
-        <p class="note">Weights are the share of your money on each side (calmer stocks get more).</p>
-        <div class="side-l">Long: the 3 strongest</div><ul class="mini ex-list" id="ex-long-home" data-source="extra_positions"></ul>
-        <div class="side-l">Short: the 3 weakest (optional)</div><ul class="mini ex-list" id="ex-short-home" data-source="extra_positions"></ul></div>
+      <div class="card"><h3><button data-go="extra">Free Money: Keepers this week</button></h3>
+        <p class="note">Optional, for money you can afford to lose. Hold the 3 strongest stocks and keep each while it stays strong; weights = share of the stock money (calmer stocks get more).</p>
+        <ul class="mini ex-list" id="ex-keep-home" data-source="free_money_holdings"></ul></div>
       <div class="card"><h3><button data-go="demo">Demo account</button></h3>
         <div class="demo-k" id="demo-home-k"></div>
         <ul class="mini ex-list" id="demo-home" data-source="demo_positions"></ul></div>
@@ -857,18 +856,18 @@
   <!-- ================= EXTRA PROFIT ================= -->
   <section id="extra" data-page hidden>
     <h1 class="ttl">Free Money :D</h1>
-    <p class="lede">Three ways to trade the strongest stocks of this week's main index (<b data-source="weekly_now" data-field="pick_index" data-row="0">—</b>), tracked side by side from 9 Oct 2026. Not actually free: every line is after 0.2% per trade, and none is a promise.</p>
+    <p class="lede">The official way to trade the strongest stocks of this week's main index (<b data-source="weekly_now" data-field="pick_index" data-row="0">—</b>) is <b>Keepers</b> (since 19 Nov 2026; before that, the weekly long/short). All three versions stay tracked side by side from 9 Oct 2026. Not actually free: every line is after 0.2% per trade, and none is a promise.</p>
     <div class="fm3">
-      <div class="card fm-c"><div class="fm-h"><i style="--c:var(--color-warn)"></i>Weekly long/short<span class="tag">current</span></div>
-        <p class="note">Buy the 3 strongest, short the 3 weakest, close all 6 every Friday. Weights: calmer stocks get more.</p>
-        <div class="side-l">Long</div><ul class="mini ex-list" id="fm-long"></ul>
-        <div class="side-l">Short</div><ul class="mini ex-list" id="fm-short"></ul></div>
-      <div class="card fm-c"><div class="fm-h"><i style="--c:var(--up)"></i>Keepers<span class="tag">A</span></div>
+      <div class="card fm-c"><div class="fm-h"><i style="--c:var(--up)"></i>Keepers<span class="tag">official · A</span></div>
         <p class="note">Long only. Hold the 3 strongest; keep each while it stays in the top 20%, sell if it drops out or falls 25% from its peak, then refill.</p>
         <div class="side-l">Holding now</div><ul class="mini ex-list" id="fm-hold-A"></ul></div>
       <div class="card fm-c"><div class="fm-h"><i style="--c:#22B8CF"></i>Keepers + trend guard<span class="tag">B</span></div>
         <p class="note">As A, but no new buys while MSCI World is below its 40-week line. Guard now: <b id="fm-guard">—</b></p>
         <div class="side-l">Holding now</div><ul class="mini ex-list" id="fm-hold-B"></ul></div>
+      <div class="card fm-c"><div class="fm-h"><i style="--c:var(--color-warn)"></i>Weekly long/short<span class="tag">previous</span></div>
+        <p class="note">Official until 19 Nov 2026, still tracked for comparison. Buy the 3 strongest, short the 3 weakest, close all 6 every Friday. Weights: calmer stocks get more. Trading all 6 every week costs about 0.4% a week.</p>
+        <div class="side-l">Long</div><ul class="mini ex-list" id="fm-long"></ul>
+        <div class="side-l">Short</div><ul class="mini ex-list" id="fm-short"></ul></div>
     </div>
 
     <h2>Timing and trend</h2>
@@ -903,9 +902,10 @@
     </div>
 
     <details class="card fm-more fm-risk"><summary>How to trade it, and the risks</summary><ul class="m">
-      <li>Buy after the Friday close or on Monday, splitting the money by the weights. Fractional shares make small amounts work.</li>
-      <li>Shorting is usually done with CFDs: leverage, borrowing fees, and <b>a short can lose more than its stake</b>.</li>
-      <li>Rankings are momentum (plus value for the S&amp;P 500). Over one week, 6 stocks are mostly luck; judge the lines after months, not weeks.</li>
+      <li>Keepers: buy after the Friday close or on Monday, splitting the stock money by the weights. Each week act only on the list's Buy and Sell; everything marked Keep stays. Fractional shares make small amounts work.</li>
+      <li>Three stocks are far riskier than an index: a 30–40% fall in a few weeks is normal for this kind of strategy (it happened in its first five live weeks). Use only money you can afford to lose.</li>
+      <li>The previous long/short needs shorting, usually with CFDs: leverage, borrowing fees, and <b>a short can lose more than its stake</b>. It is only tracked now, not suggested.</li>
+      <li>Rankings are momentum (plus value for the S&amp;P 500). Judge the lines after months, not weeks.</li>
       <li>Costs here are 0.2% per trade. Taxes, currency spreads and short-borrowing fees are not included. Not financial advice.</li></ul></details>
   </section>
 
@@ -1477,7 +1477,7 @@ SX.line = (box, series, o) => {
         const sc = document.createElement('span'); sc.className = 'pill ' + (side === 'Long' ? 'p-good' : 'p-bad'); sc.textContent = r.weight != null ? r.weight + '%' : '#' + r.rank; sc.title = 'Share of your ' + side.toLowerCase() + ' money';
         li.append(SX.icon(r.ticker, r.company), nm, p, sc); return li; }));
     };
-    if (SX.active === 'home') { SX.exList('ex-long-home', 'Long'); SX.exList('ex-short-home', 'Short'); }
+    if (SX.active === 'home' && SX.holdList) SX.holdList(document.getElementById('ex-keep-home'), (SX.rows('free_money_holdings') || []).filter((r) => r.strategy === 'A' && r.action !== 'Sell'));
     SX.idxFmt = {
       rank: (td, v) => { td.textContent = v; td.style.color = 'var(--muted)'; },
       index: (td, v, r) => { const d = document.createElement('div'); d.className = 'nm'; const c = document.createElement('span'); c.className = 'co'; c.textContent = v; const t = document.createElement('span'); t.className = 'tk'; t.textContent = r.etf; d.append(SX.icon(r.etf.slice(0, 4)), c, t); td.appendChild(d); },
@@ -1831,7 +1831,7 @@ dash.calc('lr_dec_reg', {
       SX.table('sim-buy', 'ip_buying', { plan: (td, v) => { td.textContent = v; td.className = 'wrapc'; td.style.fontWeight = '600'; }, invested: (td, v) => { td.textContent = d3.format(',')(v); }, value: (td, v) => { td.textContent = d3.format(',')(v); }, irr: (td, v) => { td.textContent = v; td.style.fontWeight = '750'; } });
     }
     const dv = SX.rows('demo_value'), ex = SX.rows('extra_weeks'); const dl = dv && dv[dv.length - 1];
-    document.getElementById('sim-live').textContent = 'Not in the chart: the demo account and Free Money (see its own tab). They hold single stocks, and free data has no reliable stock history, so they only exist live (since 9 Oct 2026).' + (dl ? ` Demo so far: ${eur(dl.value)} from ${eur(dl.invested)} put in (MSCI World, same deposits: ${eur(dl.benchmark)}).` : '') + (ex && ex.length ? ` Free Money since start: ${pct(+ex[ex.length - 1].cumulative)}.` : ' Free Money: no closed week yet.');
+    document.getElementById('sim-live').textContent = 'Not in the chart: the demo account and Free Money (see its own tab). They hold single stocks, and free data has no reliable stock history, so they only exist live (since 9 Oct 2026).' + (dl ? ` Demo so far: ${eur(dl.value)} from ${eur(dl.invested)} put in (MSCI World, same deposits: ${eur(dl.benchmark)}).` : '') + ((() => { const f_ = SX.rows('free_money_live') || []; const z = f_[f_.length - 1]; return z && z.keep != null ? ` Free Money (Keepers) since start: ${pct(z.keep)}.` : ' Free Money: no closed week yet.'; })());
   };
 
   // ---------- History: rule vs S&P 500 ----------
@@ -1895,6 +1895,7 @@ dash.calc('lr_dec_reg', {
   const holdList = (ul, rows) => { if (!ul) return; if (!rows.length) { const li = document.createElement('li'); li.className = 'note'; li.textContent = 'Starts at the next weekly update'; ul.replaceChildren(li); return; }
     ul.replaceChildren(...rows.map((r) => { const li = document.createElement('li'); const nm = document.createElement('span'); nm.style.minWidth = '0'; const tk = document.createElement('div'); tk.className = 'tk'; tk.textContent = r.ticker; const co = document.createElement('div'); co.className = 'co'; co.textContent = r.company + (r.since ? ' · since ' + d3.utcFormat('%-d %b')(pm(r.since)) : ''); nm.append(tk, co, SX.sig(r.ticker, 'Long'));
       const v = document.createElement('span'); v.textContent = r.return_pct == null ? '' : pct(r.return_pct); if (r.return_pct != null) sgn(v, r.return_pct); const w = document.createElement('span'); w.className = 'pill p-good'; w.textContent = r.weight + '%'; li.append(SX.icon(r.ticker, r.company), nm, v, w); return li; })); };
+  SX.holdList = holdList;
   SX.timingText = (tn) => tn.score < 0.2 ? `One of the weakest setups since 1937. After readings like this the strongest stocks still rose ${tn.avg_next12}% a year on average, but lost money over the next year ${tn.loss_share}% of the time: not a week to put extra money into stocks.` : tn.score >= 0.8 ? `One of the better setups in history: after readings like this the strongest stocks rose ${tn.avg_next12}% on average over the next year and lost money ${tn.loss_share}% of the time. If you have extra money for stocks, history says this is a better week than most.` : `An ordinary setup: after readings like this the strongest stocks rose ${tn.avg_next12}% on average over the next year and lost money ${tn.loss_share}% of the time.`;
   SX.drawFM = () => {
     const box = document.getElementById('fm-live'); if (!box || !box.offsetParent) return;
@@ -1907,7 +1908,7 @@ dash.calc('lr_dec_reg', {
     SX.exList('fm-long', 'Long'); SX.exList('fm-short', 'Short');
     holdList(document.getElementById('fm-hold-A'), H.filter((r) => r.strategy === 'A' && r.action !== 'Sell')); holdList(document.getElementById('fm-hold-B'), H.filter((r) => r.strategy === 'B' && r.action !== 'Sell'));
     const g = document.getElementById('fm-guard'); if (last && last.guard != null) { g.textContent = last.guard ? 'on (no new buys)' : 'off'; g.style.color = last.guard ? 'var(--down)' : 'var(--up)'; }
-    const ser = [{ k: 'keep', name: 'Keepers (A)', color: 'var(--up)', w: 2.6 }, { k: 'keep_trend', name: 'Keepers + guard (B)', color: '#22B8CF', w: 2.4 }, { k: 'free_money', name: 'Long/short (current)', color: 'var(--color-warn)', w: 2.2 },
+    const ser = [{ k: 'keep', name: 'Keepers (A, official)', color: 'var(--up)', w: 2.6 }, { k: 'keep_trend', name: 'Keepers + guard (B)', color: '#22B8CF', w: 2.4 }, { k: 'free_money', name: 'Long/short (previous)', color: 'var(--color-warn)', w: 2.2 },
       { k: 'long_only', name: 'Its long side', color: 'var(--up)', w: 1.4, dash: '4 3' }, { k: 'short_only', name: 'Its short side', color: 'var(--down)', w: 1.4, dash: '4 3' }, { k: 'rule', name: 'The rule', color: C.pick, w: 1.8 }, { k: 'sp500', name: 'S&P 500', color: C.us, w: 1.8 }];
     const weeks = Math.max(0, F.length - 1);
     kpis(document.getElementById('fm-kpis'), ser.filter((s) => !['long_only', 'short_only'].includes(s.k)).map((s) => [s.name, last && weeks && last[s.k] != null ? pct(last[s.k], 2) : '—', weeks ? 'since 9 Oct' : 'from the 16 Oct close', last && weeks ? last[s.k] : null]));
@@ -1920,13 +1921,13 @@ dash.calc('lr_dec_reg', {
     SX.table('fm-weeks', 'free_money_live', Object.fromEntries(['keep', 'keep_trend', 'free_money', 'long_only', 'short_only', 'rule', 'sp500'].map((k) => [k, (td, v) => { td.textContent = v == null ? '—' : pct(v, 2); sgn(td, v); }])));
     // since 1991
     const P = SX.rows('free_money_proxy') || [], S = SX.rows('free_money_proxy_stats') || []; const st = (k) => S.find((r) => r.key === k);
-    const sp = [{ k: 'long_only', name: 'Long only ≈ Keepers', color: 'var(--up)', w: 2.4 }, { k: 'long_trend', name: 'Long + trend guard', color: '#22B8CF', w: 2.2 }, { k: 'free_money', name: 'Long/short (current)', color: 'var(--color-warn)', w: 2.2 },
+    const sp = [{ k: 'long_only', name: 'Long only ≈ Keepers', color: 'var(--up)', w: 2.4 }, { k: 'long_trend', name: 'Long + trend guard', color: '#22B8CF', w: 2.2 }, { k: 'free_money', name: 'Long/short (previous)', color: 'var(--color-warn)', w: 2.2 },
       { k: 'short_only', name: 'Short only', color: 'var(--down)', w: 1.4, dash: '4 3' }, { k: 'rule', name: 'The rule (regions)', color: C.pick, w: 1.8 }, { k: 'us', name: 'North America ≈ S&P 500', color: C.us, w: 1.8 }];
     chipRow('fm-sim-chips', sp.map((s) => ({ ...s, name: s.name + (st({ long_only: 'long', long_trend: 'long_trend', free_money: 'fm', short_only: 'short', rule: 'rule', us: 'us' }[s.k]) ? ' ' + st({ long_only: 'long', long_trend: 'long_trend', free_money: 'fm', short_only: 'short', rule: 'rule', us: 'us' }[s.k]).cagr.toFixed(1) + '%/yr' : '') })), SX.fmSOn, SX.drawFM);
     const pb = document.getElementById('fm-proxy');
     if (P.length) SX.line(pb, sp.filter((s) => SX.fmSOn.has(s.k)).map((s) => ({ ...s, pts: P.map((r) => ({ x: pm(r.month), y: r[s.k] != null ? r[s.k] * 100 : null })) })), { h: 280, log: true, yfmt: (v) => '$' + d3.format(',.0f')(v), tipfmt: (v) => '$' + d3.format(',.0f')(v), tipDate: d3.utcFormat('%b %Y') });
     const L_ = st('long'), T_ = st('long_trend'), F_ = st('fm'), S_ = st('short'), U_ = st('us');
-    if (L_ && T_ && F_ && S_ && U_) document.getElementById('fm-sim-note').textContent = `$100 since 1991, before costs: long only ${L_.cagr.toFixed(1)}% a year (worst year ${L_.worst_year}%), long + trend guard ${T_.cagr.toFixed(1)}% (worst year ${T_.worst_year}%), the current long/short ${F_.cagr.toFixed(1)}%, short only ${S_.cagr.toFixed(1)}%, North America ${U_.cagr.toFixed(1)}%. The shorts are what dragged the current version down.`;
+    if (L_ && T_ && F_ && S_ && U_) document.getElementById('fm-sim-note').textContent = `$100 since 1991, before costs: long only ${L_.cagr.toFixed(1)}% a year (worst year ${L_.worst_year}%), long + trend guard ${T_.cagr.toFixed(1)}% (worst year ${T_.worst_year}%), the previous long/short ${F_.cagr.toFixed(1)}%, short only ${S_.cagr.toFixed(1)}%, North America ${U_.cagr.toFixed(1)}%. The shorts are what dragged the long/short down, which is why Keepers replaced it.`;
     const num = (td, v) => { td.textContent = v == null ? '—' : v; sgn(td, v); };
     SX.table('fm-stats', 'free_money_proxy_stats', { strategy: (td, v) => { td.textContent = v; td.className = 'wrapc'; td.style.fontWeight = '600'; td.style.minWidth = '12rem'; }, period: (td, v) => { td.textContent = v; td.style.color = 'var(--muted)'; }, cagr: (td, v) => { num(td, v); td.style.fontWeight = '750'; }, max_dd: (td, v) => { td.textContent = v; td.style.color = 'var(--down)'; }, worst_year: (td, v, r) => { td.textContent = v + ' (' + r.worst_year_when + ')'; td.style.color = 'var(--down)'; } });
   };
@@ -2171,11 +2172,13 @@ dash.calc('lr_dec_reg', {
       return { text: `${side === 'bottom' ? 'Weakest' : 'Strongest'} stocks in ${w?.pick_index || 'the main index'} this week:\n` + sel.map((r) => `#${r.rank} ${r.company} (${r.ticker}) score ${r.score}, 12-1 month ${pct(r.momentum)}${r.note ? ' — ' + r.note : ''}`).join('\n') + `\n\n${w?.rank_method || ''}`, go: ['stocks', 'extra'] };
     },
     extra() {
-      const ep = rowsOf('extra_positions'); if (!ep.length) return null;
+      const H = rowsOf('free_money_holdings').filter((r) => r.strategy === 'A' && r.ticker !== 'Cash');
       const fl = rowsOf('free_money_live'), fs = rowsOf('free_money_proxy_stats'); const fz = fl[fl.length - 1]; const st = (k) => fs.find((r) => r.key === k);
-      const tail = (fz && fl.length > 1 ? `\n\nLive since ${fl[0].date}: Free Money ${pct(fz.free_money)}, the rule ${pct(fz.rule)}, S&P 500 ${pct(fz.sp500)}.` : '\n\nThe live comparison with the rule and the S&P 500 starts after the first closed week.') + (st('fm') && st('us') ? `\nStand-in since 1991 (US momentum long/short): ${st('fm').cagr}%/yr, worst year ${st('fm').worst_year}% (${st('fm').worst_year_when}), vs the rule ${st('rule')?.cagr}%/yr and North America ${st('us').cagr}%/yr. Not free money.` : '');
-      const f = (s) => ep.filter((p) => p.side === s).map((p) => `${p.company} (${p.ticker}) ${p.weight ?? '—'}%`).join(', ');
-      return { text: `Free Money :D picks this week (weights = share of your money on that side):\nLong: ${f('Long')}\nShort: ${f('Short')}\n\nRecord so far: ${pct(metric('extra_summary', 'Total return (%)'))} over ${metric('extra_summary', 'Weeks') ?? 0} weeks. Calmer stocks get bigger weights (inverse volatility). Shorts can lose more than their stake.` + tail, go: ['extra'] };
+      if (!H.length && !fz) return null;
+      const list = H.map((r) => `${r.action || 'Keep'} ${r.company} (${r.ticker}) ${r.action === 'Sell' ? 'sell all' : (r.weight ?? '—') + '%'}`).join(', ');
+      const live = fz && fl.length > 1 ? `\n\nLive since ${fl[0].date}, after costs: Keepers ${pct(fz.keep)}, the previous weekly long/short ${pct(fz.free_money)}, the rule ${pct(fz.rule)}, S&P 500 ${pct(fz.sp500)}. Far too short to judge.` : '';
+      const hist = st('long') && st('fm') ? `\nStand-in since 1991 (US momentum deciles, before costs): long only ≈ Keepers ${st('long').cagr}%/yr, the old long/short ${st('fm').cagr}%/yr.` : '';
+      return { text: `Free Money :D is Keepers since 19 Nov 2026: hold the 3 strongest stocks of this week's index, keep each while it stays in the top 20%, sell if it drops out or falls 25% from its peak (weights = share of the stock money, calmer stocks get more).\nThis week: ${list || 'no holdings yet'}.` + live + hist + '\n\nOptional: only money you can afford to lose. Three single stocks swing far more than an index.', go: ['extra'] };
     },
     demo() {
       const v = metric('demo_summary', 'Account value (€)'); if (v == null) return null;

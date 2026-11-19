@@ -25,8 +25,8 @@ Since live start (5 weeks of returns): pick (MSCI World) −0.90%, S&P 500 ETF �
 ## Free Money (% of a one-off stake since 9 Oct, after 0.2% per trade)
 | Line | Since 9 Oct | Last week |
 |---|---|---|
-| Weekly long/short (current) | −14.87% (long −25.42%, short −5.38%) | +2.17% |
-| Keepers (A) | −33.39% | about +8.9% |
+| Weekly long/short (previous; official until 19 Nov) | −14.87% (long −25.42%, short −5.38%) | +2.17% |
+| Keepers (A, official since 19 Nov) | −33.39% | about +8.9% |
 | Keepers + trend guard (B) | −33.39% (guard off, same as A) | about +8.9% |
 | The rule (index pick) | −1.10% | +2.46% |
 | S&P 500 | −2.12% | +2.47% |

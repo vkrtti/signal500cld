@@ -36,7 +36,7 @@
 },
 {
 "q": "What is Free Money :D?",
-"a": "An optional side bet on single stocks, tracked three ways since 9 Oct 2026: the weekly long/short (3 strongest bought, 3 weakest shorted, all closed after one week), Keepers (long only, hold winners while they stay strong) and Keepers with a trend guard. On US data since 1991 the long/short stand-in made {{free_money_proxy_stats|key=fm|cagr}}% a year, long only {{free_money_proxy_stats|key=long|cagr}}% and the short side alone {{free_money_proxy_stats|key=short|cagr}}%, so the shorts hurt. Not free, and shorts can lose more than their stake.",
+"a": "An optional side bet on single stocks. Since 19 Nov 2026 the official version is Keepers: hold the 3 strongest stocks of this week's index and keep each while it stays in the top 20% (sell if it drops out or falls 25% from its peak). The weekly long/short it replaced (3 strongest bought, 3 weakest shorted, all closed after a week) and Keepers with a trend guard are still tracked for comparison. On US data since 1991 long only made {{free_money_proxy_stats|key=long|cagr}}% a year against {{free_money_proxy_stats|key=fm|cagr}}% for the long/short (the short side alone {{free_money_proxy_stats|key=short|cagr}}%), and the weekly long/short also paid about 0.4% a week in trading costs. Not free: three single stocks swing far more than an index.",
 "go": "extra"
 },
 {
