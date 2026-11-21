@@ -2,7 +2,7 @@
 Re-rank every run. Format: [priority] title — benefit / effort / notes. Move done items to CHANGELOG.md.
 
 ## Fixes and small wins
-- [P2] Check that earnings_next.json filled on the runner (non-null dates for most of the ~12 tickers; Japanese .T and NPN.JO may have none). If yfinance returns nothing, try Ticker.get_earnings_dates only or Nasdaq's calendar API from the runner — data / small.
+- [P3] earnings_next.json is not in the 'IndexPilot weekly pick' task's download list, so only this admin run syncs it to the dashboard. Add it to that prompt if the owner wants it synced at 08:57 too — reliability / tiny.
 - [P2] (Saturday crons did not fire by 10:50 UTC on 21 Nov, so still unverified.) Check next Saturday that the late Saturday/Sunday crons log 'weekly roll for <Friday> already done; daily update only' (guard added 14 Nov) and do not touch demo_ledger/pick_rank after the 08:57 sync — reliability / tiny.
 - [P3] Check a weekly run log for 'FX fallback: TWD from FRED' only if Yahoo misses EURTWD=X; the code path is untested live (FRED blocked from this sandbox) — reliability / small.
 - [P2] Page size: dashboard document 243.7 KB of 256 KiB (plans prose moved to method.json 2026-11-07). Next: Index pick details prose (s-pick-like text on the indexes page) into method.json rows via data-mhtml — reliability / small.
