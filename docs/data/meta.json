@@ -314,5 +314,11 @@
   "description": "The timing score at every month end since 1937.",
   "refresh": "weekly",
   "updated": "2026-11-21T03:24:09Z"
+ },
+ "earnings_next": {
+  "title": "Next results dates",
+  "description": "Next results (earnings) date of every stock the demo, Free Money Keepers and the weekly long/short hold, from Yahoo Finance via yfinance (announced or estimated; dates can move).",
+  "refresh": "daily",
+  "updated": "2026-11-21T10:52:12Z"
  }
 }

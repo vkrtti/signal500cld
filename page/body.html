@@ -1229,14 +1229,20 @@ SX.signal = (r, side) => {   // 0-1 trend quality: percentile of risk-adjusted m
     if (!ok(r) || all.length < 10) return null; q = all.filter((x) => z(x) <= z(r)).length / all.length; }
   const v = side === 'Short' ? 1 - q : q; return { v: Math.round(v * 100) / 100 }; };
 SX.sig = (ticker, side) => {
-  const r = (SX.rows('pick_rank') || []).find((x) => x.ticker === ticker); const out = document.createElement('span'); out.className = 'sig'; if (!r || r.score == null) return out;
+  const r = (SX.rows('pick_rank') || []).find((x) => x.ticker === ticker); const out = document.createElement('span'); out.className = 'sig'; if (!r || r.score == null) return SX.earn(out, ticker);
   const sg = SX.signal(r, side); if (sg) { const g = document.createElement('span'); g.className = 'sgv ' + (sg.v >= 0.66 ? (side === 'Short' ? 'lo' : 'hi') : sg.v >= 0.33 ? 'mid' : (side === 'Short' ? 'hi' : 'lo')); g.textContent = 'trend ' + sg.v.toFixed(2); g.title = side === 'Short' ? `Trend ${sg.v.toFixed(2)} of 1: how steadily this stock is falling. Its 12-1 month return divided by its volatility, ranked against every stock of the index (1 = the steadiest faller). Not a tested buy or sell probability.` : `Trend ${sg.v.toFixed(2)} of 1: how steadily this stock is rising. Its 12-1 month return divided by its volatility, ranked against every stock of the index (1 = the steadiest riser; a stock that only jumped on one big move scores lower). Not a tested buy probability.`; out.appendChild(g); }
   const s = Math.round(r.score); const t = document.createElement('span'); t.className = 'st' + (side === 'Short' ? ' dn' : ''); t.textContent = side === 'Short' ? `weaker than ${100 - s}%` : `stronger than ${s}%`; t.title = `Score ${r.score} of 100: its rank among all stocks of this week's index. Not a tested buy probability.`; out.appendChild(t);
   const warn = (txt, tip) => { const w = document.createElement('span'); w.className = 'wt'; w.textContent = txt; w.title = tip; out.appendChild(w); };
   if (r.vol != null && r.vol > 60) warn('very jumpy', `Volatility ${r.vol}% a year: big swings both ways.`);
   const fl = SX.rows('free_money_live') || []; const g = fl.length && fl[fl.length - 1].guard;
   if (g && side !== 'Short') warn('trend guard on', 'MSCI World is below its 40-week line: Keepers with guard buys nothing new.');
-  return out; };
+  return SX.earn(out, ticker); };
+/* Results (earnings) date within 14 days: prices often jump on results days. Source: earnings_next.json (Yahoo Finance via yfinance). */
+SX.earn = (out, ticker) => {
+  const e = (SX.rows('earnings_next') || []).find((x) => x.ticker === ticker); if (!e || !e.next_date) return out;
+  const d = new Date(e.next_date + 'T12:00:00Z'), days = Math.round((d - Date.now()) / 864e5); if (days < -1 || days > 14) return out;
+  const w = document.createElement('span'); w.className = 'wt'; w.textContent = 'results ' + d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+  w.title = `Next results (earnings) date ${e.next_date}, as announced or estimated by Yahoo Finance; it can move. Prices often jump up or down on results days.`; out.appendChild(w); return out; };
 SX.MAIN = ['home', 'plan', 'faq'];
 SX.show = (name) => {
   if (name === 'research') name = SX.RESEARCH.includes(SX.active) ? SX.active : 'history';

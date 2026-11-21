@@ -1,5 +1,10 @@
 # Changelog (newest first)
 
+## 2026-11-21
+- Health: Friday's scheduled run (03:22 UTC Sat) did the weekly roll for 20 Nov; all data fresh, no NaN; the Saturday 06:17/09:47 crons had not fired by 10:50 UTC (known GitHub behaviour). The 08:57 weekly-pick task had already synced every changed file (checked: diff per dataset + one blob cmp).
+- Data: new docs/data/earnings_next.json (scripts/earnings.py, every run, keyless Yahoo calendars via yfinance; failed tickers keep a still-future previous date). Stock chips show 'results 26 Nov' when a held stock reports within 14 days (prices often jump on results days; R0f: AppLovin short −55.8% in its results week). Added to runtime DATASETS, meta, Method data table and a new dashboard dataset doc. Daily run dispatched to fill it.
+- Backlog P2 meter check done: weeks per label since 2012 are spread (weak 109, mixed 113, strong 326, very strong 229); no cut-off change.
+
 ## 2026-11-19 (later): Keepers is the official Free Money strategy (owner approved)
 - Owner approved in chat; applied on main without a pull request at the owner's request (this quarter's second strategy change; the owner overrode the one-per-quarter rule).
 - Before → after: official Free Money = weekly long/short (3 long + 3 short, all closed every Friday, ~0.4%/week costs; stand-in since 1991 3.9%/yr) → Keepers (A) (3 long, keep while in the top 20%, sell on drop-out or −25% from peak; stand-in since 1991 15.6%/yr, 1927–2026 16.8% vs 5.9%). Live after 5 weeks (not used to decide): Keepers −33.4%, long/short −14.9%.

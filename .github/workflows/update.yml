@@ -57,6 +57,9 @@ jobs:
       - name: Headlines
         continue-on-error: true
         run: python scripts/news.py docs/data
+      - name: Next results dates of held stocks
+        continue-on-error: true
+        run: python scripts/earnings.py docs/data
       - name: Long-history research (Saturday / manual weekly runs)
         if: steps.mode.outputs.weekly == 'true'
         continue-on-error: true
