@@ -47,4 +47,6 @@ Your memory between runs. Keep under two pages; merge or delete outdated lines.
 - State files that keep a 'prev' for same-day reruns must store prev without its own prev (free_money_variants_state nested itself until 14 Nov).
 - page/body.html has long one-line JS statements: never append a // comment to a line of code (it silently comments out the rest of the line; 19 Nov broke every script). Use /* */ or a line of its own.
 - To see a new chip/tag that today's data doesn't trigger, copy docs/data to the scratchpad, edit the test copy and run page_test.js on it; for shots, swap the file in briefly and restore it.
+- Moving prose to method.json: wrap the block in `<div data-mhtml="key">`; for cards inside a grid add style="display:contents" so the layout stays; data-source numbers inside still fill (checked 28 Nov).
+- The sync check took 5 minutes and showed the 08:57 task covers everything except earnings_next: on a quiet Saturday only earnings_next, method and the page need syncing.
 - Any 0–1 score shown per stock must spread across stocks: check its distribution on the current data before shipping (the old signal sat at 0.51 for weeks).

@@ -1,5 +1,13 @@
 # Changelog (newest first)
 
+## 2026-11-28
+- Health: Friday's scheduled run (04:06 UTC Sat) did the weekly roll for 27 Nov (MSCI World unchanged, €60, meter +29); all runs this week succeeded, no error annotations, no NaN, markets dated 27 Nov. The 08:57 weekly-pick task had synced every changed data file (diff per dataset + one blob cmp); only earnings_next (not in its list) was behind.
+- Verified (backlog P2): last week's late Saturday/Sunday crons (21 Nov 14:41 and 16:58, 22 Nov 14:41 UTC) logged daily updates only (news, markets, earnings, meta) and did not touch demo_ledger or pick_rank.
+- Headlines: news.py's noise filter now also drops first-person reader-letter columns ("I hate that…", "Am I a hypocrite?", "will I lose money", "my 401(k)", "Who's to blame?") and quote pages ("Stock Quote Price and Forecast"); 4 of 60 current titles matched, no market news.
+- Page size (backlog P2): Index pick 'rule updated' note, 'What it does well / What to doubt' cards and the Free Money timing/trend explanation moved to method.json rows (data-mhtml; numbers still bound with data-source). Dashboard document 249.1 → 246.4 KB of 256 KiB.
+- Data check: Yahoo revised the 20 Nov closes after the early roll (EUNL 122.965 → 122.715); this week's roll picked up the revision in etf_daily.csv, LIVE.md uses it.
+- Dashboard: synced earnings_next, method and the page.
+
 ## 2026-11-21
 - Health: Friday's scheduled run (03:22 UTC Sat) did the weekly roll for 20 Nov; all data fresh, no NaN; the Saturday 06:17/09:47 crons had not fired by 10:50 UTC (known GitHub behaviour). The 08:57 weekly-pick task had already synced every changed file (checked: diff per dataset + one blob cmp).
 - Data: new docs/data/earnings_next.json (scripts/earnings.py, every run, keyless Yahoo calendars via yfinance; failed tickers keep a still-future previous date). Stock chips show 'results 26 Nov' when a held stock reports within 14 days (prices often jump on results days; R0f: AppLovin short −55.8% in its results week). Added to runtime DATASETS, meta, Method data table and a new dashboard dataset doc. Daily run dispatched: all 12 tickers got a date on the runner (Naspers NPN.JO, a long/short short, reports 25 Nov). Dashboard: page (249.1 KB of 256 KiB), method, news_feed and the new earnings_next dataset synced.

@@ -35,7 +35,8 @@ for p in [p for p in (L('demo_positions') or []) if p.get('leg') == 'Stocks' and
 
 # Reader-letter advice columns ("My husband ...", "Should I sell ...?") and quote/profile pages are not market news.
 NOISE = re.compile(r"\bmy (husband|wife|mother|father|mom|dad|brother|sister|son|daughter|parents|kids|boyfriend|girlfriend|partner|family)\b"
-                   r"|\bshould (i|we)\b|^[‘'\"]?i[’']?(m|ve) |^[‘'\"]i |stock price, news, quote", re.I)
+                   r"|\bshould (i|we)\b|\b(am|will|can|do) i\b|^[‘'\"]?i[’']?(m|ve|d) |^[‘'\"]?i |\bmy (401|ira|retirement|savings|pension)"
+                   r"|who[’']s to blame|stock price, news, quote|stock quote|quote price and forecast", re.I)
 
 
 def parse_date(s):

@@ -3,9 +3,9 @@ Re-rank every run. Format: [priority] title — benefit / effort / notes. Move d
 
 ## Fixes and small wins
 - [P3] earnings_next.json is not in the 'IndexPilot weekly pick' task's download list, so only this admin run syncs it to the dashboard. Add it to that prompt if the owner wants it synced at 08:57 too — reliability / tiny.
-- [P2] (Saturday crons did not fire by 10:50 UTC on 21 Nov, so still unverified.) Check next Saturday that the late Saturday/Sunday crons log 'weekly roll for <Friday> already done; daily update only' (guard added 14 Nov) and do not touch demo_ledger/pick_rank after the 08:57 sync — reliability / tiny.
 - [P3] Check a weekly run log for 'FX fallback: TWD from FRED' only if Yahoo misses EURTWD=X; the code path is untested live (FRED blocked from this sandbox) — reliability / small.
-- [P2] Page size: dashboard document 243.7 KB of 256 KiB (plans prose moved to method.json 2026-11-07). Next: Index pick details prose (s-pick-like text on the indexes page) into method.json rows via data-mhtml — reliability / small.
+- [P2] Page size: dashboard document 246.4 KB of 256 KiB (28 Nov moved index-pick and timing prose to method.json). Next candidates via data-mhtml: the 'Why US data?' template (~0.6 KB), the demo 'Why this mix' cards, the history intro paragraphs — reliability / small.
+- [P2] Headline filter: the 28 Nov regex is keyword-based; next week skim news_feed for remaining personal-finance columns or quote pages, and check nothing real was dropped — quality / tiny.
 - [P3] Hourly-bar fallback closes differed from Yahoo's official Friday close by ~0.1% (16 Oct EUNL 130.445 vs 130.54); the Sunday retry fixes the data. Consider deciding only on daily bars and letting Sunday retry instead — correctness / small.
 - [P3] Demo page "Why this mix" table: show when each worst fall happened (e.g. −50% (2007–09)) and name the columns "Worst fall from peak" — clarity / small.
 - [P3] sim_growth + sim_buying are ~300 KB together; if page load gets slow, thin them to every 2nd week before 2020 — speed / small.

@@ -637,7 +637,7 @@
   <section id="indexes" data-page hidden>
     <h1 class="ttl">The weekly index pick</h1>
     <p class="lede">Every Friday close, six index ETFs that a euro investor can buy get a score: their 52-week return in euros divided by their volatility, i.e. return per unit of risk. The best score becomes the main index, but only if it beats the current pick by more than 0.25; otherwise the pick stays. That buffer keeps switching to about 1–2 times a year.</p>
-    <div class="warnbox">Rule updated on 11 Oct 2026. The previous rule ranked by 52-week return alone (with a 5-point buffer) and had picked MSCI Emerging Markets for the week of 12 Oct 2026. The new rule did better on both test sets below: <b data-source="ip_variants" data-field="cagr" data-where="key=riskadj">—</b>% vs <b data-source="ip_variants" data-field="cagr" data-where="key=old">—</b>% a year on 2012–today ETF prices, and <b data-source="hist_rotation_variants" data-field="cagr" data-where="key=pick">—</b>% vs <b data-source="hist_rotation_variants" data-field="cagr" data-where="key=old">—</b>% on 1991–today regional data. It picks calmer markets when returns are similar.</div>
+    <div data-mhtml="ip_rule_note"></div>
     <div class="card tbl">
       <table id="idx-table" data-source="index_rank" data-row-key="key">
         <thead><tr><th data-field="rank" class="n">#</th><th data-field="index">Index</th><th data-field="fund">ETF</th><th data-field="isin">ISIN</th><th data-field="price" class="n">Price (€)</th><th data-field="r13" class="n">3 months (%)</th><th data-field="r26" class="n">6 months (%)</th><th data-field="r52" class="n">52 weeks (%)</th><th data-field="vol" class="n">Volatility (%)</th><th data-field="score" class="n">Score</th><th data-field="from_high_52w" class="n">From 52w high (%)</th><th data-field="status">Status</th></tr></thead>
@@ -688,8 +688,7 @@
 
     <h2 id="ip-honest-h">Honest reading</h2>
     <div class="grid">
-      <div class="card"><h3>What it does well</h3><ul class="m"><li>Keeps you in the strongest market of the moment, which since 2012 was mostly US tech (Nasdaq-100).</li><li>Scoring return per unit of risk prefers calmer markets when returns are close, and the buffer avoids chasing small leads; switches are rare.</li><li>Each pick is one diversified index fund, never a single stock.</li></ul></div>
-      <div class="card"><h3>What to doubt</h3><ul class="m"><li>Most of the 2012–today edge came from one index (Nasdaq-100). Without it the pick did worse than simply holding the world.</li><li>On 35 years of regional data the pick (<b data-source="hist_rotation" data-field="cagr" data-where="key=pick">—</b>%/yr) beat the developed world (<b data-source="hist_rotation" data-field="cagr" data-where="key=Developed">—</b>%) but not North America (<b data-source="hist_rotation" data-field="cagr" data-where="key=US">—</b>%).</li><li>Momentum works until it reverses sharply; the pick reacts weeks late.</li></ul></div>
+      <div data-mhtml="ip_well_doubt" style="display:contents"></div>
       <div class="card"><h3>Sensible use</h3><ul class="m"><li>Put new money into the pick; keep what you hold (no sales, no tax). That was the "new money only" line above.</li><li>A world index fund is the calm default; the pick is a tilt, not a guarantee.</li><li>Not financial advice. You place every trade yourself.</li></ul></div>
     </div>
   </section>
@@ -875,8 +874,7 @@
       <div class="tm"><div><div class="note" style="margin:0">Market timing for stock buys</div><div class="big" id="tm-score">—</div></div><div class="bar" aria-hidden="true"><i id="tm-mark"></i></div></div>
       <p class="note" id="tm-text" style="margin:10px 0 0"></p>
       <details class="fm-more"><summary>How it works and how well it has worked</summary>
-        <p class="note"><b>Market timing</b> (one number for the whole market, updated monthly): every month since 1937 a simple model, using only data known then, estimated the next year for the strongest 10% of US stocks from five market conditions (trend, 2-year rise, market swings, swings of the strongest stocks, and how far they ran ahead of the market); the score is that estimate's rank in history (0 = worst setup, 1 = best). It is a weak predictor: the table shows a higher chance of a losing year at the low end, but the months overlap (each 12-month window shares 11 months with the next), so it rests on far fewer independent years than the month counts suggest.</p>
-        <p class="note"><b>Trend</b> (each stock, 0–1): the stock's 12-1 month return divided by its volatility, ranked against every stock of the index. 1 = the steadiest riser; a stock that only jumped on one big move, or swings wildly, scores lower. Shorts show the mirror image (1 = steadiest faller). Steady trends have held up better than jumpy ones in published momentum studies, but this site has not tested it on its own data.</p>
+        <div data-mhtml="fm_timing_trend"></div>
         <div class="tbl"><table id="tm-cal" data-source="timing_calib" data-row-key="band"><thead><tr><th data-field="band">Timing score</th><th data-field="months" class="n">Months</th><th data-field="avg_next12" class="n">Next 12 months (avg %)</th><th data-field="loss_share" class="n">Losing years (%)</th></tr></thead><tbody></tbody></table></div>
         <div class="chart" id="tm-hist" data-source="timing_history" style="min-height:140px;margin-top:10px"></div></details>
     </div>
